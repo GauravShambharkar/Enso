@@ -4,6 +4,8 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="flex items-center justify-center w-full h-screen"></div>
+    <div className="flex items-center justify-center w-full h-screen">
+      this is the Enso Homepage
+    </div>
   );
 }
