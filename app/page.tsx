@@ -180,7 +180,7 @@ function 原则Card({
   return (
     <motion.div
       whileHover={{ y: -8 }}
-      className="p-10 rounded-[2.5rem] border border-border/40 bg-card/40 backdrop-blur-xl hover:bg-card/60 transition-all duration-500 group"
+      className="p-10 rounded-[2.5rem] border border-border/40 bg-black/40 backdrop-blur-xl hover:bg-black/70 transition-all duration-500 group"
     >
       <div className="grid gap-6">
         <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">

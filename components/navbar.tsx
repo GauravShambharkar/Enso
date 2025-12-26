@@ -164,7 +164,7 @@ const ListItem = React.forwardRef<
   React.ComponentPropsWithoutRef<"a">
 >(({ className, title, children, ...props }, ref) => {
   return (
-    <li>
+    <div>
       <NavigationMenuLink asChild>
         <a
           ref={ref}
@@ -180,7 +180,7 @@ const ListItem = React.forwardRef<
           </p>
         </a>
       </NavigationMenuLink>
-    </li>
+    </div>
   );
 });
 ListItem.displayName = "ListItem";

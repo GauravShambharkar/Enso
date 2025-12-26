@@ -1,10 +1,13 @@
-import React from 'react'
 
 const idea_vault = () => {
+
+
     return (
         <>
-            <div className="">
-                <div>idea_vault</div>
+            <div className="mt-15">
+                <div>
+                    <h1 className='text-white text-2xl font-thin' >idea vault</h1>
+                </div>
             </div>
         </>
     )
