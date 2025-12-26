@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "./ui/button";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -54,108 +55,106 @@ const components: { title: string; href: string; description: string }[] = [
   },
 ];
 
+const tools: { title: string; href: string; description: string }[] = [
+  {
+    title: "Ikigai",
+    href: "/tools/ikigai",
+    description: "Find your true passion and purpose with our ikigai tool.",
+  },
+  {
+    title: "Idea Vault",
+    href: "/tools/idea-vault",
+    description: "Save and organize your ideas in one place.",
+  },
+
+]
+
 export function Navbar() {
   const isMobile = useIsMobile();
 
   return (
-    <div className="flex justify-center p-4 font-light tracking-tight">
-      <NavigationMenu viewport={!isMobile}>
-        <NavigationMenuList className="flex-wrap">
-          <NavigationMenuItem>
-            <NavigationMenuLink
-              asChild
-              className={navigationMenuTriggerStyle()}
-            >
-              <Link href="/">Home</Link>
-            </NavigationMenuLink>
-            {/* <NavigationMenuContent>
-              <ul className="grid gap-2 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                <li className="row-span-3">
-                  <NavigationMenuLink asChild>
-                    <a
-                      className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-4 no-underline outline-hidden transition-all duration-200 select-none focus:shadow-md md:p-6"
-                      href="/"
+    <div className="flex fixed top-0 z-50 w-full h-15 items-center backdrop-blur-lg bg-background/5 px-6 py-3 font-light tracking-tight">
+      {/* Brand/Logo Section */}
+      <div className="flex-1 flex items-center">
+        <Link href="/" className="text-2xl text-white italic font-medium tracking-tighter">
+          Enso.
+        </Link>
+      </div>
+
+      {/* Navigation Section (Centered) */}
+      <div className="flex-1 flex justify-center">
+        <NavigationMenu viewport={!isMobile}>
+          <NavigationMenuList className="flex-wrap gap-1">
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                asChild
+                className={navigationMenuTriggerStyle()}
+              >
+                <Link href="/">Home</Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            {/* <NavigationMenuItem>
+              <NavigationMenuTrigger>Components</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-4">
+                  {components.map((component) => (
+                    <ListItem
+                      key={component.title}
+                      title={component.title}
+                      href={component.href}
                     >
-                      <div className="mb-2 text-lg font-medium sm:mt-4">
-                        shadcn/ui
-                      </div>
-                      <p className="text-muted-foreground text-sm leading-tight">
-                        Beautifully designed components built with Tailwind CSS.
-                      </p>
-                    </a>
-                  </NavigationMenuLink>
-                </li>
-                <ListItem href="/docs" title="Introduction">
-                  Re-usable components built using Radix UI and Tailwind CSS.
-                </ListItem>
-                <ListItem href="/docs/installation" title="Installation">
-                  How to install dependencies and structure your app.
-                </ListItem>
-                <ListItem href="/docs/primitives/typography" title="Typography">
-                  Styles for headings, paragraphs, lists...etc
-                </ListItem>
-              </ul>
-            </NavigationMenuContent> */}
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>Components</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                {components.map((component) => (
-                  <ListItem
-                    key={component.title}
-                    title={component.title}
-                    href={component.href}
-                  >
-                    {component.description}
-                  </ListItem>
-                ))}
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink
-              asChild
-              className={navigationMenuTriggerStyle()}
-            >
-              <Link href="/docs">Docs</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem className="hidden md:block">
-            <NavigationMenuTrigger>Tools</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid w-[300px] gap-4">
-                <li>
-                  <NavigationMenuLink asChild>
-                    <Link href="#">
-                      <div className="font-medium">Components</div>
-                      <div className="text-muted-foreground">
-                        Browse all components in the library.
-                      </div>
-                    </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link href="#">
-                      <div className="font-medium">Documentation</div>
-                      <div className="text-muted-foreground">
-                        Learn how to use the library.
-                      </div>
-                    </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link href="#">
-                      <div className="font-medium">Blog</div>
-                      <div className="text-muted-foreground">
-                        Read our latest blog posts.
-                      </div>
-                    </Link>
-                  </NavigationMenuLink>
-                </li>
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
+                      {component.description}
+                    </ListItem>
+                  ))}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem> */}
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                asChild
+                className={navigationMenuTriggerStyle()}
+              >
+                <Link href="/docs">Docs</Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem className="hidden md:block">
+              <NavigationMenuTrigger>Tools</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="w-[300px] gap-2 p-4">
+                  <li>
+                    {tools.map((tool) => (
+                      <NavigationMenuLink
+                        key={tool.title}
+                        asChild
+                        className="flex flex-col gap-1"
+                      >
+                        <ListItem
+                          title={tool.title}
+                          href={tool.href}
+                        > {tool.description}</ListItem>
+                      </NavigationMenuLink>
+                    ))}
+                  </li>
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      </div>
+
+      {/* Auth Section (End) */}
+      <div className="flex-1 flex items-center justify-end gap-3">
+        <Link href="/signup">
+          <Button variant="secondary">
+            Sign Up
+          </Button>
+        </Link>
+        <Link href="/login">
+          <Button variant="default">
+            Login
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }
