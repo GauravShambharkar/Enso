@@ -27,21 +27,19 @@ export default function Home() {
         <div className="container mx-auto max-w-6xl relative">
           <div className="flex flex-col items-center text-center">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }}
               className="max-w-4xl"
             >
               <div className="space-y-8">
                 <h2 className="text-4xl md:text-7xl leading-tighter tracking-tighter font-medium text-white/90">
-                  Finding your purpose <br />
-                  in a world full of noise.
+                  Finding your purpose
+                  in a <br /> world full of noise.
                 </h2>
 
-                <p className="text-xl md:text-xl leading-5 text-white/90 leading-tighter font-normal max-w-3xl mx-auto  pl-8 text-left md:text-center md:pl-0">
-                  Enso is more than a tool. It is a path to clarity.{" "}
-                  <br className="hidden md:block" />
-                  Align your passion, vocation, and mission to discover your
+                <p className="text-xl md:text-xl text-white/70 leading-tight font-normal max-w-3xl mx-auto  pl-8 text-left md:text-center md:pl-0">
+                  Enso is more than a tool. It is a path to clarity. {" "}
+                  Align your passion, vocation, <br className="hidden md:block" /> and mission to  discover  your
                   Ikigai.
                 </p>
 

@@ -62,11 +62,15 @@ const tools: { title: string; href: string; description: string }[] = [
     description: "Find your true passion and purpose with our ikigai tool.",
   },
   {
+    title: "Eisen Matrix",
+    href: "/tools/eisen-matrix",
+    description: "helps decide the priority of your tasks.",
+  },
+  {
     title: "Idea Vault",
     href: "/tools/idea-vault",
     description: "Save and organize your ideas in one place.",
   },
-
 ]
 
 export function Navbar() {
@@ -82,13 +86,13 @@ export function Navbar() {
       </div>
 
       {/* Navigation Section (Centered) */}
-      <div className="flex-1 flex justify-center">
-        <NavigationMenu viewport={!isMobile}>
+      <div className="flex-1 flex justify-center ">
+        <NavigationMenu viewport={!isMobile} >
           <NavigationMenuList className="flex-wrap gap-1">
             <NavigationMenuItem>
               <NavigationMenuLink
                 asChild
-                className={navigationMenuTriggerStyle()}
+                className={navigationMenuTriggerStyle() + " font-medium tracking-normal"}
               >
                 <Link href="/">Home</Link>
               </NavigationMenuLink>
@@ -112,7 +116,7 @@ export function Navbar() {
             <NavigationMenuItem>
               <NavigationMenuLink
                 asChild
-                className={navigationMenuTriggerStyle()}
+                className={navigationMenuTriggerStyle() + " font-medium tracking-normal"}
               >
                 <Link href="/docs">Docs</Link>
               </NavigationMenuLink>
@@ -145,12 +149,12 @@ export function Navbar() {
       {/* Auth Section (End) */}
       <div className="flex-1 flex items-center justify-end gap-3">
         <Link href="/signup">
-          <Button variant="secondary">
+          <Button variant="default">
             Sign Up
           </Button>
         </Link>
         <Link href="/login">
-          <Button variant="default">
+          <Button variant="secondary">
             Login
           </Button>
         </Link>
