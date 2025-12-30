@@ -157,3 +157,13 @@
     font-family: instrument serif;
   }
 }
+
+
+@font-face {
+  font-family: 'bbh';
+  src: url('/Sekuya-Regular.ttf');
+}
+
+.bbh{
+  font-family: bbh;
+}

@@ -80,8 +80,8 @@ export function Navbar() {
     <div className="flex fixed top-0 z-50 w-full h-15 items-center backdrop-blur-lg bg-background/5 px-6 py-3 font-light tracking-tight">
       {/* Brand/Logo Section */}
       <div className="flex-1 flex items-center">
-        <Link href="/" className="text-2xl text-white italic font-medium tracking-tighter">
-          Enso.
+        <Link href="/" className="text-2xl text-[#977DD3] italic font-medium tracking-tighter bbh">
+          Enso
         </Link>
       </div>
 

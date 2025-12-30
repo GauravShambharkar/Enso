@@ -32,10 +32,16 @@ export default function Home() {
               className="max-w-4xl"
             >
               <div className="space-y-8">
-                <h2 className="text-4xl md:text-7xl leading-tighter tracking-tighter font-medium text-white/90">
-                  Finding your purpose
-                  in a <br /> world full of noise.
-                </h2>
+                <div className="flex">
+                  <h2 className="text-4xl md:text-7xl leading-tighter tracking-tighter font-medium text-[#977DD3] mix-blend-plus-lighter">
+                    Finding your purpose
+                    in a <br /> world full of noise.
+                  </h2>
+                  <h2 className="absolute text-4xl md:text-7xl leading-tighter tracking-tighter font-medium text-[#977DD3] mix-blend-hard-light">
+                    Finding your purpose
+                    in a <br /> world full of noise.
+                  </h2>
+                </div>
 
                 <p className="text-xl md:text-xl text-white/70 leading-tight font-normal max-w-3xl mx-auto  pl-8 text-left md:text-center md:pl-0">
                   Enso is more than a tool. It is a path to clarity. {" "}
@@ -54,7 +60,7 @@ export default function Home() {
                   <Button
                     size="lg"
                     variant="ghost"
-                    className="h-16 px-5 border-dashed ease-in-out duration-500 text-white/90 border border-white/20 text-xl hover:bg-accent/50 transition-all font-light"
+                    className="h-16 px-5 border-dashed ease-in-out duration-500 text-white/90 border border-white/20 text-xl hover:bg-accent/20 transition-all font-light"
                   >
                     How it works
                   </Button>
@@ -84,7 +90,7 @@ export default function Home() {
       </section>
 
       {/* Ikigai Principles Section */}
-      <section className="py-32 px-6 relative  bg-accent/2">
+      <section className="py-32 px-6 relative ">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-20">
             <h3 className="text-3xl md:text-5xl text-white font-light tracking-tighter leading-tighter mb-4">
@@ -124,7 +130,7 @@ export default function Home() {
       </section>
 
       {/* Philosophy Quote Section */}
-      <section className="py-32 px-6 bg-primary/5">
+      <section className="py-32 px-6 ">
         <div className="container mx-auto max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0 }}
@@ -146,7 +152,7 @@ export default function Home() {
 
       {/* Footer-like CTA */}
       <section className="py-40 px-6 text-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-primary/5 -z-10" />
+        <div className="absolute inset-0  -z-10" />
         <div className="container mx-auto max-w-6xl">
           <h3 className="text-4xl md:text-7xl mb-12 font-light leading-tighter tracking-tighter">
             Close the circle. <br />
