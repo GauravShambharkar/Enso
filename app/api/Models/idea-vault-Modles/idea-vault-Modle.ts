@@ -1,27 +1,27 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface IdeaVault extends Document {
-    title: string;
-    description: string;
-    tags: string[];
+type ideaVault = {
+    title: string,
+    description: string,
 }
 
+export interface IdeaVault extends Document {
+    ideaVault: ideaVault[],
+}
 // idea-vault schemas 
 const ideaVaultSchema = new Schema<IdeaVault>(
     {
-        title: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-        description: {
-            type: String,
-            required: true,
-        },
-        tags: {
-            type: [String],
-            default: [],
-        },
+        ideaVault: [{
+            title: {
+                type: String,
+                required: true,
+                trim: true,
+            },
+            description: {
+                type: String,
+                required: true,
+            },
+        }]
     },
     {
         timestamps: true,

@@ -1,35 +1,36 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+type decisionMatric = {
+    urgent: string,
+    non_urgent: string,
+    important: string,
+    non_important: string,
+}
+
 export interface Eisen_Matrix extends Document {
-    urgent: string;
-    non_urgent: string;
-    important: string;
-    non_important: string;
+    eisen_matrix: decisionMatric[],
 }
 
 // Eisen Matrix schemas 
 const eisenMatrixSchema = new Schema<Eisen_Matrix>({
-    // Eisen Matrix properties
-    // urgent
-    urgent: {
-        type: String,
-        required: true,
-    },
-    // not-urgent
-    non_urgent: {
-        type: String,
-        required: true,
-    },
-    // important
-    important: {
-        type: String,
-        required: true,
-    },
-    // not-important
-    non_important: {
-        type: String,
-        required: true,
-    },
+    eisen_matrix: [{
+        urgent: {
+            type: String,
+            required: true,
+        },
+        non_urgent: {
+            type: String,
+            required: true,
+        },
+        important: {
+            type: String,
+            required: true,
+        },
+        non_important: {
+            type: String,
+            required: true,
+        },
+    }]
 }, {
     timestamps: true,
 });
