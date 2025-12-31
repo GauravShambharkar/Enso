@@ -158,12 +158,11 @@
   }
 }
 
-
 @font-face {
-  font-family: 'bbh';
-  src: url('/Sekuya-Regular.ttf');
+  font-family: "bbh";
+  src: url("/Sekuya-Regular.ttf");
 }
 
-.bbh{
+.bbh {
   font-family: bbh;
 }

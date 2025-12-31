@@ -32,16 +32,10 @@ export default function Home() {
               className="max-w-4xl"
             >
               <div className="space-y-8">
-                <div className="flex">
-                  <h2 className="text-4xl md:text-7xl leading-tighter tracking-tighter font-medium text-[#977DD3] mix-blend-plus-lighter">
+                  <h2 className="text-4xl md:text-7xl leading-tighter tracking-tighter font-medium text-white">
                     Finding your purpose
                     in a <br /> world full of noise.
                   </h2>
-                  <h2 className="absolute text-4xl md:text-7xl leading-tighter tracking-tighter font-medium text-[#977DD3] mix-blend-hard-light">
-                    Finding your purpose
-                    in a <br /> world full of noise.
-                  </h2>
-                </div>
 
                 <p className="text-xl md:text-xl text-white/70 leading-tight font-normal max-w-3xl mx-auto  pl-8 text-left md:text-center md:pl-0">
                   Enso is more than a tool. It is a path to clarity. {" "}
@@ -159,8 +153,8 @@ export default function Home() {
             Find your balance.
           </h3>
           <Button
-            size="lg"
-            className="rounded-full px-16 h-16 text-2xl shadow-2xl shadow-primary/20 hover:scale-105 transition-all"
+            size="default"
+            className="px-16 h-16 text-2xl shadow-2xl shadow-primary/20 hover:scale-105 transition-all"
           >
             Get started
           </Button>
