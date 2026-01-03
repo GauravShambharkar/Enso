@@ -31,13 +31,13 @@ export default function Home() {
               animate={{ opacity: 1, y: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }}
               className="max-w-4xl"
             >
-              <div className="space-y-8">
-                  <h2 className="text-4xl md:text-7xl leading-tighter tracking-tighter font-medium text-white">
+              <div className="space-y-4 ">
+                  <h2 className="text-4xl  md:text-7xl leading-tighter tracking-tighter font-medium text-white max-[450px]:text-center">
                     Finding your purpose
                     in a <br /> world full of noise.
                   </h2>
 
-                <p className="text-xl md:text-xl text-white/70 leading-tight font-normal max-w-3xl mx-auto  pl-8 text-left md:text-center md:pl-0">
+                <p className="text-xl  md:text-xl text-white/70 leading-tight font-normal max-w-3xl mx-auto text-left md:text-center md:pl-0 max-[770px]:text-center max-[770px]:text-lg">
                   Enso is more than a tool. It is a path to clarity. {" "}
                   Align your passion, vocation, <br className="hidden md:block" /> and mission to  discover  your
                   Ikigai.
@@ -46,7 +46,7 @@ export default function Home() {
                 <div className=" flex flex-wrap items-center justify-center gap-8">
                   <Button
                     size="lg"
-                    className="h-16 px-5 full text-2xl group bg-primary/25 backdrop-blur-2xl text-white/90 border border-white/20 shadow-2xl shadow-primary/20 hover:scale-105 transition-all duration-500"
+                    className="h-16 px-5 text-2xl group bg-primary/25 backdrop-blur-2xl text-white/90 border border-white/20 shadow-2xl shadow-primary/20 hover:scale-105 transition-all duration-500 max-[440px]:text-lg"
                   >
                     Find your purpose
                     <ArrowRight className="ml-3 w-8 h-8 group-hover:translate-x-2 transition-transform duration-500" />
@@ -124,7 +124,7 @@ export default function Home() {
       </section>
 
       {/* Philosophy Quote Section */}
-      <section className="py-32 px-6 ">
+      <section className="py-32 px-6 max-[770px]:hidden">
         <div className="container mx-auto max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0 }}
@@ -145,7 +145,7 @@ export default function Home() {
       </section>
 
       {/* Footer-like CTA */}
-      <section className="py-40 px-6 text-center relative overflow-hidden">
+      <section className="py-40 px-6 text-center relative overflow-hidden max-[770px]:hidden">
         <div className="absolute inset-0  -z-10" />
         <div className="container mx-auto max-w-6xl">
           <h3 className="text-4xl md:text-7xl mb-12 font-light leading-tighter tracking-tighter">
