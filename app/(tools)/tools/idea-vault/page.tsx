@@ -4,9 +4,9 @@ const idea_vault = () => {
 
     return (
         <>
-            <div className="flex flex-col items-center justify-center h-screen">
-                <div className="">
-                    <h1 className='text-4xl font-thin text-white tracking-tight' >idea vault</h1>
+            <div className="w-full h-screen flex items-center justify-center">
+                <div className='mt-15'>
+                    <h1 className='text-4xl font-medium text-white' >Idea Vault</h1>
                 </div>
             </div>
         </>
