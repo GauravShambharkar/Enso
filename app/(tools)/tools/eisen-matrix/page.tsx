@@ -4,7 +4,7 @@ const EisenMatrix = () => {
     return (
         <>
             <div className="w-full h-screen flex items-center justify-center">
-                <div className='mt-15'>
+                <div className=''>
                     <h1 className='text-4xl font-medium text-white' >EisenMatrix</h1>
                 </div>
             </div>
