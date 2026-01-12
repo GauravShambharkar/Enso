@@ -1,6 +1,7 @@
 "use client";
 
 import { EnsoCircle } from "@/components/enso-circle";
+import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import {
@@ -281,6 +282,8 @@ export default function Home() {
         {/* Background glow for CTA */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-t from-white/5 to-transparent pointer-events-none -z-10" />
       </section>
+      <Footer />
+
     </main>
   );
 }
@@ -318,5 +321,6 @@ function 原则Card({
         </div>
       </div>
     </motion.div>
+
   );
 }

@@ -1,15 +1,24 @@
+'use client'
+import { motion } from "framer-motion"
 
 const idea_vault = () => {
-
-
     return (
-        <>
-            <div className="w-full h-screen flex items-center justify-center">
-                <div className='mt-15'>
-                    <h1 className='text-4xl font-medium text-white' >Idea Vault</h1>
-                </div>
+        <div className="flex flex-col gap-2">
+            <div className="w-full ">
+                <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className='text-4xl font-medium text-white'
+                >Idea-Vault</motion.h1>
             </div>
-        </>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.05 }}
+                className="w-full  text-white/70"
+            >dashboards</motion.div>
+        </div>
     )
 }
 

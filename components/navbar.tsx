@@ -73,6 +73,7 @@ const tools: { title: string; href: string; description: string }[] = [
   },
 ]
 
+
 export function Navbar() {
   const isMobile = useIsMobile();
 
@@ -121,26 +122,13 @@ export function Navbar() {
                 <Link href="/docs">Docs</Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
-            <NavigationMenuItem className="hidden md:block">
-              <NavigationMenuTrigger>Tools</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="w-[300px] gap-2 p-4">
-                  <li>
-                    {tools.map((tool) => (
-                      <NavigationMenuLink
-                        key={tool.title}
-                        asChild
-                        className="flex flex-col gap-1"
-                      >
-                        <ListItem
-                          title={tool.title}
-                          href={tool.href}
-                        > {tool.description}</ListItem>
-                      </NavigationMenuLink>
-                    ))}
-                  </li>
-                </ul>
-              </NavigationMenuContent>
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                asChild
+                className={navigationMenuTriggerStyle() + " font-medium tracking-normal"}
+              >
+                <Link href="/tools">Tools</Link>
+              </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
