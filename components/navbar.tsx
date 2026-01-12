@@ -87,7 +87,7 @@ export function Navbar() {
       </div>
 
       {/* Navigation Section (Centered) */}
-      <div className="flex-1 flex justify-center ">
+      <div className="flex-1 flex justify-center max-[450px]:hidden">
         <NavigationMenu viewport={!isMobile} >
           <NavigationMenuList className="flex-wrap gap-1">
             <NavigationMenuItem>

@@ -216,7 +216,7 @@ export default function Home() {
       </section>
 
       {/* Philosophy Quote Section */}
-      <section className="py-32 px-6 ">
+      <section className="py-32 px-6 max-[770px]:hidden">
         <div className="container mx-auto max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0 }}
@@ -247,7 +247,7 @@ export default function Home() {
       </section>
 
       {/* Footer-like CTA */}
-      <section className="py-40 px-6 text-center relative overflow-hidden">
+      <section className="py-40 px-6 text-center relative overflow-hidden max-[770px]:hidden">
         <div className="absolute inset-0  -z-10" />
         <div className="container mx-auto max-w-4xl relative z-10">
           <h3 className="text-5xl md:text-8xl mb-8 font-light leading-[0.9] tracking-tighter text-white">
