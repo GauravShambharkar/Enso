@@ -33,8 +33,8 @@ const layout = ({
             </aside>
 
             {/* Main Content */}
-            <main className="w-full  mt-15  ml-64">
-                <div className="p-8">
+            <main className="w-full h-screen mt-15  ml-64">
+                <div className="p-6">
                     {children}
                 </div>
             </main>

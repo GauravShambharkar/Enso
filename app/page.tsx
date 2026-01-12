@@ -33,18 +33,24 @@ export default function Home() {
           <div className="flex flex-col items-center text-center">
             <motion.div
               initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: { duration: 1, ease: [0.16, 1, 0.3, 1] },
+              }}
               className="max-w-4xl mx-auto"
             >
               <div className="space-y-10">
                 <h1 className="text-4xl md:text-7xl leading-[0.9] tracking-tighter font-light text-white">
                   Finding your purpose
-                  <span className="block text-white/40">in a world full of noise.</span>
+                  <span className="block text-white/40">
+                    in a world full of noise.
+                  </span>
                 </h1>
 
                 <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed font-light max-w-2xl mx-auto">
-                  Enso is more than a tool. It is a path to clarity. {" "}
-                  Align your passion, vocation, and mission to discover your Ikigai.
+                  Enso is more than a tool. It is a path to clarity. Align your
+                  passion, vocation, and mission to discover your Ikigai.
                 </p>
 
                 <div className="flex flex-wrap items-center justify-center gap-6">
@@ -145,14 +151,18 @@ export default function Home() {
               whileHover={{ scale: 1.02 }}
               className="md:col-span-2 rounded-[2.5rem] border  border-white/10 bg-black/15 backdrop-blur-md p-10 relative overflow-hidden group hover:border-white/20 transition-all cursor-pointer"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-linear-to-br from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative z-10 h-full flex flex-col justify-between">
                 <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mb-4">
                   <Sparkles className="w-6 h-6 text-purple-300" />
                 </div>
                 <div>
-                  <h4 className="text-3xl font-light text-white mb-2">Ikigai Builder</h4>
-                  <p className="text-white/60">Discover your reason for being through our guided framework.</p>
+                  <h4 className="text-3xl font-light text-white mb-2">
+                    Ikigai Builder
+                  </h4>
+                  <p className="text-white/60">
+                    Discover your reason for being through our guided framework.
+                  </p>
                 </div>
               </div>
               {/* Decorative Element */}
@@ -164,14 +174,18 @@ export default function Home() {
               whileHover={{ scale: 1.02 }}
               className="md:col-span-1 rounded-[2.5rem] bg-black/15 backdrop-blur-md border border-white/10 p-10 relative overflow-hidden group hover:border-white/20 transition-all cursor-pointer"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-linear-to-br from-orange-500/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative z-10 h-full flex flex-col justify-between">
                 <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mb-4">
                   <Grid2X2 className="w-6 h-6 text-orange-300" />
                 </div>
                 <div>
-                  <h4 className="text-2xl font-light text-white mb-2">Eisenhower Matrix</h4>
-                  <p className="text-white/60 text-sm">Prioritize tasks by urgency and importance.</p>
+                  <h4 className="text-2xl font-light text-white mb-2">
+                    Eisenhower Matrix
+                  </h4>
+                  <p className="text-white/60 text-sm">
+                    Prioritize tasks by urgency and importance.
+                  </p>
                 </div>
               </div>
             </motion.div>
@@ -181,14 +195,18 @@ export default function Home() {
               whileHover={{ scale: 1.02 }}
               className="md:col-span-1 rounded-[2.5rem] bg-black/15 backdrop-blur-md border border-white/10 p-10 relative overflow-hidden group hover:border-white/20 transition-all cursor-pointer"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-linear-to-br from-yellow-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative z-10 h-full flex flex-col justify-between">
                 <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mb-4">
                   <Brain className="w-6 h-6 text-yellow-300" />
                 </div>
                 <div>
-                  <h4 className="text-2xl font-light text-white mb-2">Idea Vault</h4>
-                  <p className="text-white/60 text-sm">Capture and organize your fleeting thoughts.</p>
+                  <h4 className="text-2xl font-light text-white mb-2">
+                    Idea Vault
+                  </h4>
+                  <p className="text-white/60 text-sm">
+                    Capture and organize your fleeting thoughts.
+                  </p>
                 </div>
               </div>
             </motion.div>
@@ -198,19 +216,22 @@ export default function Home() {
               whileHover={{ scale: 1.02 }}
               className="md:col-span-2 rounded-[2.5rem] bg-black/15 backdrop-blur-md border border-white/10 p-10 relative overflow-hidden group hover:border-white/20 transition-all cursor-pointer"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative z-10 h-full flex flex-col justify-between">
                 <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mb-4">
                   <Layers className="w-6 h-6 text-blue-300" />
                 </div>
                 <div>
-                  <h4 className="text-3xl font-light text-white mb-2">Deep Focus</h4>
-                  <p className="text-white/60">Eliminate distractions and enter flight mode for your mind.</p>
+                  <h4 className="text-3xl font-light text-white mb-2">
+                    Deep Focus
+                  </h4>
+                  <p className="text-white/60">
+                    Eliminate distractions and enter flight mode for your mind.
+                  </p>
                 </div>
               </div>
               <div className="absolute -left-10 -top-10 w-64 h-64 bg-blue-500/20 blur-[80px] rounded-full group-hover:bg-blue-500/30 transition-all" />
             </motion.div>
-
           </div>
         </div>
       </section>
@@ -231,7 +252,9 @@ export default function Home() {
               enough."
             </blockquote>
             <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed font-light mb-12">
-              In the rush of modern life, we often forget that completeness isn't about adding more, but peeling away the unnecessary. Enso invites you to find wholeness in the now.
+              In the rush of modern life, we often forget that completeness
+              isn't about adding more, but peeling away the unnecessary. Enso
+              invites you to find wholeness in the now.
             </p>
             <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
               <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
@@ -239,10 +262,9 @@ export default function Home() {
                 The Path of Enso
               </p>
             </div>
-
           </motion.div>
           {/* Subtle background glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-white/5 blur-[120px] -z-10 rounded-full pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-75 bg-white/5 blur-[120px] -z-10 rounded-full pointer-events-none" />
         </div>
       </section>
 
@@ -255,7 +277,8 @@ export default function Home() {
             <span className="text-white/50">Find your balance.</span>
           </h3>
           <p className="text-xl text-white/70 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
-            Join thousands of others who are finding clarity and purpose.  Start defining your own path today.
+            Join thousands of others who are finding clarity and purpose. Start
+            defining your own path today.
           </p>
 
           <div className="flex flex-col items-center gap-8">
@@ -280,10 +303,9 @@ export default function Home() {
           </div>
         </div>
         {/* Background glow for CTA */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-t from-white/5 to-transparent pointer-events-none -z-10" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-125 bg-linear-to-t from-white/5 to-transparent pointer-events-none -z-10" />
       </section>
       <Footer />
-
     </main>
   );
 }
@@ -321,6 +343,5 @@ function 原则Card({
         </div>
       </div>
     </motion.div>
-
   );
 }

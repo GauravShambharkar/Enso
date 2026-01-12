@@ -166,3 +166,9 @@
 .bbh {
   font-family: bbh;
 }
+
+* {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(75, 75, 75) transparent;
+}
