@@ -1,30 +1,12 @@
 import React from 'react'
 import Link from 'next/link'
+import { tools } from '@/utils/tools'
+import { PanelLeftCloseIcon, PanelRightClose } from 'lucide-react'
 
-const tools = [
-    {
-        name: 'Ikigai',
-        description: 'Discover your reason for being.',
-        href: '/tools/ikigai',
-        color: 'bg-blue-500/10 border-blue-500/20 text-blue-400'
-    },
-    {
-        name: 'Idea Vault',
-        description: 'Securely store and manage your creative ideas.',
-        href: '/tools/idea-vault',
-        color: 'bg-amber-500/10 border-amber-500/20 text-amber-400'
-    },
-    {
-        name: 'Eisen Matrix',
-        description: 'Prioritize tasks with the Eisenhower Matrix.',
-        href: '/tools/eisen-matrix',
-        color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-    },
-]
 
 const ToolsPage = () => {
     return (
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl">
             <h1 className="text-3xl font-bold text-white mb-2">Tools</h1>
             <p className="text-white/60 mb-8">Select a tool to get started.</p>
 
