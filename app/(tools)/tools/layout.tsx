@@ -1,39 +1,42 @@
-import React from 'react'
-import Link from 'next/link'
+"use client"
+import React, { useEffect, useState } from 'react'
+import SideBar from '@/features/Tool-SideBar/SideBar';
 
-const tools = [
-    { name: 'Ikigai', href: '/tools/ikigai' },
-    { name: 'Idea Vault', href: '/tools/idea-vault' },
-    { name: 'Eisen Matrix', href: '/tools/eisen-matrix' },
-]
+
 
 const layout = ({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) => {
+
+    const [isCollapsed, setIsCollapsed] = useState(false);
+
+    const toggleCollapse = () => {
+        setIsCollapsed(prev => {
+            const newValue = !prev;
+            localStorage.setItem("sideBar", String(newValue));
+            return newValue;
+        });
+    };
+
+    useEffect(() => {
+        const sideBar = localStorage.getItem("sideBar");
+        if (sideBar === "true") {
+            setIsCollapsed(true);
+        }
+    }, []);
+
+    
+
+
     return (
         <div className="min-h-screen flex">
             {/* Sidebar */}
-            <aside className="w-64 fixed top-15 h-full  overflow-y-auto bg-black/50 backdrop-blur-md z-10 transition-transform duration-300">
-                <div className="p-6">
-                    <h2 className="text-xl font-semibold mb-6 text-white/80 px-2 ">Tools</h2>
-                    <nav className="space-y-1">
-                        {tools.map((tool) => (
-                            <Link
-                                key={tool.name}
-                                href={tool.href}
-                                className="block px-3 py-2 rounded-md text-sm font-medium text-white/60 hover:text-white hover:bg-white/5 transition-colors"
-                            >
-                                {tool.name}
-                            </Link>
-                        ))}
-                    </nav>
-                </div>
-            </aside>
+            <SideBar toggleCollapse={toggleCollapse} isCollapsed={isCollapsed} />
 
             {/* Main Content */}
-            <main className="w-full h-screen mt-15  ml-64">
+            <main className={`flex-1 h-screen mt-15  transition-all ease-in-out duration-200 ${isCollapsed ? "ml-25" : "ml-64"}`} >
                 <div className="p-6">
                     {children}
                 </div>
