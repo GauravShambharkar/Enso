@@ -40,7 +40,7 @@ export default function Home() {
               }}
               className="max-w-4xl mx-auto"
             >
-              <div className="space-y-10">
+              <div className="space-y-4">
                 <h1 className="text-4xl md:text-7xl leading-[0.9] tracking-tighter font-light text-white">
                   Finding your purpose
                   <span className="block text-white/40">
@@ -48,12 +48,12 @@ export default function Home() {
                   </span>
                 </h1>
 
-                <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed font-light max-w-2xl mx-auto">
+                <p className="text-xl md:text-xl text-muted-foreground leading-relaxed font-light max-w-2xl mx-auto">
                   Enso is more than a tool. It is a path to clarity. Align your
                   passion, vocation, and mission to discover your Ikigai.
                 </p>
 
-                <div className="flex flex-wrap items-center justify-center gap-6">
+                <div className="flex flex-wrap  items-center justify-center gap-6">
                   <Button
                     size="lg"
                     className="h-14 px-8 rounded-full text-lg bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/10 shadow-xl transition-all duration-300 font-light"
@@ -71,26 +71,27 @@ export default function Home() {
                 </div>
               </div>
             </motion.div>
+
           </div>
+          {/* Improved Scroll Indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 1 }}
+            className="flex flex-col items-center gap-4 mt-10 text-muted-foreground/30"
+          >
+            <span className="text-xs uppercase text-white tracking-[0.4em] font-medium">
+              Scroll to explore
+            </span>
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ChevronDown className="w-6 h-6" />
+            </motion.div>
+          </motion.div>
         </div>
 
-        {/* Improved Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 text-muted-foreground/30"
-        >
-          <span className="text-xs uppercase tracking-[0.4em] font-medium">
-            Scroll to explore
-          </span>
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ChevronDown className="w-6 h-6" />
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* Ikigai Principles Section */}
@@ -301,9 +302,10 @@ export default function Home() {
               </span>
             </div>
           </div>
+
         </div>
         {/* Background glow for CTA */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-125 bg-linear-to-t from-white/5 to-transparent pointer-events-none -z-10" />
+        {/* <div className="border bottom-0 left-1/2 -translate-x-1/2 w-full h-125 bg-linear-to-t from-white/5 to-transparent pointer-events-none -z-10" /> */}
       </section>
       <Footer />
     </main>
