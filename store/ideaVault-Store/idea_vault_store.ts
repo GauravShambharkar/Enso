@@ -10,10 +10,14 @@ type vaultType = {
 interface ideaVault {
     vault: vaultType[]
     setVault: (data: vaultType) => void
+    createModal: boolean
+    setCreateModal: (data: boolean) => void
 }
 
-export const idea_Vault_store = create<ideaVault>((set) => ({
+export const useIdeaVaultStore = create<ideaVault>((set) => ({
     vault: [],
+    createModal: false,
+    setCreateModal: (data: boolean) => set({ createModal: data }),
     setVault: (data) => set((state) => ({ vault: [...state.vault, data] })),
 
 }))

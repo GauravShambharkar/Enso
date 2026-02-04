@@ -17,7 +17,7 @@ const View_idea = ({ idea, onClose }: ViewIdeaProps) => {
     return (
         <>
             <div className="pointer-events-none w-full h-full fixed flex justify-end px-32.5 py-1.5">
-                <div className='pointer-events-auto p-4 rounded-xl border-2 border-white/20 w-150 h-155 bg-white/2 backdrop-blur-md z-50'>
+                <div className='pointer-events-auto p-4 rounded-lg border-2 border-white/20 w-150 h-155 bg-white/2 backdrop-blur-md z-50'>
                     <div className="">
                         <div className="space-y-2">
                             <h2 className="text-white items-center text-3xl flex justify-between">{idea?.idea || "No idea available"}
