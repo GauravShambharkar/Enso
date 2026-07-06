@@ -21,6 +21,30 @@ export const Ikigai = () => {
 
   const [activeSegment, setActiveSegment] = useState<string>("ikigai");
 
+  const getSegmentContent = () => {
+    if (!activeProfile) return { title: "Explore", content: "No profile active.", color: "text-purple-300 border-purple-500/20 bg-purple-500/5" };
+    switch (activeSegment) {
+      case "love":
+        return { title: "What You Love", content: inputs.love, color: "text-rose-300 border-rose-500/20 bg-rose-500/5" };
+      case "goodAt":
+        return { title: "What You Are Good At (Skills)", content: inputs.goodAt, color: "text-yellow-300 border-yellow-500/20 bg-yellow-500/5" };
+      case "worldNeeds":
+        return { title: "What The World Needs", content: inputs.worldNeeds, color: "text-blue-300 border-blue-500/20 bg-blue-500/5" };
+      case "paidFor":
+        return { title: "What You Can Be Paid For", content: inputs.paidFor, color: "text-emerald-300 border-emerald-500/20 bg-emerald-500/5" };
+      case "passion":
+        return { title: "Passion (Love + Skills)", content: activeProfile.result.analysis.passion, color: "text-rose-300 border-rose-500/20 bg-rose-500/5" };
+      case "mission":
+        return { title: "Mission (Love + Needs)", content: activeProfile.result.analysis.mission, color: "text-blue-300 border-blue-500/20 bg-blue-500/5" };
+      case "vocation":
+        return { title: "Vocation (Needs + Careers)", content: activeProfile.result.analysis.vocation, color: "text-emerald-300 border-emerald-500/20 bg-emerald-500/5" };
+      case "profession":
+        return { title: "Profession (Skills + Careers)", content: activeProfile.result.analysis.profession, color: "text-amber-300 border-amber-500/20 bg-amber-500/5" };
+      default:
+        return { title: "Interactive Explorer", content: "Click any segment or circle on the left Venn diagram to inspect your specific Ikigai elements.", color: "text-purple-300 border-purple-500/20 bg-purple-500/5" };
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6 relative min-h-screen pb-20 text-white">
       {/* Title Header matching Idea-Vault */}
@@ -65,88 +89,88 @@ export const Ikigai = () => {
             Ikigai Intersection Graph
           </h3>
 
-          <div className="relative w-64 h-64 select-none scale-100 mb-8">
+          <div className="relative w-72 h-72 select-none scale-100 mb-8">
             {/* Circle 1: Love */}
             <div
               onClick={() => setActiveSegment("love")}
-              className={`absolute top-0 left-1/2 -translate-x-1/2 w-36 h-36 rounded-full bg-rose-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
+              className={`absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full bg-rose-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
                 activeSegment === "love" ? "border-rose-400 ring-4 ring-rose-400/20 scale-105 bg-rose-500/15" : "border-rose-500/20 hover:border-rose-400"
               }`}
-              style={{ top: '5%' }}
+              style={{ top: '4%' }}
             >
-              <span className="text-rose-300/80 font-medium text-[10px] absolute top-6">Love</span>
+              <span className="text-rose-300/80 font-medium text-xs absolute top-6">Love</span>
             </div>
 
             {/* Circle 2: Good At (Skills) */}
             <div
               onClick={() => setActiveSegment("goodAt")}
-              className={`absolute top-1/2 -translate-y-1/2 left-0 w-36 h-36 rounded-full bg-yellow-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
+              className={`absolute top-1/2 -translate-y-1/2 left-0 w-40 h-40 rounded-full bg-yellow-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
                 activeSegment === "goodAt" ? "border-yellow-400 ring-4 ring-yellow-400/20 scale-105 bg-yellow-500/15" : "border-yellow-500/20 hover:border-yellow-400"
               }`}
-              style={{ left: '5%' }}
+              style={{ left: '4%' }}
             >
-              <span className="text-yellow-300/80 font-medium text-[10px] absolute left-4">Skills</span>
+              <span className="text-yellow-300/80 font-medium text-xs absolute left-4">Skills</span>
             </div>
 
             {/* Circle 3: World Needs */}
             <div
               onClick={() => setActiveSegment("worldNeeds")}
-              className={`absolute top-1/2 -translate-y-1/2 right-0 w-36 h-36 rounded-full bg-blue-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
+              className={`absolute top-1/2 -translate-y-1/2 right-0 w-40 h-40 rounded-full bg-blue-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
                 activeSegment === "worldNeeds" ? "border-blue-400 ring-4 ring-blue-400/20 scale-105 bg-blue-500/15" : "border-blue-500/20 hover:border-blue-400"
               }`}
-              style={{ right: '5%' }}
+              style={{ right: '4%' }}
             >
-              <span className="text-blue-300/80 font-medium text-[10px] absolute right-4">Needs</span>
+              <span className="text-blue-300/80 font-medium text-xs absolute right-4">Needs</span>
             </div>
 
             {/* Circle 4: Paid For */}
             <div
               onClick={() => setActiveSegment("paidFor")}
-              className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-36 h-36 rounded-full bg-emerald-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
+              className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full bg-emerald-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
                 activeSegment === "paidFor" ? "border-emerald-400 ring-4 ring-emerald-400/20 scale-105 bg-emerald-500/15" : "border-emerald-500/20 hover:border-emerald-400"
               }`}
-              style={{ bottom: '5%' }}
+              style={{ bottom: '4%' }}
             >
-              <span className="text-emerald-300/80 font-medium text-[10px] absolute bottom-6">Careers</span>
+              <span className="text-emerald-300/80 font-medium text-xs absolute bottom-6">Careers</span>
             </div>
 
             {/* Intersections */}
             <button
               onClick={() => setActiveSegment("passion")}
-              className={`absolute w-9 h-9 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[8px] font-semibold flex items-center justify-center ${
+              className={`absolute w-10 h-10 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[9px] font-semibold flex items-center justify-center ${
                 activeSegment === "passion" ? "bg-rose-500/30 border-rose-300 text-rose-300 scale-105" : "bg-black/60 border-white/20 text-white/50"
               }`}
-              style={{ top: '29%', left: '27%' }}
+              style={{ top: '28%', left: '26%' }}
             >
               PSN
             </button>
 
             <button
               onClick={() => setActiveSegment("mission")}
-              className={`absolute w-9 h-9 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[8px] font-semibold flex items-center justify-center ${
+              className={`absolute w-10 h-10 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[9px] font-semibold flex items-center justify-center ${
                 activeSegment === "mission" ? "bg-blue-500/30 border-blue-300 text-blue-300 scale-105" : "bg-black/60 border-white/20 text-white/50"
               }`}
-              style={{ top: '29%', right: '27%' }}
+              style={{ top: '28%', right: '26%' }}
             >
               MSN
             </button>
 
             <button
               onClick={() => setActiveSegment("profession")}
-              className={`absolute w-9 h-9 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[8px] font-semibold flex items-center justify-center ${
+              className={`absolute w-10 h-10 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[9px] font-semibold flex items-center justify-center ${
                 activeSegment === "profession" ? "bg-amber-500/30 border-amber-300 text-amber-300 scale-105" : "bg-black/60 border-white/20 text-white/50"
               }`}
-              style={{ bottom: '29%', left: '27%' }}
+              style={{ bottom: '28%', left: '26%' }}
             >
               PRF
             </button>
 
             <button
               onClick={() => setActiveSegment("vocation")}
-              className={`absolute w-9 h-9 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[8px] font-semibold flex items-center justify-center ${
+              className={`absolute w-10 h-10 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[9px] font-semibold flex items-center justify-center ${
                 activeSegment === "vocation" ? "bg-emerald-500/30 border-emerald-300 text-emerald-300 scale-105" : "bg-black/60 border-white/20 text-white/50"
               }`}
-              style={{ bottom: '29%', right: '27%' }}
+              style={{ bottom: '28%', right: '26%' }}
             >
               VOC
             </button>
@@ -154,7 +178,7 @@ export const Ikigai = () => {
             {/* Center */}
             <button
               onClick={() => setActiveSegment("ikigai")}
-              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border transition-all duration-300 cursor-pointer text-[8px] font-semibold flex flex-col items-center justify-center shadow-md ${
+              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full border transition-all duration-300 cursor-pointer text-[9px] font-semibold flex flex-col items-center justify-center shadow-md ${
                 activeSegment === "ikigai"
                 ? "bg-purple-600 border-purple-300 text-white scale-105"
                 : "bg-black border-purple-500/40 text-purple-300 hover:border-purple-400"
@@ -162,61 +186,6 @@ export const Ikigai = () => {
             >
               <span>IKIGAI</span>
             </button>
-          </div>
-
-          {/* Render what user mentioned at each circle block below/beside diagram */}
-          <div className="w-full space-y-4 pt-4 border-t border-white/5">
-            <h4 className="text-xs font-medium text-white/50 uppercase tracking-widest mb-2">Pillar Previews</h4>
-            
-            <div className="grid grid-cols-2 gap-2 w-full">
-              <div 
-                onClick={() => setActiveSegment("love")}
-                className={`p-3 rounded-lg border text-left cursor-pointer transition-all ${
-                  activeSegment === "love" ? "bg-rose-500/10 border-rose-500/30" : "bg-white/5 border-white/5 hover:border-white/10"
-                }`}
-              >
-                <div className="flex items-center gap-1 text-xs text-rose-300 mb-1"><Heart className="size-3" /> Love</div>
-                <p className="text-xs text-white/70 font-light line-clamp-2 leading-relaxed">
-                  {inputs.love || "Not entered yet..."}
-                </p>
-              </div>
-
-              <div 
-                onClick={() => setActiveSegment("goodAt")}
-                className={`p-3 rounded-lg border text-left cursor-pointer transition-all ${
-                  activeSegment === "goodAt" ? "bg-yellow-500/10 border-yellow-500/30" : "bg-white/5 border-white/5 hover:border-white/10"
-                }`}
-              >
-                <div className="flex items-center gap-1 text-xs text-yellow-300 mb-1"><Sparkles className="size-3" /> Skills</div>
-                <p className="text-xs text-white/70 font-light line-clamp-2 leading-relaxed">
-                  {inputs.goodAt || "Not entered yet..."}
-                </p>
-              </div>
-
-              <div 
-                onClick={() => setActiveSegment("worldNeeds")}
-                className={`p-3 rounded-lg border text-left cursor-pointer transition-all ${
-                  activeSegment === "worldNeeds" ? "bg-blue-500/10 border-blue-500/30" : "bg-white/5 border-white/5 hover:border-white/10"
-                }`}
-              >
-                <div className="flex items-center gap-1 text-xs text-blue-300 mb-1"><Globe className="size-3" /> Needs</div>
-                <p className="text-xs text-white/70 font-light line-clamp-2 leading-relaxed">
-                  {inputs.worldNeeds || "Not entered yet..."}
-                </p>
-              </div>
-
-              <div 
-                onClick={() => setActiveSegment("paidFor")}
-                className={`p-3 rounded-lg border text-left cursor-pointer transition-all ${
-                  activeSegment === "paidFor" ? "bg-emerald-500/10 border-emerald-500/30" : "bg-white/5 border-white/5 hover:border-white/10"
-                }`}
-              >
-                <div className="flex items-center gap-1 text-xs text-emerald-300 mb-1"><Briefcase className="size-3" /> Careers</div>
-                <p className="text-xs text-white/70 font-light line-clamp-2 leading-relaxed">
-                  {inputs.paidFor || "Not entered yet..."}
-                </p>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -343,94 +312,37 @@ export const Ikigai = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="space-y-6"
+                className="p-6 rounded-xl border border-white/10 bg-black/30 backdrop-blur-md space-y-6"
               >
                 {/* Core Synthesis Statement */}
-                <div className="p-6 rounded-xl border border-white/10 bg-linear-to-r from-purple-500/10 to-blue-500/10 backdrop-blur-md relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-60 h-60 bg-[#977DD3]/5 blur-[60px] rounded-full pointer-events-none" />
-                  <div className="relative z-10 space-y-2">
-                    <div className="flex items-center gap-1.5 text-white/50 text-[10px] font-semibold uppercase tracking-wider">
-                      <Zap className="size-3 text-yellow-400" />
-                      Ikigai Purpose Statement
+                <div className="border-b border-white/5 pb-4">
+                  <span className="text-[10px] uppercase tracking-widest font-semibold text-[#977DD3] flex items-center gap-1.5 mb-1.5">
+                    <Zap className="size-3 text-yellow-400" />
+                    Synthesized Purpose Report
+                  </span>
+                  <h3 className="text-xl font-light text-white italic leading-relaxed">
+                    "{activeProfile.result.ikigaiSummary}"
+                  </h3>
+                </div>
+
+                {/* Active Segment Detail Panel */}
+                {(() => {
+                  const segment = getSegmentContent();
+                  return (
+                    <div className={`p-4 rounded-lg border text-xs font-light space-y-1.5 transition-all duration-300 ${segment.color}`}>
+                      <span className="font-semibold block uppercase tracking-wider text-[9px]">
+                        {segment.title}
+                      </span>
+                      <p className="leading-relaxed text-white/80">
+                        {segment.content || "Empty or not set yet"}
+                      </p>
                     </div>
-                    <p className="text-md md:text-lg text-white font-light leading-relaxed italic">
-                      "{activeProfile.result.ikigaiSummary}"
-                    </p>
-                  </div>
-                </div>
+                  );
+                })()}
 
-                {/* Sub-Pillar Intersections Explainer */}
-                <div className="p-6 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md space-y-4">
-                  <div className="border-b border-white/5 pb-2">
-                    <h4 className="text-sm font-medium text-purple-300">Pillar Intersection Details</h4>
-                    <p className="text-[10px] text-white/40">Select segments inside the Venn diagram to examine intersection analysis.</p>
-                  </div>
-
-                  <div className="min-h-[90px] flex flex-col justify-center">
-                    <AnimatePresence mode="wait">
-                      {activeSegment === "love" && (
-                        <motion.div key="l" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
-                          <h5 className="text-xs font-semibold text-rose-300 flex items-center gap-1"><Heart className="size-3" /> Love</h5>
-                          <p className="text-white/80 text-sm leading-relaxed font-light">{inputs.love}</p>
-                        </motion.div>
-                      )}
-                      {activeSegment === "goodAt" && (
-                        <motion.div key="g" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
-                          <h5 className="text-xs font-semibold text-yellow-300 flex items-center gap-1"><Sparkles className="size-3" /> Skills</h5>
-                          <p className="text-white/80 text-sm leading-relaxed font-light">{inputs.goodAt}</p>
-                        </motion.div>
-                      )}
-                      {activeSegment === "worldNeeds" && (
-                        <motion.div key="w" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
-                          <h5 className="text-xs font-semibold text-blue-300 flex items-center gap-1"><Globe className="size-3" /> Needs</h5>
-                          <p className="text-white/80 text-sm leading-relaxed font-light">{inputs.worldNeeds}</p>
-                        </motion.div>
-                      )}
-                      {activeSegment === "paidFor" && (
-                        <motion.div key="p" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
-                          <h5 className="text-xs font-semibold text-emerald-300 flex items-center gap-1"><Briefcase className="size-3" /> Careers</h5>
-                          <p className="text-white/80 text-sm leading-relaxed font-light">{inputs.paidFor}</p>
-                        </motion.div>
-                      )}
-                      {activeSegment === "passion" && (
-                        <motion.div key="pass" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
-                          <h5 className="text-xs font-semibold text-rose-300">Your Passion (Skills + Love)</h5>
-                          <p className="text-white/80 text-sm leading-relaxed font-light">{activeProfile.result.analysis.passion}</p>
-                        </motion.div>
-                      )}
-                      {activeSegment === "mission" && (
-                        <motion.div key="miss" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
-                          <h5 className="text-xs font-semibold text-blue-300">Your Mission (Needs + Love)</h5>
-                          <p className="text-white/80 text-sm leading-relaxed font-light">{activeProfile.result.analysis.mission}</p>
-                        </motion.div>
-                      )}
-                      {activeSegment === "vocation" && (
-                        <motion.div key="voc" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
-                          <h5 className="text-xs font-semibold text-emerald-300">Your Vocation (Needs + Careers)</h5>
-                          <p className="text-white/80 text-sm leading-relaxed font-light">{activeProfile.result.analysis.vocation}</p>
-                        </motion.div>
-                      )}
-                      {activeSegment === "profession" && (
-                        <motion.div key="prof" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
-                          <h5 className="text-xs font-semibold text-amber-300">Your Profession (Skills + Careers)</h5>
-                          <p className="text-white/80 text-sm leading-relaxed font-light">{activeProfile.result.analysis.profession}</p>
-                        </motion.div>
-                      )}
-                      {activeSegment === "ikigai" && (
-                        <motion.div key="ik" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
-                          <h5 className="text-xs font-semibold text-purple-300 font-light uppercase tracking-wider">Your Synthesized Ikigai</h5>
-                          <p className="text-white/80 text-sm leading-relaxed font-light">
-                            Use the interactive diagram on the left to click on overlaps like Passion (PSN), Mission (MSN), Vocation (VOC), or Profession (PRF) to explore details.
-                          </p>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </div>
-
-                {/* Actions & Obstacles Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-5 rounded-lg border border-white/5 bg-black/40 space-y-3">
+                {/* Actions and Obstacles */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-5 border-t border-white/5">
+                  <div className="space-y-3">
                     <h5 className="text-xs font-medium text-white flex items-center gap-1.5">
                       <CheckCircle2 className="size-3.5 text-emerald-400" />
                       Action Steps
@@ -445,10 +357,10 @@ export const Ikigai = () => {
                     </ul>
                   </div>
 
-                  <div className="p-5 rounded-lg border border-white/5 bg-black/40 space-y-3">
+                  <div className="space-y-3">
                     <h5 className="text-xs font-medium text-white flex items-center gap-1.5">
                       <AlertTriangle className="size-3.5 text-amber-400" />
-                      Obstacles
+                      Potential Obstacles
                     </h5>
                     <ul className="space-y-2">
                       {activeProfile.result.potentialObstacles.map((obstacle, idx) => (
@@ -473,7 +385,7 @@ export const Ikigai = () => {
           <h3 className="text-lg font-light">Saved Ikigai Profiles</h3>
         </div>
 
-        <div className="w-full border border-white/20 bg-white/10 backdrop-blur-xl rounded-xl overflow-hidden max-h-80 overflow-y-auto custom-scrollbar">
+        <div className="w-full border border-white/20 bg-white/20 backdrop-blur-xl rounded-xl overflow-hidden max-h-80 overflow-y-auto custom-scrollbar">
           <table className="w-full table-fixed border-collapse text-white">
             <thead className="sticky top-0 left-0 right-0 z-10 bg-black text-xs">
               <tr>

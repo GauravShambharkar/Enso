@@ -39,7 +39,7 @@ const layout = ({
             <SideBar toggleCollapse={toggleCollapse} isCollapsed={isCollapsed} />
 
             {/* Main Content */}
-            <main className={`flex-1 h-screen mt-15  transition-all ease-in-out duration-200 ${isCollapsed ? "ml-25" : "ml-64"}`} >
+            <main className={`flex-1 h-screen mt-0 transition-all ease-in-out duration-200 ${isCollapsed ? "ml-25" : "ml-64"}`} >
                 <div className="p-6 relative">
                     {children}
                     {createModal && <Create_idea/>}

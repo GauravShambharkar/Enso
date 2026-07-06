@@ -160,12 +160,12 @@
 }
 
 @font-face {
-  font-family: "bbh";
+  font-family: "sekuya";
   src: url("/Sekuya-Regular.ttf");
 }
 
-.bbh {
-  font-family: bbh;
+.sekuya {
+  font-family: sekuya;
 }
 
 * {

@@ -1,7 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
 import { tools } from '@/utils/tools'
-import { PanelLeftCloseIcon, PanelRightClose } from 'lucide-react'
 
 
 const ToolsPage = () => {

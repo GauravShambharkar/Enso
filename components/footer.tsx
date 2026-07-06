@@ -90,7 +90,7 @@ export function Footer() {
                     <div className="w-full flex justify-center">
                         <h1 style={
                             {
-                                fontFamily: "bbh",
+                                fontFamily: "sekuya",
                                 fontWeight: "normal",
                                 fontSize: "12rem",
                             }

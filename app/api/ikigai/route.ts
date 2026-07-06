@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     if (!love || !goodAt || !worldNeeds || !paidFor) {
       return NextResponse.json(
         { error: "Please fill out all fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     if (!apiKey) {
       return NextResponse.json(
         { error: "Groq API key not configured on server" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -38,22 +38,23 @@ The user has submitted their answers to the 4 pillars of Ikigai:
 4. WHAT YOU CAN BE PAID FOR (Profession/Vocation): ${paidFor}
 
 Synthesize these inputs and provide a clear, comprehensive analysis of their potential Ikigai.
+Address the user directly in the second person ("you", "your", "yourself"). Do NOT use third-person pronouns (they, their, them, he, she).
 Structure your response in JSON format matching the following schema. Make sure to return ONLY valid JSON:
 {
-  "ikigaiSummary": "A concise, powerful synthesis sentence defining their core purpose.",
+  "ikigaiSummary": "A concise, powerful synthesis sentence defining your core purpose.",
   "analysis": {
-    "passion": "Analysis of the intersection of what they love and what they are good at.",
-    "mission": "Analysis of the intersection of what they love and what the world needs.",
-    "vocation": "Analysis of the intersection of what the world needs and what they can be paid for.",
-    "profession": "Analysis of the intersection of what they are good at and what they can be paid for."
+    "passion": "Analysis of the intersection of what you love and what you are good at.",
+    "mission": "Analysis of the intersection of what you love and what the world needs.",
+    "vocation": "Analysis of the intersection of what the world needs and what you can be paid for.",
+    "profession": "Analysis of the intersection of what you are good at and what you can be paid for."
   },
   "actionableSteps": [
-    "Step 1 to start aligning their life with this Ikigai",
+    "Step 1 to start aligning your life with this Ikigai",
     "Step 2...",
     "Step 3..."
   ],
   "potentialObstacles": [
-    "Potential challenge or distraction they might face",
+    "Potential challenge or distraction you might face",
     "Another challenge..."
   ]
 }
@@ -63,7 +64,8 @@ Structure your response in JSON format matching the following schema. Make sure 
       messages: [
         {
           role: "system",
-          content: "You are an expert Ikigai strategist. Return ONLY valid JSON.",
+          content:
+            "You are an expert Ikigai strategist. Return ONLY valid JSON.",
         },
         {
           role: "user",
@@ -85,7 +87,7 @@ Structure your response in JSON format matching the following schema. Make sure 
     console.error("Ikigai API Error:", error);
     return NextResponse.json(
       { error: error.message || "Failed to generate Ikigai" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
