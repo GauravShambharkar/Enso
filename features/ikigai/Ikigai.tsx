@@ -89,88 +89,88 @@ export const Ikigai = () => {
             Ikigai Intersection Graph
           </h3>
 
-          <div className="relative w-72 h-72 select-none scale-100 mb-8">
+          <div className="relative w-96 h-96 select-none mb-8">
             {/* Circle 1: Love */}
             <div
               onClick={() => setActiveSegment("love")}
-              className={`absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full bg-rose-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
+              className={`absolute top-0 left-1/2 -translate-x-1/2 w-52 h-52 rounded-full bg-rose-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
                 activeSegment === "love" ? "border-rose-400 ring-4 ring-rose-400/20 scale-105 bg-rose-500/15" : "border-rose-500/20 hover:border-rose-400"
               }`}
-              style={{ top: '4%' }}
+              style={{ top: '3%' }}
             >
-              <span className="text-rose-300/80 font-medium text-xs absolute top-6">Love</span>
+              <span className="text-rose-300/80 font-medium text-sm absolute top-7">Love</span>
             </div>
 
             {/* Circle 2: Good At (Skills) */}
             <div
               onClick={() => setActiveSegment("goodAt")}
-              className={`absolute top-1/2 -translate-y-1/2 left-0 w-40 h-40 rounded-full bg-yellow-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
+              className={`absolute top-1/2 -translate-y-1/2 left-0 w-52 h-52 rounded-full bg-yellow-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
                 activeSegment === "goodAt" ? "border-yellow-400 ring-4 ring-yellow-400/20 scale-105 bg-yellow-500/15" : "border-yellow-500/20 hover:border-yellow-400"
               }`}
-              style={{ left: '4%' }}
+              style={{ left: '3%' }}
             >
-              <span className="text-yellow-300/80 font-medium text-xs absolute left-4">Skills</span>
+              <span className="text-yellow-300/80 font-medium text-sm absolute left-5">Skills</span>
             </div>
 
             {/* Circle 3: World Needs */}
             <div
               onClick={() => setActiveSegment("worldNeeds")}
-              className={`absolute top-1/2 -translate-y-1/2 right-0 w-40 h-40 rounded-full bg-blue-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
+              className={`absolute top-1/2 -translate-y-1/2 right-0 w-52 h-52 rounded-full bg-blue-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
                 activeSegment === "worldNeeds" ? "border-blue-400 ring-4 ring-blue-400/20 scale-105 bg-blue-500/15" : "border-blue-500/20 hover:border-blue-400"
               }`}
-              style={{ right: '4%' }}
+              style={{ right: '3%' }}
             >
-              <span className="text-blue-300/80 font-medium text-xs absolute right-4">Needs</span>
+              <span className="text-blue-300/80 font-medium text-sm absolute right-5">Needs</span>
             </div>
 
             {/* Circle 4: Paid For */}
             <div
               onClick={() => setActiveSegment("paidFor")}
-              className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full bg-emerald-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
+              className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-52 h-52 rounded-full bg-emerald-500/10 border transition-all duration-300 cursor-pointer flex items-center justify-center ${
                 activeSegment === "paidFor" ? "border-emerald-400 ring-4 ring-emerald-400/20 scale-105 bg-emerald-500/15" : "border-emerald-500/20 hover:border-emerald-400"
               }`}
-              style={{ bottom: '4%' }}
+              style={{ bottom: '3%' }}
             >
-              <span className="text-emerald-300/80 font-medium text-xs absolute bottom-6">Careers</span>
+              <span className="text-emerald-300/80 font-medium text-sm absolute bottom-7">Careers</span>
             </div>
 
             {/* Intersections */}
             <button
               onClick={() => setActiveSegment("passion")}
-              className={`absolute w-10 h-10 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[9px] font-semibold flex items-center justify-center ${
+              className={`absolute w-12 h-12 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[10px] font-semibold flex items-center justify-center ${
                 activeSegment === "passion" ? "bg-rose-500/30 border-rose-300 text-rose-300 scale-105" : "bg-black/60 border-white/20 text-white/50"
               }`}
-              style={{ top: '28%', left: '26%' }}
+              style={{ top: '27%', left: '24%' }}
             >
               PSN
             </button>
 
             <button
               onClick={() => setActiveSegment("mission")}
-              className={`absolute w-10 h-10 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[9px] font-semibold flex items-center justify-center ${
+              className={`absolute w-12 h-12 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[10px] font-semibold flex items-center justify-center ${
                 activeSegment === "mission" ? "bg-blue-500/30 border-blue-300 text-blue-300 scale-105" : "bg-black/60 border-white/20 text-white/50"
               }`}
-              style={{ top: '28%', right: '26%' }}
+              style={{ top: '27%', right: '24%' }}
             >
               MSN
             </button>
 
             <button
               onClick={() => setActiveSegment("profession")}
-              className={`absolute w-10 h-10 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[9px] font-semibold flex items-center justify-center ${
+              className={`absolute w-12 h-12 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[10px] font-semibold flex items-center justify-center ${
                 activeSegment === "profession" ? "bg-amber-500/30 border-amber-300 text-amber-300 scale-105" : "bg-black/60 border-white/20 text-white/50"
               }`}
-              style={{ bottom: '28%', left: '26%' }}
+              style={{ bottom: '27%', left: '24%' }}
             >
               PRF
             </button>
 
             <button
               onClick={() => setActiveSegment("vocation")}
-              className={`absolute w-10 h-10 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[9px] font-semibold flex items-center justify-center ${
+              className={`absolute w-12 h-12 rounded-full border border-dashed transition-all duration-300 cursor-pointer text-[10px] font-semibold flex items-center justify-center ${
                 activeSegment === "vocation" ? "bg-emerald-500/30 border-emerald-300 text-emerald-300 scale-105" : "bg-black/60 border-white/20 text-white/50"
               }`}
-              style={{ bottom: '28%', right: '26%' }}
+              style={{ bottom: '27%', right: '24%' }}
             >
               VOC
             </button>
@@ -178,7 +178,7 @@ export const Ikigai = () => {
             {/* Center */}
             <button
               onClick={() => setActiveSegment("ikigai")}
-              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full border transition-all duration-300 cursor-pointer text-[9px] font-semibold flex flex-col items-center justify-center shadow-md ${
+              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full border transition-all duration-300 cursor-pointer text-[10px] font-semibold flex flex-col items-center justify-center shadow-md ${
                 activeSegment === "ikigai"
                 ? "bg-purple-600 border-purple-300 text-white scale-105"
                 : "bg-black border-purple-500/40 text-purple-300 hover:border-purple-400"
