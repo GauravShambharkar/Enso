@@ -243,16 +243,16 @@ export const EisenMatrix = () => {
                 <div className={`flex justify-between items-center mb-3 ${meta.headerColor}`}>
                   <span className="text-sm font-medium">{meta.title}</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs opacity-50">{list.length}</span>
+                    <span className="text-xs">{list.length}</span>
                     <button
                       onClick={() => {
                         setNewTaskQuadrant(q);
                         setCreateTaskModal(true);
                       }}
-                      className="cursor-pointer opacity-40 hover:opacity-100 transition-opacity"
+                      className="cursor-pointer flex items-center gap-1 opacity-90 hover:opacity-100 bg-black/5 hover:bg-white/10 px-2 py-0.5 rounded text-[10px] uppercase tracking-wide transition-all border border-white/5"
                       title={`Add task to ${meta.title}`}
                     >
-                      <Plus className="size-3.5" />
+                      Add <Plus className="size-3" />
                     </button>
                   </div>
                 </div>
