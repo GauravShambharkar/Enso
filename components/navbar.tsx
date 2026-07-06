@@ -16,6 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "./ui/button";
+import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -90,38 +91,24 @@ export function Navbar() {
       <div className="flex-1 flex justify-center max-[450px]:hidden">
         <NavigationMenu viewport={!isMobile} >
           <NavigationMenuList className="flex-wrap gap-1">
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                asChild
-                className={navigationMenuTriggerStyle() + " font-medium tracking-normal"}
-              >
-                <Link href="/">Home</Link>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-            {/* <NavigationMenuItem>
-              <NavigationMenuTrigger>Components</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid gap-2 sm:w-[400px] md:w-[500px] md:grid-cols-2 lg:w-[600px] p-4">
-                  {components.map((component) => (
-                    <ListItem
-                      key={component.title}
-                      title={component.title}
-                      href={component.href}
-                    >
-                      {component.description}
-                    </ListItem>
-                  ))}
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem> */}
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                asChild
-                className={navigationMenuTriggerStyle() + " font-medium tracking-normal"}
-              >
-                <Link href="/docs">Docs</Link>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
+            <Show when="signed-out">
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className={navigationMenuTriggerStyle() + " font-medium tracking-normal"}
+                >
+                  <Link href="/">Home</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  asChild
+                  className={navigationMenuTriggerStyle() + " font-medium tracking-normal"}
+                >
+                  <Link href="/docs">Docs</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </Show>
             <NavigationMenuItem>
               <NavigationMenuLink
                 asChild
@@ -136,16 +123,21 @@ export function Navbar() {
 
       {/* Auth Section (End) */}
       <div className="flex-1 flex items-center justify-end gap-3">
-        <Link href="/signup">
-          <Button variant="default">
-            Sign Up
-          </Button>
-        </Link>
-        <Link href="/login">
-          <Button variant="secondary">
-            Login
-          </Button>
-        </Link>
+        <Show when="signed-out">
+          <SignInButton mode="modal" forceRedirectUrl="/tools">
+            <Button variant="secondary" className="h-9 px-4 rounded-full text-xs font-light">
+              Login
+            </Button>
+          </SignInButton>
+          <SignUpButton mode="modal" forceRedirectUrl="/tools">
+            <Button variant="default" className="h-9 px-4 rounded-full text-xs font-light bg-[#977DD3] hover:bg-[#977DD3]/80 text-white">
+              Sign Up
+            </Button>
+          </SignUpButton>
+        </Show>
+        <Show when="signed-in">
+          <UserButton />
+        </Show>
       </div>
     </div>
   );
