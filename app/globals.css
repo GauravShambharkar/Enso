@@ -155,7 +155,7 @@
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    font-family: instrument serif;
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   }
 }
 

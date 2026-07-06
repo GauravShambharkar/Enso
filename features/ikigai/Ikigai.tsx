@@ -176,7 +176,7 @@ export const Ikigai = () => {
                 }`}
               >
                 <div className="flex items-center gap-1 text-xs text-rose-300 mb-1"><Heart className="size-3" /> Love</div>
-                <p className="text-[10px] text-white/60 font-light line-clamp-2 leading-relaxed">
+                <p className="text-xs text-white/70 font-light line-clamp-2 leading-relaxed">
                   {inputs.love || "Not entered yet..."}
                 </p>
               </div>
@@ -188,7 +188,7 @@ export const Ikigai = () => {
                 }`}
               >
                 <div className="flex items-center gap-1 text-xs text-yellow-300 mb-1"><Sparkles className="size-3" /> Skills</div>
-                <p className="text-[10px] text-white/60 font-light line-clamp-2 leading-relaxed">
+                <p className="text-xs text-white/70 font-light line-clamp-2 leading-relaxed">
                   {inputs.goodAt || "Not entered yet..."}
                 </p>
               </div>
@@ -200,7 +200,7 @@ export const Ikigai = () => {
                 }`}
               >
                 <div className="flex items-center gap-1 text-xs text-blue-300 mb-1"><Globe className="size-3" /> Needs</div>
-                <p className="text-[10px] text-white/60 font-light line-clamp-2 leading-relaxed">
+                <p className="text-xs text-white/70 font-light line-clamp-2 leading-relaxed">
                   {inputs.worldNeeds || "Not entered yet..."}
                 </p>
               </div>
@@ -212,7 +212,7 @@ export const Ikigai = () => {
                 }`}
               >
                 <div className="flex items-center gap-1 text-xs text-emerald-300 mb-1"><Briefcase className="size-3" /> Careers</div>
-                <p className="text-[10px] text-white/60 font-light line-clamp-2 leading-relaxed">
+                <p className="text-xs text-white/70 font-light line-clamp-2 leading-relaxed">
                   {inputs.paidFor || "Not entered yet..."}
                 </p>
               </div>
@@ -371,55 +371,55 @@ export const Ikigai = () => {
                       {activeSegment === "love" && (
                         <motion.div key="l" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
                           <h5 className="text-xs font-semibold text-rose-300 flex items-center gap-1"><Heart className="size-3" /> Love</h5>
-                          <p className="text-white/70 text-[11px] leading-relaxed font-light">{inputs.love}</p>
+                          <p className="text-white/80 text-sm leading-relaxed font-light">{inputs.love}</p>
                         </motion.div>
                       )}
                       {activeSegment === "goodAt" && (
                         <motion.div key="g" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
                           <h5 className="text-xs font-semibold text-yellow-300 flex items-center gap-1"><Sparkles className="size-3" /> Skills</h5>
-                          <p className="text-white/70 text-[11px] leading-relaxed font-light">{inputs.goodAt}</p>
+                          <p className="text-white/80 text-sm leading-relaxed font-light">{inputs.goodAt}</p>
                         </motion.div>
                       )}
                       {activeSegment === "worldNeeds" && (
                         <motion.div key="w" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
                           <h5 className="text-xs font-semibold text-blue-300 flex items-center gap-1"><Globe className="size-3" /> Needs</h5>
-                          <p className="text-white/70 text-[11px] leading-relaxed font-light">{inputs.worldNeeds}</p>
+                          <p className="text-white/80 text-sm leading-relaxed font-light">{inputs.worldNeeds}</p>
                         </motion.div>
                       )}
                       {activeSegment === "paidFor" && (
                         <motion.div key="p" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
                           <h5 className="text-xs font-semibold text-emerald-300 flex items-center gap-1"><Briefcase className="size-3" /> Careers</h5>
-                          <p className="text-white/70 text-[11px] leading-relaxed font-light">{inputs.paidFor}</p>
+                          <p className="text-white/80 text-sm leading-relaxed font-light">{inputs.paidFor}</p>
                         </motion.div>
                       )}
                       {activeSegment === "passion" && (
                         <motion.div key="pass" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
                           <h5 className="text-xs font-semibold text-rose-300">Your Passion (Skills + Love)</h5>
-                          <p className="text-white/70 text-[11px] leading-relaxed font-light">{activeProfile.result.analysis.passion}</p>
+                          <p className="text-white/80 text-sm leading-relaxed font-light">{activeProfile.result.analysis.passion}</p>
                         </motion.div>
                       )}
                       {activeSegment === "mission" && (
                         <motion.div key="miss" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
                           <h5 className="text-xs font-semibold text-blue-300">Your Mission (Needs + Love)</h5>
-                          <p className="text-white/70 text-[11px] leading-relaxed font-light">{activeProfile.result.analysis.mission}</p>
+                          <p className="text-white/80 text-sm leading-relaxed font-light">{activeProfile.result.analysis.mission}</p>
                         </motion.div>
                       )}
                       {activeSegment === "vocation" && (
                         <motion.div key="voc" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
                           <h5 className="text-xs font-semibold text-emerald-300">Your Vocation (Needs + Careers)</h5>
-                          <p className="text-white/70 text-[11px] leading-relaxed font-light">{activeProfile.result.analysis.vocation}</p>
+                          <p className="text-white/80 text-sm leading-relaxed font-light">{activeProfile.result.analysis.vocation}</p>
                         </motion.div>
                       )}
                       {activeSegment === "profession" && (
                         <motion.div key="prof" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
                           <h5 className="text-xs font-semibold text-amber-300">Your Profession (Skills + Careers)</h5>
-                          <p className="text-white/70 text-[11px] leading-relaxed font-light">{activeProfile.result.analysis.profession}</p>
+                          <p className="text-white/80 text-sm leading-relaxed font-light">{activeProfile.result.analysis.profession}</p>
                         </motion.div>
                       )}
                       {activeSegment === "ikigai" && (
                         <motion.div key="ik" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-1">
                           <h5 className="text-xs font-semibold text-purple-300 font-light uppercase tracking-wider">Your Synthesized Ikigai</h5>
-                          <p className="text-white/70 text-[11px] leading-relaxed font-light">
+                          <p className="text-white/80 text-sm leading-relaxed font-light">
                             Use the interactive diagram on the left to click on overlaps like Passion (PSN), Mission (MSN), Vocation (VOC), or Profession (PRF) to explore details.
                           </p>
                         </motion.div>
@@ -437,8 +437,8 @@ export const Ikigai = () => {
                     </h5>
                     <ul className="space-y-2">
                       {activeProfile.result.actionableSteps.map((step, idx) => (
-                        <li key={idx} className="flex gap-2 text-white/70 font-light text-[10px] leading-normal">
-                          <span className="flex-none w-3.5 h-3.5 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-[9px] mt-0.5">{idx + 1}</span>
+                        <li key={idx} className="flex gap-2 text-white/80 font-light text-xs leading-normal">
+                          <span className="flex-none w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-[10px] mt-0.5">{idx + 1}</span>
                           <span>{step}</span>
                         </li>
                       ))}
@@ -452,8 +452,8 @@ export const Ikigai = () => {
                     </h5>
                     <ul className="space-y-2">
                       {activeProfile.result.potentialObstacles.map((obstacle, idx) => (
-                        <li key={idx} className="flex gap-2 text-white/70 font-light text-[10px] leading-normal">
-                          <span className="flex-none w-3.5 h-3.5 rounded-full bg-amber-500/10 text-amber-400 flex items-center justify-center text-[9px] mt-0.5">!</span>
+                        <li key={idx} className="flex gap-2 text-white/80 font-light text-xs leading-normal">
+                          <span className="flex-none w-4 h-4 rounded-full bg-amber-500/10 text-amber-400 flex items-center justify-center text-[10px] mt-0.5">!</span>
                           <span>{obstacle}</span>
                         </li>
                       ))}
