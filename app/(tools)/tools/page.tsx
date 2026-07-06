@@ -16,8 +16,8 @@ const ToolsPage = () => {
                         href={tool.href}
                         className={`bg-black/10 backdrop-blur-lg block p-6 rounded-xl border transition-all hover:scale-[1.02] hover:bg-opacity-20 ${tool.color}`}
                     >
-                        <h3 className="text-xl  text-white font-thin mb-2">{tool.name}</h3>
-                        <p className="text-sm opacity-80 text-white font-thin">{tool.description}</p>
+                        <h3 className="text-2xl  text-white font-medium mb-2">{tool.name}</h3>
+                        <p className="text-sm opacity-80 text-white font-medium">{tool.description}</p>
                     </Link>
                 ))}
             </div>
