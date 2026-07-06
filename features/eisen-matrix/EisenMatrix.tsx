@@ -1,134 +1,291 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
-import { Plus, Eye, CheckCircle, Circle, ClipboardList } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Plus,
+  Eye,
+  CheckCircle,
+  Circle,
+  Trash2,
+  Calendar,
+  Tag,
+  ArrowLeft,
+  FolderOpen,
+} from "lucide-react";
 import { useEisenMatrix } from "./hooks/controller/useEisenMatrix.hook";
+import CreateProjectModal from "./components/modal/CreateProjectModal";
 import CreateTaskModal from "./components/modal/CreateTaskModal";
-import ViewTaskModal from "./components/modal/ViewTaskModal";
 
 const quadrantMeta = {
   Q1: {
-    title: "Quadrant 1: Do First",
-    headerBg: "bg-rose-500/20 text-rose-300 border-rose-500/30",
-    badge: "Do",
+    title: "Do First",
+    label: "Urgent & Important",
+    headerColor: "text-rose-300",
+    accent: "text-rose-300",
   },
   Q2: {
-    title: "Quadrant 2: Schedule",
-    headerBg: "bg-blue-500/20 text-blue-300 border-blue-500/30",
-    badge: "Schedule",
+    title: "Schedule",
+    label: "Important, Not Urgent",
+    headerColor: "text-blue-300",
+    accent: "text-blue-300",
   },
   Q3: {
-    title: "Quadrant 3: Delegate",
-    headerBg: "bg-amber-500/20 text-amber-300 border-amber-500/30",
-    badge: "Delegate",
+    title: "Delegate",
+    label: "Urgent, Not Important",
+    headerColor: "text-amber-300",
+    accent: "text-amber-300",
   },
   Q4: {
-    title: "Quadrant 4: Eliminate",
-    headerBg: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
-    badge: "Eliminate",
+    title: "Eliminate",
+    label: "Not Urgent, Not Important",
+    headerColor: "text-emerald-300",
+    accent: "text-emerald-300",
   },
 };
 
 export const EisenMatrix = () => {
   const {
-    tasks,
-    createModal,
-    setCreateModal,
-    viewModal,
-    setViewModal,
+    projects,
+    activeProject,
     selectedTask,
     setSelectedTask,
-    newTitle,
-    setNewTitle,
-    newQuadrant,
-    setNewQuadrant,
+    createProjectModal,
+    setCreateProjectModal,
+    createTaskModal,
+    setCreateTaskModal,
+    newProjectName,
+    setNewProjectName,
+    newProjectPurpose,
+    setNewProjectPurpose,
+    newTaskTitle,
+    setNewTaskTitle,
+    newTaskQuadrant,
+    setNewTaskQuadrant,
+    handleCreateProject,
+    handleDeleteProject,
+    handleOpenProject,
+    handleBackToList,
     handleAddTask,
     handleDeleteTask,
     handleToggleComplete,
-    handleViewTask,
   } = useEisenMatrix();
 
-  // Filter tasks per quadrant
   const qTasks = (q: "Q1" | "Q2" | "Q3" | "Q4") =>
-    tasks.filter((t) => t.quadrant === q);
+    activeProject?.tasks.filter((t) => t.quadrant === q) || [];
 
-  return (
-    <div className="flex flex-col gap-6 relative min-h-screen pb-20 text-white">
-      {/* Title Header matching Idea-Vault */}
-      <div className="w-full">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-4xl font-medium text-white"
-        >
-          Eisen-Matrix
-        </motion.h1>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-          className="w-full text-white/70 text-sm mt-1"
-        >
-          dashboards
-        </motion.div>
-      </div>
+  // ─── PROJECT LIST VIEW ───
+  if (!activeProject) {
+    return (
+      <div className="flex flex-col gap-6 relative min-h-screen pb-20 text-white">
+        {/* Header */}
+        <div className="w-full flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-4xl font-medium text-white"
+            >
+              Eisen-Matrix
+            </motion.h1>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.05 }}
+              className="text-white/70 text-sm mt-1"
+            >
+              your priority matrices
+            </motion.div>
+          </div>
 
-      <div className="w-full space-y-6">
-        {/* Create Button matching Idea-Vault */}
-        <div className="flex justify-end">
           <button
-            onClick={() => setCreateModal(true)}
-            className="cursor-pointer hover:bg-white/10 transition-all ease-in-out duration-300 text-white flex items-center gap-2 border px-4 py-1.5 rounded-lg bg-black/50 border-white/30 shadow-sm shadow-white/30 text-sm font-light"
+            onClick={() => setCreateProjectModal(true)}
+            className="cursor-pointer hover:bg-white/10 transition-all ease-in-out duration-300 text-white flex items-center gap-2 border px-4 py-1.5 rounded-lg bg-black/50 border-white/30 shadow-sm shadow-white/30 text-sm font-light self-start md:self-auto"
           >
             <Plus className="size-4" />
-            Create Task
+            Create Matrix
           </button>
         </div>
 
-        {/* 2x2 Matrix Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Projects Table */}
+        <div className="w-full border border-white/20 bg-white/10 backdrop-blur-xl rounded-lg overflow-hidden max-h-[70vh] overflow-y-auto">
+          <table className="w-full table-fixed border-collapse text-white">
+            <thead className="sticky top-0 left-0 right-0 z-10 bg-black text-sm">
+              <tr>
+                <th className="border border-white/20 px-4 py-2.5 text-left font-thin w-[35%]">Matrix</th>
+                <th className="border border-white/20 px-4 py-2.5 text-left font-thin w-[35%]">Purpose</th>
+                <th className="border border-white/20 px-4 py-2.5 text-left font-thin w-[10%]">Tasks</th>
+                <th className="border border-white/20 px-4 py-2.5 text-left font-thin w-[20%]">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {projects.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="border border-white/20 px-4 py-8 text-center text-white/50 font-light text-sm italic"
+                  >
+                    No matrices created yet.
+                  </td>
+                </tr>
+              ) : (
+                projects.map((p) => (
+                  <tr
+                    key={p.id}
+                    className="hover:bg-white/5 transition group text-sm"
+                  >
+                    <td className="border border-white/20 px-4 py-2">
+                      <span className="truncate block max-w-full font-light">{p.name}</span>
+                    </td>
+                    <td className="border border-white/20 px-4 py-2">
+                      <span className="text-white/60 font-light truncate block">{p.purpose || "—"}</span>
+                    </td>
+                    <td className="border border-white/20 px-4 py-2">
+                      <span className="text-white/70 font-light">{p.tasks.length}</span>
+                    </td>
+                    <td className="border border-white/20 px-4 py-2">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleOpenProject(p.id)}
+                          className="inline-flex cursor-pointer hover:bg-white/10 transition-all duration-300 text-xs text-white items-center gap-1.5 border px-3 py-1 rounded-md bg-black/50 border-white/30"
+                        >
+                          <FolderOpen className="size-3" />
+                          Open
+                        </button>
+                        <button
+                          onClick={() => handleDeleteProject(p.id)}
+                          className="inline-flex cursor-pointer hover:bg-rose-500/15 transition-all duration-300 text-xs text-rose-300 items-center gap-1.5 border px-3 py-1 rounded-md bg-black/50 border-rose-500/20"
+                        >
+                          <Trash2 className="size-3" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Create Project Modal */}
+        {createProjectModal && (
+          <CreateProjectModal
+            onClose={() => setCreateProjectModal(false)}
+            onSubmit={handleCreateProject}
+            state={{
+              name: newProjectName,
+              setName: setNewProjectName,
+              purpose: newProjectPurpose,
+              setPurpose: setNewProjectPurpose,
+            }}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // ─── PROJECT DETAIL VIEW (2x2 Grid + Preview) ───
+  return (
+    <div className="flex flex-col gap-6 relative min-h-screen pb-20 text-white">
+      {/* Header with back button */}
+      <div className="w-full flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleBackToList}
+            className="cursor-pointer text-white/50 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="size-5" />
+          </button>
+          <div>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-4xl font-medium text-white"
+            >
+              {activeProject.name}
+            </motion.h1>
+            {activeProject.purpose && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.05 }}
+                className="text-white/50 text-xs mt-1 font-light"
+              >
+                {activeProject.purpose}
+              </motion.div>
+            )}
+          </div>
+        </div>
+
+        <button
+          onClick={() => setCreateTaskModal(true)}
+          className="cursor-pointer hover:bg-white/10 transition-all ease-in-out duration-300 text-white flex items-center gap-2 border px-4 py-1.5 rounded-lg bg-black/50 border-white/30 shadow-sm shadow-white/30 text-sm font-light self-start md:self-auto"
+        >
+          <Plus className="size-4" />
+          Add Task
+        </button>
+      </div>
+
+      {/* Split Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
+        {/* Left: 2x2 Matrix */}
+        <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
           {(["Q1", "Q2", "Q3", "Q4"] as const).map((q) => {
             const meta = quadrantMeta[q];
             const list = qTasks(q);
             return (
               <div
                 key={q}
-                className="p-6 rounded-xl border border-white/10 bg-black/30 backdrop-blur-md flex flex-col min-h-[220px]"
+                className="p-5 rounded-xl border border-white/10 bg-black/30 backdrop-blur-md flex flex-col min-h-[200px]"
               >
-                <div
-                  className={`flex justify-between items-center px-3.5 py-1.5 rounded-full border text-xs font-medium mb-4 ${meta.headerBg}`}
-                >
-                  <span>{meta.title}</span>
-                  <span>{meta.badge}</span>
+                <div className={`flex justify-between items-center mb-3 ${meta.headerColor}`}>
+                  <span className="text-sm font-medium">{meta.title}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs opacity-50">{list.length}</span>
+                    <button
+                      onClick={() => {
+                        setNewTaskQuadrant(q);
+                        setCreateTaskModal(true);
+                      }}
+                      className="cursor-pointer opacity-40 hover:opacity-100 transition-opacity"
+                      title={`Add task to ${meta.title}`}
+                    >
+                      <Plus className="size-3.5" />
+                    </button>
+                  </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto max-h-28 space-y-2 pr-1 custom-scrollbar">
+                <div className="flex-1 overflow-y-auto max-h-32 space-y-1.5 pr-1 custom-scrollbar">
                   {list.length === 0 ? (
-                    <div className="h-full flex items-center justify-center text-xs text-white/30 font-light italic">
-                      No tasks in this quadrant
+                    <div className="h-full flex items-center justify-center text-[11px] text-white/30 font-light italic">
+                      No tasks
                     </div>
                   ) : (
                     list.map((t) => (
                       <div
                         key={t.id}
-                        onClick={() => handleViewTask(t)}
-                        className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:border-white/20 hover:bg-white/10 transition-all cursor-pointer group"
+                        onClick={() => setSelectedTask(t)}
+                        className={`flex items-center p-2.5 rounded-lg border transition-all cursor-pointer ${
+                          selectedTask?.id === t.id
+                            ? "bg-white/10 border-white/20"
+                            : "bg-white/5 border-white/5 hover:border-white/15 hover:bg-white/8"
+                        }`}
                       >
-                        <div className="flex items-center gap-2 max-w-[80%]">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
                           <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleToggleComplete(t.id);
                             }}
-                            className="text-white/40 hover:text-white transition-colors"
+                            className="flex-none text-white/40 hover:text-white transition-colors cursor-pointer"
                           >
                             {t.completed ? (
-                              <CheckCircle className="size-4 text-emerald-400" />
+                              <CheckCircle className="size-3.5 text-emerald-400" />
                             ) : (
-                              <Circle className="size-4" />
+                              <Circle className="size-3.5" />
                             )}
                           </button>
                           <span
@@ -137,7 +294,6 @@ export const EisenMatrix = () => {
                             {t.title}
                           </span>
                         </div>
-                        <Eye className="size-3.5 text-white/0 group-hover:text-white/60 transition-opacity" />
                       </div>
                     ))
                   )}
@@ -147,110 +303,109 @@ export const EisenMatrix = () => {
           })}
         </div>
 
-        {/* All Tasks Table - Unified view matching Idea-Vault */}
-        <div className="w-full space-y-4 pt-4">
-          <div className="flex items-center gap-2 text-white/80">
-            <ClipboardList className="size-5" />
-            <h3 className="text-lg font-light">All Registered Tasks</h3>
-          </div>
+        {/* Right: Task Preview Panel */}
+        <div className="lg:col-span-5 w-full">
+          <AnimatePresence mode="wait">
+            {selectedTask ? (
+              <motion.div
+                key={selectedTask.id}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="p-6 rounded-xl border border-white/10 bg-black/30 backdrop-blur-md space-y-5 sticky top-6"
+              >
+                <div className="border-b border-white/5 pb-4 space-y-2">
+                  <div
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-white/10 text-[10px] font-medium ${quadrantMeta[selectedTask.quadrant].headerColor}`}
+                  >
+                    <Tag className="size-3" />
+                    {quadrantMeta[selectedTask.quadrant].title}
+                  </div>
+                  <h3 className="text-lg font-light text-white leading-relaxed">
+                    {selectedTask.title}
+                  </h3>
+                </div>
 
-          <div className="w-full border border-white/20 bg-white/10 backdrop-blur-xl rounded-lg overflow-hidden max-h-80 overflow-y-auto">
-            <table className="w-full table-fixed border-collapse text-white">
-              <thead className="sticky top-0 left-0 right-0 z-10 bg-black text-sm">
-                <tr>
-                  <th className="border border-white/20 px-4 py-2.5 text-left font-thin w-[45%]">
-                    Task
-                  </th>
-                  <th className="border border-white/20 px-4 py-2.5 text-left font-thin w-[20%]">
-                    Quadrant
-                  </th>
-                  <th className="border border-white/20 px-4 py-2.5 text-left font-thin w-[15%]">
-                    Status
-                  </th>
-                  <th className="border border-white/20 px-4 py-2.5 text-left font-thin w-[20%]">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-[11px] text-white/60">
+                    <Calendar className="size-3.5 flex-none" />
+                    <span className="font-light">Created on {selectedTask.createdOn}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-[11px]">
+                    {selectedTask.completed ? (
+                      <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/20 font-light">
+                        <CheckCircle className="size-3" />
+                        Completed
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 text-white/60 border border-white/10 font-light">
+                        <Circle className="size-3" />
+                        Active
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-white/40 font-light leading-relaxed">
+                    {quadrantMeta[selectedTask.quadrant].label}
+                  </p>
+                </div>
 
-              <tbody>
-                {tasks.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={4}
-                      className="border border-white/20 px-4 py-8 text-center text-white/50 font-light text-sm italic"
-                    >
-                      No tasks created yet.
-                    </td>
-                  </tr>
-                ) : (
-                  tasks.map((t) => (
-                    <tr
-                      key={t.id}
-                      className="hover:bg-white/5 transition group text-sm"
-                    >
-                      <td className="border border-white/20 px-4 py-2">
-                        <span
-                          className={`truncate block max-w-full font-light ${t.completed ? "line-through opacity-40" : ""}`}
-                        >
-                          {t.title}
-                        </span>
-                      </td>
-                      <td className="border border-white/20 px-4 py-2">
-                        <span className="text-white/70 font-light">
-                          {quadrantMeta[t.quadrant].badge}
-                        </span>
-                      </td>
-                      <td className="border border-white/20 px-4 py-2">
-                        <span
-                          className={`text-xs font-light px-2.5 py-0.5 rounded-full ${t.completed ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" : "bg-white/5 text-white/50 border border-white/10"}`}
-                        >
-                          {t.completed ? "Completed" : "Active"}
-                        </span>
-                      </td>
-                      <td className="border border-white/20 px-4 py-2">
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleViewTask(t)}
-                            className="inline-flex cursor-pointer hover:bg-white/10 transition-all duration-300 text-xs text-white items-center gap-1.5 border px-3 py-1 rounded-md bg-black/50 border-white/30"
-                          >
-                            <Eye className="size-3" />
-                            View
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                <div className="flex gap-3 pt-3 border-t border-white/5">
+                  <button
+                    onClick={() => handleToggleComplete(selectedTask.id)}
+                    className="cursor-pointer flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-light transition-all"
+                  >
+                    {selectedTask.completed ? (
+                      <>
+                        <Circle className="size-3" /> Mark Active
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className="size-3 text-emerald-400" /> Complete
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleDeleteTask(selectedTask.id);
+                      setSelectedTask(null);
+                    }}
+                    className="cursor-pointer flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-rose-500/20 bg-rose-500/5 hover:bg-rose-500/15 text-rose-300 text-xs font-light transition-all"
+                  >
+                    <Trash2 className="size-3" />
+                    Delete
+                  </button>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="p-6 rounded-xl border border-white/10 bg-black/30 backdrop-blur-md flex flex-col items-center justify-center min-h-[280px] text-center sticky top-6"
+              >
+                <Eye className="size-8 text-white/15 mb-3" />
+                <h4 className="text-sm font-light text-white/50">No task selected</h4>
+                <p className="text-[11px] text-white/30 font-light mt-1 max-w-[200px]">
+                  Click any task in the matrix to inspect its details here.
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
-      {/* Modals */}
-      {createModal && (
+      {/* Create Task Modal */}
+      {createTaskModal && (
         <CreateTaskModal
-          onClose={() => setCreateModal(false)}
+          onClose={() => setCreateTaskModal(false)}
           onSubmit={handleAddTask}
           state={{
-            title: newTitle,
-            setTitle: setNewTitle,
-            quadrant: newQuadrant,
-            setQuadrant: setNewQuadrant,
+            title: newTaskTitle,
+            setTitle: setNewTaskTitle,
+            quadrant: newTaskQuadrant,
+            setQuadrant: setNewTaskQuadrant,
           }}
-        />
-      )}
-
-      {viewModal && selectedTask && (
-        <ViewTaskModal
-          task={selectedTask}
-          onClose={() => {
-            setViewModal(false);
-            setSelectedTask(null);
-          }}
-          onDelete={handleDeleteTask}
-          onToggle={handleToggleComplete}
         />
       )}
     </div>
