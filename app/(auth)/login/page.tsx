@@ -1,16 +1,9 @@
-import React from 'react'
+import LoginView from "@/features/auth/components/login/LoginView";
 
-const LoginPage = () => {
-    return (
-        <>
-            <div className="mt-15">
-
-                <div>
-                    <h1 className='text-2xl text-white font-light tracking-tighter'>LoginPage</h1>
-                </div>
-            </div>
-        </>
-    )
+export default function LoginPage() {
+  return (
+    <div className="w-full min-h-screen">
+      <LoginView />
+    </div>
+  );
 }
-
-export default LoginPage

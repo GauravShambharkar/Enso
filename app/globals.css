@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import '@clerk/ui/themes/shadcn.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -154,21 +155,36 @@
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    font-family: instrument serif;
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   }
 }
 
 @font-face {
-  font-family: "bbh";
+  font-family: "sekuya";
   src: url("/Sekuya-Regular.ttf");
 }
 
-.bbh {
-  font-family: bbh;
+.sekuya {
+  font-family: sekuya;
 }
 
 * {
   scroll-behavior: smooth;
   scrollbar-width: thin;
-  scrollbar-color: rgb(75, 75, 75) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+

@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
-
+import { ClerkProvider, Show } from "@clerk/nextjs";
+import { dark, neobrutalism } from "@clerk/ui/themes";
+import { env } from "@/config/env.config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,11 +28,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <Navbar />
-        {children}
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <ClerkProvider
+          publishableKey={env.CLERK_PUBLISHABLE_KEY}
+          appearance={{ theme: dark }}
+          signInForceRedirectUrl="/tools"
+          signUpForceRedirectUrl="/tools"
+        >
+          <Show when="signed-out">
+            <Navbar />
+          </Show>
+          {children}
+        </ClerkProvider>
       </body>
     </html>
   );
 }
-
