@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/navbar";
-import { ClerkProvider, Show } from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import { dark, neobrutalism } from "@clerk/ui/themes";
 import { env } from "@/config/env.config";
 
@@ -27,9 +26,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ background: "#090909", colorScheme: "dark" }}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        style={{ background: "#090909", color: "#f0f0f0", backgroundImage: "none" }}
       >
         <ClerkProvider
           publishableKey={env.CLERK_PUBLISHABLE_KEY}
@@ -37,9 +37,6 @@ export default function RootLayout({
           signInForceRedirectUrl="/tools"
           signUpForceRedirectUrl="/tools"
         >
-          <Show when="signed-out">
-            <Navbar />
-          </Show>
           {children}
         </ClerkProvider>
       </body>

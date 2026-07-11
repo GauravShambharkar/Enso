@@ -1,113 +1,206 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Edit2, Eye, Plus } from "lucide-react"
-import View_idea from "./modal/View_idea"
-import { useState } from "react"
-import { ideas, Idea } from "@/utils/ideas"
-import Create_idea from "./modal/Create_idea"
-import { useIdeaVaultStore } from "@/store/ideaVault-Store/idea_vault_store"
+import React, { useState, useEffect, useRef } from "react";
+import { Trash2, ArrowUpRight, X, Plus } from "lucide-react";
 
-const Idea_Vault = () => {
-    const [viewModal, setViewModal] = useState(false)
-    const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null)
-    const { setCreateModal } = useIdeaVaultStore()
-
-    const handleViewIdea = (idea: Idea) => {
-        setSelectedIdea(idea)
-        setViewModal(true)
-    }
-
-    const closeViewModal = () => {
-        setViewModal(false)
-        setSelectedIdea(null)
-    }
-
-
-    return (
-        <>
-            <div className="flex flex-col h-screen gap-2 relative">
-                <div className="w-full ">
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className='text-4xl font-medium text-white'
-                    >Idea-Vault</motion.h1>
-                </div>
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.05 }}
-                    className="w-full text-white/70"
-                >dashboards</motion.div>
-
-                <div className="w-full h-full space-y-4">
-                    {/* create Button */}
-                    <div className="flex justify-end">
-                        <span onClick={() => setCreateModal(true)} className="cursor-pointer hover:bg-white/10 transition-all ease-in-out duration-300 text-white flex items-center gap-2 border px-2 py-0.5 pr-3 rounded-lg bg-black/50 border-white/30 shadow-sm shadow-white/30" >
-                            <Plus className="size-4" />
-                            Create
-                        </span>
-                    </div>
-
-                    {/* listing ideas */}
-                    <div className="w-full border border-white/20 bg-white/10 backdrop-blur-xl rounded-lg overflow-hidden max-h-120 overflow-y-auto">
-                        <table className="w-full table-fixed border-collapse text-white ">
-                            <thead className="sticky top-0 left-0 right-0 z-10 bg-black">
-                                <tr>
-                                    <th className="border border-white/20 px-3 rounded-tl-lg py-2 text-left font-thin">Title</th>
-                                    <th className="border border-white/20 px-3 py-2 text-left font-thin">Created On</th>
-                                    <th className="border border-white/20 px-3 py-2 text-left font-thin">Updated On</th>
-                                    <th className="border border-white/20 px-3 py-2 text-left font-thin">Actions</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {ideas.map((item) => (
-                                    <tr key={item.id} className="hover:bg-white/5 transition group">
-                                        <td className="border border-white/20 px-3 py-2">
-                                            <div className="flex items-center justify-between gap-2">
-                                                <span className="truncate text-sm">{item.idea}</span>
-                                                <Eye
-                                                    className={`size-4 stroke-1 transition-all ease-in-out duration-300 hover:stroke-2 hover:scale-110 cursor-pointer  hover:text-white ${viewModal && item.id === selectedIdea?.id ? "text-green-400" : "text-white/50"}`}
-                                                    onClick={() => {
-                                                        handleViewIdea(item)
-                                                        if (item.id === selectedIdea?.id) {
-                                                            setViewModal(!viewModal)
-                                                        }
-                                                    }}
-                                                />
-                                            </div>
-                                        </td>
-                                        <td className="border border-white/20 px-3 py-2 text-white/60 text-sm">
-                                            {item.createdOn}
-                                        </td>
-                                        <td className="border border-white/20 px-3 py-2 text-white/60 text-sm">
-                                            {item.updatedOn}
-                                        </td>
-                                        <td className="border border-white/20 px-3 py-2">
-                                            <span className="inline-flex cursor-pointer hover:bg-white/10 transition-all duration-300 text-sm text-white items-center gap-2 border px-2 py-0.5 rounded-md bg-black/50 border-white/30 shadow-xs shadow-white/30">
-                                                <Edit2 className="size-3" />
-                                                Edit
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {viewModal && <View_idea
-                    onClose={closeViewModal}
-                    idea={selectedIdea}
-                />}
-
-
-            </div>
-        </>
-    )
+interface Idea {
+  id: string;
+  text: string;
+  createdOn: string;
 }
 
-export default Idea_Vault
+const STORAGE_KEY = "enso_idea_vault";
+
+function loadIdeas(): Idea[] {
+  if (typeof window === "undefined") return [];
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveIdeas(ideas: Idea[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(ideas));
+}
+
+export default function Idea_Vault() {
+  const [ideas, setIdeas] = useState<Idea[]>([]);
+  const [draft, setDraft] = useState("");
+  const [selected, setSelected] = useState<Idea | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    setIdeas(loadIdeas());
+  }, []);
+
+  const addIdea = () => {
+    if (!draft.trim()) return;
+    const next: Idea = {
+      id: Date.now().toString(),
+      text: draft.trim(),
+      createdOn: new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }),
+    };
+    const updated = [next, ...ideas];
+    setIdeas(updated);
+    saveIdeas(updated);
+    setDraft("");
+    inputRef.current?.focus();
+  };
+
+  const deleteIdea = (id: string) => {
+    const updated = ideas.filter((i) => i.id !== id);
+    setIdeas(updated);
+    saveIdeas(updated);
+    if (selected?.id === id) setSelected(null);
+  };
+
+  return (
+    <div className="w-full px-6 md:px-10 py-8 h-screen flex flex-col overflow-hidden bg-background">
+      {/* Header */}
+      <div className="mb-7 flex-shrink-0">
+        <h1 className="text-[28px] font-medium text-foreground tracking-[-0.02em]">
+          Idea Vault
+        </h1>
+        <p className="text-[13px] text-neutral-500 mt-0.5">
+          {ideas.length === 0 ? "Capture your first idea on the right" : `${ideas.length} idea${ideas.length !== 1 ? "s" : ""}`}
+        </p>
+      </div>
+
+      {/* Responsive Grid Split: list at left, input/details at right */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-start flex-1 min-h-0 overflow-hidden">
+        
+        {/* Left Column: Idea List */}
+        <div className="lg:col-span-7 xl:col-span-8 min-w-0 w-full h-full flex flex-col overflow-hidden">
+          <p className="text-[11px] text-primary font-semibold uppercase tracking-[0.08em] mb-4 flex-shrink-0">
+            Saved Ideas
+          </p>
+          
+          {ideas.length === 0 ? (
+            <p className="text-[13px] text-neutral-500 font-light italic">
+              No ideas saved yet. Use the vault to capture thoughts.
+            </p>
+          ) : (
+            <div className="flex flex-col border-t border-border overflow-y-auto flex-1 pr-2.5">
+              {ideas.map((idea) => (
+                <div
+                  key={idea.id}
+                  className="flex items-start justify-between group py-3 border-b border-border"
+                >
+                  <button
+                    onClick={() => setSelected(idea)}
+                    className="flex-1 text-left cursor-pointer transition-colors duration-100 bg-none border-none p-0 text-[13px] leading-[1.55] font-sans text-muted-foreground hover:text-foreground"
+                    style={{
+                      color: selected?.id === idea.id ? "var(--text-1)" : undefined,
+                    }}
+                  >
+                    {idea.text.length > 120 ? idea.text.slice(0, 120) + "…" : idea.text}
+                  </button>
+
+                  <div className="flex items-center gap-3 ml-4 flex-none pt-0.5">
+                    <span className="text-[11px] text-neutral-500">{idea.createdOn}</span>
+                    <button
+                      onClick={() => setSelected(idea)}
+                      title="View"
+                      className="cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity text-neutral-500 hover:text-foreground bg-none border-none p-0.5"
+                    >
+                      <ArrowUpRight className="size-3.5" />
+                    </button>
+                    <button
+                      onClick={() => deleteIdea(idea.id)}
+                      title="Delete"
+                      className="cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity text-neutral-500 hover:text-destructive bg-none border-none p-0.5"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Capture Box OR Selected Details */}
+        <div className="lg:col-span-5 xl:col-span-4 w-full flex-shrink-0">
+          {selected ? (
+            /* Selected Idea Details Panel */
+            <div className="bg-card border border-border rounded-md p-5 flex flex-col">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-[11px] text-primary font-semibold uppercase tracking-[0.08em]">
+                  Idea Details
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setSelected(null)}
+                    title="Write a new idea"
+                    className="cursor-pointer flex items-center gap-1 text-[12px] bg-none border-none text-primary hover:underline font-sans"
+                  >
+                    <Plus className="size-3" /> New
+                  </button>
+                  <button
+                    onClick={() => setSelected(null)}
+                    className="cursor-pointer transition-colors duration-100 text-neutral-500 hover:text-foreground bg-none border-none p-0.5"
+                  >
+                    <X className="size-4" />
+                  </button>
+                </div>
+              </div>
+
+              <p className="text-[14px] text-foreground leading-[1.7] white-space-pre-wrap min-h-[120px] whitespace-pre-wrap">
+                {selected.text}
+              </p>
+
+              <div className="border-t border-border mt-5 pt-3 flex justify-between items-center">
+                <span className="text-[11px] text-neutral-500">
+                  Captured {selected.createdOn}
+                </span>
+                <button
+                  onClick={() => deleteIdea(selected.id)}
+                  className="text-[12px] px-2.5 py-1 rounded-md border border-destructive/30 bg-transparent text-destructive cursor-pointer hover:bg-destructive/10 transition-colors font-sans"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ) : (
+            /* Input / Capture Form */
+            <div className="bg-card border border-border rounded-md overflow-hidden focus-within:border-ring/30 transition-colors">
+              <div className="px-4 pt-3.5">
+                <p className="text-[11px] text-primary font-semibold uppercase tracking-[0.08em]">
+                  Capture new idea
+                </p>
+              </div>
+              <textarea
+                ref={inputRef}
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    addIdea();
+                  }
+                }}
+                placeholder="Write a thought... (Enter to save, Shift+Enter for newline)"
+                rows={5}
+                className="w-full bg-transparent border-none outline-none px-4 py-3 text-white/30 focus:text-white/80 text-[14px] leading-[1.6] resize-none font-sans"
+              />
+              <div className="flex items-center justify-between px-3 py-2 border-t border-border">
+                <p className="text-[11px] text-neutral-500">
+                  Enter to save · Shift+Enter for newline
+                </p>
+                <button
+                  onClick={addIdea}
+                  disabled={!draft.trim()}
+                  className="text-[12px] px-3 py-1 rounded-md border-none font-medium font-sans cursor-pointer disabled:cursor-not-allowed bg-foreground text-background disabled:bg-secondary disabled:text-neutral-500"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+      </div>
+    </div>
+  );
+}

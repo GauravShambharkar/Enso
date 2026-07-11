@@ -1,31 +1,34 @@
 import React from "react";
 import Link from "next/link";
-import { tools } from "@/utils/tools";
 
-const ToolsPage = () => {
+const TOOLS = [
+  { name: "Ikigai",       href: "/tools/ikigai",       desc: "Discover your reason for being." },
+  { name: "Idea Vault",   href: "/tools/idea-vault",   desc: "Capture and develop ideas." },
+  { name: "Eisen Matrix", href: "/tools/eisen-matrix", desc: "Prioritize tasks by urgency and importance." },
+];
+
+export default function ToolsPage() {
   return (
-    <div className="max-w-4xl">
-      <h1 className="text-3xl font-bold text-white mb-2">Tools</h1>
-      <p className="text-white/60 mb-8">Select a tool to get started.</p>
+    <div style={{ padding: "32px 40px", maxWidth: 600 }}>
+      <h1 style={{ fontSize: 28, fontWeight: 500, color: "var(--text-1)", letterSpacing: "-0.02em", marginBottom: 6 }}>
+        Tools
+      </h1>
+      <p style={{ fontSize: 13, color: "var(--text-3)", marginBottom: 32 }}>
+        Select a tool to get started.
+      </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {tools.map((tool) => (
+      <div style={{ borderTop: "1px solid var(--border)" }}>
+        {TOOLS.map(tool => (
           <Link
             key={tool.name}
             href={tool.href}
-            className={`bg-black/10 backdrop-blur-lg block p-6 rounded-xl border transition-all hover:scale-[1.02] hover:bg-opacity-20 ${tool.color}`}
+            style={{ display: "flex", alignItems: "baseline", gap: 40, padding: "18px 0", borderBottom: "1px solid var(--border)", textDecoration: "none" }}
           >
-            <h3 className="text-2xl  text-white font-medium mb-2">
-              {tool.name}
-            </h3>
-            <p className="text-sm opacity-80 text-white font-medium">
-              {tool.description}
-            </p>
+            <span style={{ fontSize: 14, color: "var(--text-1)", minWidth: 120, fontWeight: 450 }}>{tool.name}</span>
+            <span style={{ fontSize: 13, color: "var(--text-3)" }}>{tool.desc}</span>
           </Link>
         ))}
       </div>
     </div>
   );
-};
-
-export default ToolsPage;
+}

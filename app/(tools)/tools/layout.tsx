@@ -1,10 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import SideBar from '@/features/Tool-SideBar/SideBar';
-import Create_idea from '@/features/idea-vault/modal/Create_idea';
-import { useIdeaVaultStore } from '@/store/ideaVault-Store/idea_vault_store';
-
-
 
 const layout = ({
     children,
@@ -28,22 +24,15 @@ const layout = ({
             setIsCollapsed(true);
         }
     }, []);
-    const { createModal } = useIdeaVaultStore()
-
-
-
 
     return (
-        <div className="min-h-screen flex">
-            {/* Sidebar */}
+        <div className="min-h-screen flex" style={{ background: "var(--bg)" }}>
             <SideBar toggleCollapse={toggleCollapse} isCollapsed={isCollapsed} />
-
-            {/* Main Content */}
-            <main className={`flex-1 h-screen mt-0 transition-all ease-in-out duration-200 ${isCollapsed ? "ml-25" : "ml-64"}`} >
-                <div className="p-6 relative">
-                    {children}
-                    {createModal && <Create_idea/>}
-                </div>
+            <main
+                className={`flex-1 transition-[margin] duration-150 ease-out ${isCollapsed ? "ml-[52px]" : "ml-[216px]"}`}
+                style={{ minHeight: "100vh" }}
+            >
+                {children}
             </main>
         </div>
     )

@@ -3,12 +3,12 @@
 import React from "react";
 import { X } from "lucide-react";
 
-const quadrants = [
-  { key: "Q1", label: "Do First", color: "text-rose-300 border-rose-500/30 bg-rose-500/10" },
-  { key: "Q2", label: "Schedule", color: "text-blue-300 border-blue-500/30 bg-blue-500/10" },
-  { key: "Q3", label: "Delegate", color: "text-amber-300 border-amber-500/30 bg-amber-500/10" },
-  { key: "Q4", label: "Eliminate", color: "text-emerald-300 border-emerald-500/30 bg-emerald-500/10" },
-] as const;
+const QUADRANTS = [
+  { key: "Q1" as const, label: "Do First",  accent: "#f87171" },
+  { key: "Q2" as const, label: "Schedule",  accent: "#60a5fa" },
+  { key: "Q3" as const, label: "Delegate",  accent: "#fbbf24" },
+  { key: "Q4" as const, label: "Eliminate", accent: "#34d399" },
+];
 
 interface CreateTaskProps {
   onClose: () => void;
@@ -24,70 +24,75 @@ interface CreateTaskProps {
 export const CreateTaskModal = ({ onClose, onSubmit, state }: CreateTaskProps) => {
   return (
     <div
-      className="w-full h-full fixed inset-0 flex justify-center items-center bg-black/60 z-50 backdrop-blur-xs"
+      className="fixed inset-0 flex items-center justify-center bg-black/70 z-50 px-4"
       onClick={onClose}
     >
       <div
-        onClick={(e) => e.stopPropagation()}
-        className="w-[420px] p-6 rounded-xl border border-white/10 bg-[#0a0a0a]/95 backdrop-blur-xl"
+        onClick={e => e.stopPropagation()}
+        className="w-full max-w-[400px] bg-card border border-border rounded-md p-6 pb-5 flex flex-col"
       >
+        {/* Header */}
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-base text-white font-medium">New Task</h2>
-          <button onClick={onClose} className="text-white/30 hover:text-white transition-colors cursor-pointer">
+          <p className="text-[14px] font-medium text-foreground">New Task</p>
+          <button
+            onClick={onClose}
+            className="text-neutral-500 hover:text-foreground bg-transparent border-none cursor-pointer p-0.5"
+          >
             <X className="size-4" />
           </button>
         </div>
 
-        <div className="space-y-4">
-          {/* Task title */}
-          <input
-            type="text"
-            value={state.title}
-            onChange={(e) => state.setTitle(e.target.value)}
-            placeholder="What needs to be done?"
-            autoFocus
-            onKeyDown={(e) => e.key === "Enter" && state.title.trim() && onSubmit()}
-            className="w-full px-4 py-2.5 rounded-lg border border-white/10 bg-white/5 text-white placeholder:text-white/20 focus:outline-none focus:border-white/20 text-sm font-light transition-colors"
-          />
+        {/* Title input */}
+        <input
+          type="text"
+          value={state.title}
+          onChange={e => state.setTitle(e.target.value)}
+          placeholder="What needs to be done?"
+          autoFocus
+          onKeyDown={e => e.key === "Enter" && state.title.trim() && onSubmit()}
+          className="w-full bg-background border border-border rounded-md px-3 py-2.5 text-foreground text-[14px] outline-none mb-4 focus:border-ring/35 transition-colors font-sans"
+        />
 
-          {/* Quadrant selector */}
-          <div className="flex gap-2">
-            {quadrants.map(({ key, label, color }) => (
+        {/* Quadrant selector */}
+        <div className="flex gap-1.5 mb-5">
+          {QUADRANTS.map(({ key, label, accent }) => {
+            const active = state.quadrant === key;
+            return (
               <button
                 key={key}
-                type="button"
                 onClick={() => state.setQuadrant(key)}
-                className={`flex-1 py-1.5 rounded-lg border text-[10px] font-light transition-colors cursor-pointer ${
-                  state.quadrant === key
-                    ? color
-                    : "bg-white/5 border-white/8 text-white/40 hover:text-white/70"
+                className={`flex-1 py-1.5 px-1 rounded-md text-[11px] cursor-pointer font-sans transition-all border ${
+                  active
+                    ? ""
+                    : "border-border bg-transparent text-neutral-500 hover:text-muted-foreground"
                 }`}
+                style={{
+                  borderColor: active ? `${accent}40` : undefined,
+                  backgroundColor: active ? `${accent}15` : undefined,
+                  color: active ? accent : undefined,
+                }}
               >
                 {label}
               </button>
-            ))}
-          </div>
+            );
+          })}
+        </div>
 
-          {/* Actions */}
-          <div className="flex gap-3 justify-end pt-1">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 rounded-lg border border-white/10 text-white/50 hover:text-white hover:bg-white/5 transition-colors text-xs cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={onSubmit}
-              disabled={!state.title.trim()}
-              className={`px-5 py-2 rounded-lg text-xs transition-colors cursor-pointer ${
-                state.title.trim()
-                  ? "bg-white text-black hover:bg-white/90"
-                  : "bg-white/5 text-white/25 cursor-not-allowed"
-              }`}
-            >
-              Add Task
-            </button>
-          </div>
+        {/* Actions */}
+        <div className="flex gap-2 justify-end">
+          <button
+            onClick={onClose}
+            className="text-[12px] px-3.5 py-1.5 rounded-md border border-border bg-transparent text-muted-foreground cursor-pointer font-sans transition-colors hover:text-foreground"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onSubmit}
+            disabled={!state.title.trim()}
+            className="text-[12px] px-3.5 py-1.5 rounded-md border-none font-medium font-sans cursor-pointer disabled:cursor-not-allowed bg-foreground text-background disabled:bg-secondary disabled:text-neutral-500"
+          >
+            Add task
+          </button>
         </div>
       </div>
     </div>

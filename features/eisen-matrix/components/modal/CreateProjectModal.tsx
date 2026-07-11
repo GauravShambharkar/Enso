@@ -17,65 +17,67 @@ interface CreateProjectModalProps {
 export const CreateProjectModal = ({ onClose, onSubmit, state }: CreateProjectModalProps) => {
   return (
     <div
-      className="w-full h-full fixed inset-0 flex justify-center items-center bg-black/60 z-50 backdrop-blur-xs"
+      className="fixed inset-0 flex items-center justify-center bg-black/70 z-50 px-4"
       onClick={onClose}
     >
       <div
-        onClick={(e) => e.stopPropagation()}
-        className="w-[440px] p-7 rounded-xl border border-white/10 bg-[#0a0a0a]/95 backdrop-blur-xl"
+        onClick={e => e.stopPropagation()}
+        className="w-full max-w-[420px] bg-card border border-border rounded-md p-6 pb-5 flex flex-col"
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg text-white font-medium">New Matrix</h2>
-          <button onClick={onClose} className="text-white/30 hover:text-white transition-colors cursor-pointer">
+        <div className="flex items-center justify-between mb-5">
+          <p className="text-[14px] font-medium text-foreground">New Matrix</p>
+          <button
+            onClick={onClose}
+            className="text-neutral-500 hover:text-foreground bg-transparent border-none cursor-pointer p-0.5"
+          >
             <X className="size-4" />
           </button>
         </div>
 
-        {/* Form */}
-        <div className="space-y-5">
-          <div className="space-y-1.5">
-            <label className="text-white/50 text-xs">Name</label>
-            <input
-              type="text"
-              value={state.name}
-              onChange={(e) => state.setName(e.target.value)}
-              placeholder="Weekly Sprint, Product Launch..."
-              autoFocus
-              className="w-full px-4 py-2.5 rounded-lg border border-white/10 bg-white/5 text-white placeholder:text-white/20 focus:outline-none focus:border-white/20 text-sm font-light transition-colors"
-            />
-          </div>
+        {/* Name */}
+        <div className="mb-3.5">
+          <label className="text-[11px] text-neutral-500 block mb-1.5 font-sans font-medium uppercase tracking-[0.04em]">Name</label>
+          <input
+            type="text"
+            value={state.name}
+            onChange={e => state.setName(e.target.value)}
+            placeholder="Weekly sprint, product launch…"
+            autoFocus
+            onKeyDown={e => e.key === "Enter" && state.name.trim() && onSubmit()}
+            className="w-full bg-background border border-border rounded-md px-3 py-2.5 text-foreground text-[14px] outline-none focus:border-ring/35 transition-colors font-sans"
+          />
+        </div>
 
-          <div className="space-y-1.5">
-            <label className="text-white/50 text-xs">Purpose</label>
-            <textarea
-              value={state.purpose}
-              onChange={(e) => state.setPurpose(e.target.value)}
-              placeholder="What are you prioritizing?"
-              rows={2}
-              className="w-full px-4 py-2.5 rounded-lg border border-white/10 bg-white/5 text-white placeholder:text-white/20 focus:outline-none focus:border-white/20 text-sm font-light transition-colors resize-none"
-            />
-          </div>
+        {/* Purpose */}
+        <div className="mb-5">
+          <label className="text-[11px] text-neutral-500 block mb-1.5 font-sans font-medium uppercase tracking-[0.04em]">
+            Purpose <span className="text-neutral-500 opacity-60 lowercase font-normal">(optional)</span>
+          </label>
+          <textarea
+            value={state.purpose}
+            onChange={e => state.setPurpose(e.target.value)}
+            placeholder="What are you prioritizing?"
+            rows={2}
+            className="w-full bg-background border border-border rounded-md px-3 py-2.5 text-foreground text-[14px] outline-none resize-none focus:border-ring/35 transition-colors font-sans"
+          />
+        </div>
 
-          <div className="flex gap-3 pt-2 justify-end">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 rounded-lg border border-white/10 text-white/50 hover:text-white hover:bg-white/5 transition-colors text-xs cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={onSubmit}
-              disabled={!state.name.trim()}
-              className={`px-5 py-2 rounded-lg text-xs transition-colors cursor-pointer ${
-                state.name.trim()
-                  ? "bg-white text-black hover:bg-white/90"
-                  : "bg-white/5 text-white/25 cursor-not-allowed"
-              }`}
-            >
-              Create
-            </button>
-          </div>
+        {/* Actions */}
+        <div className="flex gap-2 justify-end">
+          <button
+            onClick={onClose}
+            className="text-[12px] px-3.5 py-1.5 rounded-md border border-border bg-transparent text-muted-foreground cursor-pointer font-sans transition-colors hover:text-foreground"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onSubmit}
+            disabled={!state.name.trim()}
+            className="text-[12px] px-3.5 py-1.5 rounded-md border-none font-medium font-sans cursor-pointer disabled:cursor-not-allowed bg-foreground text-background disabled:bg-secondary disabled:text-neutral-500"
+          >
+            Create
+          </button>
         </div>
       </div>
     </div>

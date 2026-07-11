@@ -1,170 +1,43 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
-import { CircleCheckIcon, CircleHelpIcon, CircleIcon } from "lucide-react";
-
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Button } from "./ui/button";
 import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
 
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-  {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-  },
-];
-
-const tools: { title: string; href: string; description: string }[] = [
-  {
-    title: "Ikigai",
-    href: "/tools/ikigai",
-    description: "Find your true passion and purpose with our ikigai tool.",
-  },
-  {
-    title: "Eisen Matrix",
-    href: "/tools/eisen-matrix",
-    description: "helps decide the priority of your tasks.",
-  },
-  {
-    title: "Idea Vault",
-    href: "/tools/idea-vault",
-    description: "Save and organize your ideas in one place.",
-  },
-]
-
-
 export function Navbar() {
-  const isMobile = useIsMobile();
-
   return (
-    <div className="flex fixed top-0 z-50 w-full h-15 items-center backdrop-blur-lg bg-background/5 px-6 py-3 font-light tracking-tight">
-      {/* Brand/Logo Section */}
-      <div className="flex-1 flex items-center">
-        <Link href="/" className="text-2xl text-[#977DD3] italic font-medium tracking-tighter sekuya">
-          Enso
-        </Link>
-      </div>
+    <header className="fixed top-0 left-0 right-0 h-[60px] flex items-center justify-between px-10 bg-transparent z-50">
+      {/* Brand */}
+      <Link
+        href="/"
+        className="sekuya text-lg leading-none text-[#0f2963] no-underline font-semibold"
+      >
+        Enso
+      </Link>
 
-      {/* Navigation Section (Centered) */}
-      <div className="flex-1 flex justify-center max-[450px]:hidden">
-        <NavigationMenu viewport={!isMobile} >
-          <NavigationMenuList className="flex-wrap gap-1">
-            <Show when="signed-out">
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  asChild
-                  className={navigationMenuTriggerStyle() + " font-medium tracking-normal"}
-                >
-                  <Link href="/">Home</Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  asChild
-                  className={navigationMenuTriggerStyle() + " font-medium tracking-normal"}
-                >
-                  <Link href="/docs">Docs</Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </Show>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                asChild
-                className={navigationMenuTriggerStyle() + " font-medium tracking-normal"}
-              >
-                <Link href="/tools">Tools</Link>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-      </div>
-
-      {/* Auth Section (End) */}
-      <div className="flex-1 flex items-center justify-end gap-3">
+      {/* Auth */}
+      <div className="flex items-center gap-3">
         <Show when="signed-out">
           <SignInButton mode="modal" forceRedirectUrl="/tools">
-            <Button variant="secondary" className="h-9 px-4 rounded-full text-xs font-light">
-              Login
-            </Button>
+            <button className="text-[13px] px-4 py-1.5 rounded-[6px] border border-[#0f2963]/15 bg-transparent text-[#0f2963] cursor-pointer font-medium transition-all hover:border-[#0f2963] hover:bg-[#0f2963]/2">
+              Sign in
+            </button>
           </SignInButton>
           <SignUpButton mode="modal" forceRedirectUrl="/tools">
-            <Button variant="default" className="h-9 px-4 rounded-full text-xs font-light bg-[#977DD3] hover:bg-[#977DD3]/80 text-white">
-              Sign Up
-            </Button>
+            <button className="text-[13px] px-4 py-1.5 rounded-[6px] border-none bg-[#0f2963] text-white cursor-pointer font-medium transition-opacity hover:opacity-90">
+              Get started
+            </button>
           </SignUpButton>
         </Show>
         <Show when="signed-in">
+          <Link
+            href="/tools"
+            className="text-[13px] px-4 py-1.5 rounded-[6px] border border-[#0f2963]/15 bg-[#0f2963] text-white no-underline cursor-pointer font-medium"
+          >
+            Go to tools
+          </Link>
           <UserButton />
         </Show>
       </div>
-    </div>
+    </header>
   );
 }
-
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <div>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </div>
-  );
-});
-ListItem.displayName = "ListItem";
