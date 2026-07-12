@@ -141,7 +141,7 @@ export const EisenMatrix = () => {
   /* ── Project list ── */
   if (!activeProject) {
     return (
-      <div className="px-6 md:px-10 py-8">
+      <div className="px-6 md:px-10 py-8 pb-24 md:pb-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -179,7 +179,7 @@ export const EisenMatrix = () => {
           </div>
         ) : (
           /* Project rows */
-          <div className="border-t border-border w-200">
+          <div className="border-t border-border w-full max-w-[800px]">
             {projects.map((p) => (
               <div
                 key={p.id}
@@ -238,7 +238,7 @@ export const EisenMatrix = () => {
 
   /* ── Project detail ── */
   return (
-    <div className="px-6 md:px-10 py-8">
+    <div className="px-6 md:px-10 py-8 pb-24 md:pb-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-7">
         <div className="flex items-center gap-3">
@@ -271,7 +271,7 @@ export const EisenMatrix = () => {
       {/* 2×2 grid + panel wrapper */}
       <div className="flex flex-col md:flex-row gap-6 items-start w-full">
         {/* Matrix grid */}
-        <div className="grid grid-cols-2 gap-px flex-1 bg-border border border-border rounded-md overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-px flex-1 bg-border border border-border rounded-md overflow-hidden">
           {(["Q1", "Q2", "Q3", "Q4"] as Q[]).map((q) => {
             const meta = Q_META[q];
             const tasks = qTasks(q);

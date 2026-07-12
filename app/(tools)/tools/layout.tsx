@@ -29,7 +29,7 @@ const layout = ({
         <div className="min-h-screen flex" style={{ background: "var(--bg)" }}>
             <SideBar toggleCollapse={toggleCollapse} isCollapsed={isCollapsed} />
             <main
-                className={`flex-1 transition-[margin] duration-150 ease-out ${isCollapsed ? "ml-[52px]" : "ml-[216px]"}`}
+                className={`flex-1 transition-[margin] duration-150 ease-out ml-0 pb-14 md:pb-0 ${isCollapsed ? "md:ml-[52px]" : "md:ml-[216px]"}`}
                 style={{ minHeight: "100vh" }}
             >
                 {children}

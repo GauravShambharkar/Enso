@@ -5,7 +5,7 @@ import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
 
 export function Navbar() {
   return (
-    <header className="fixed top-0 left-0 right-0 h-[60px] flex items-center justify-between px-10 bg-transparent z-50">
+    <header className="fixed top-0 left-0 right-0 h-[60px] flex items-center justify-between px-6 sm:px-10 bg-transparent z-50">
       {/* Brand */}
       <Link
         href="/"

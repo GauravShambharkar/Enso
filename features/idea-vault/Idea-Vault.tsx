@@ -133,7 +133,7 @@ export default function Idea_Vault() {
   };
 
   return (
-    <div className="w-full px-6 md:px-10 py-8 h-screen flex flex-col overflow-hidden bg-background">
+    <div className="w-full px-6 md:px-10 py-8 min-h-screen lg:h-screen flex flex-col overflow-y-auto lg:overflow-hidden bg-background pb-20 lg:pb-8">
       {/* Header */}
       <div className="mb-7 flex-shrink-0">
         <h1 className="text-[28px] font-medium text-foreground tracking-[-0.02em]">
@@ -145,10 +145,10 @@ export default function Idea_Vault() {
       </div>
 
       {/* Responsive Grid Split: list at left, input/details at right */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-start flex-1 min-h-0 overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-start flex-1 min-h-0">
         
         {/* Left Column: Idea List */}
-        <div className="lg:col-span-7 xl:col-span-8 min-w-0 w-full h-full flex flex-col overflow-hidden">
+        <div className="lg:col-span-7 xl:col-span-8 min-w-0 w-full h-auto lg:h-full flex flex-col lg:overflow-hidden">
           <p className="text-[11px] text-primary font-semibold uppercase tracking-[0.08em] mb-4 flex-shrink-0">
             Saved Ideas
           </p>
@@ -168,7 +168,7 @@ export default function Idea_Vault() {
               No ideas saved yet. Use the vault to capture thoughts.
             </p>
           ) : (
-            <div className="flex flex-col border-t border-border overflow-y-auto flex-1 pr-2.5">
+            <div className="flex flex-col border-t border-border overflow-y-auto max-h-[300px] lg:max-h-none lg:flex-1 pr-2.5">
               {ideas.map((idea) => (
                 <div
                   key={idea.id}

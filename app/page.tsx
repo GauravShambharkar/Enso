@@ -37,24 +37,24 @@ export default function Home() {
       <main>
         {/* Hero Section */}
         <section
-          className="relative h-screen flex flex-col items-center justify-start text-center px-6 pt-[150px]"
+          className="relative min-h-[90vh] md:h-screen flex flex-col items-center justify-start text-center px-6 pt-[120px] md:pt-[150px] max-[750px]:pt-[100px]"
           style={{
             backgroundImage:
               "linear-gradient(to bottom, rgba(252, 237, 217, 0.1) 60%, rgba(252, 237, 217, 0.95) 98%), url('/bgEnso2.png')",
             backgroundSize: "cover",
-            backgroundPosition: "center calc(100% + 180px)",
+            backgroundPosition: "center bottom",
             backgroundRepeat: "no-repeat",
           }}
         >
           <div className="max-w-[800px]">
             {/* Headline */}
-            <h1 className="text-[36px] tracking-tighter sm:text-[48px] md:text-[64px] font-medium text-[#0f2963] leading-[1.1] mb-5">
+            <h1 className="text-[32px] tracking-tighter sm:text-[48px] md:text-[64px] font-medium text-[#0f2963] leading-[1.15] sm:leading-[1.1] mb-5">
               Finding your focus in a<br />
               world full of noise.
             </h1>
 
             {/* Description */}
-            <p className="text-[15px] text-[#55688a] leading-[1.7] mb-8 max-w-[640px] mx-auto font-normal ">
+            <p className="text-[14px] sm:text-[15px] w-full text-[#55688a] leading-[1.6] sm:leading-[1.7] mb-8 max-w-[640px] mx-auto font-normal px-2 max-[750px]:text-[12px]">
               Enso is a quiet workspace designed for professionals who want to
               cultivate clarity.
               <br className="hidden sm:inline" />
@@ -82,7 +82,7 @@ export default function Home() {
               </Show>
             </div>
           </div>
-          
+
           {/* Bottom transition gradient overlay */}
           <div className="absolute bottom-0 left-0 right-0 h-[180px] bg-gradient-to-t from-[#FCEDD9] to-transparent pointer-events-none" />
         </section>
@@ -132,22 +132,22 @@ export default function Home() {
 
         {/* Footer Section with bgEnso.png */}
         <section
-          className="py-[120px] md:pb-20 px-6 text-center border-t border-[#0f2963]/8"
+          className="py-16 md:py-[120px] md:pb-20 px-6 text-center border-t border-[#0f2963]/8"
           style={{
             backgroundImage:
               "linear-gradient(to top, rgba(252, 237, 217, 0.95) 0%, rgba(252, 237, 217, 0.3) 100%), url('/bgEnso.png')",
             backgroundSize: "cover",
-            backgroundPosition: "center calc(100% + 180px)",
+            backgroundPosition: "center bottom",
             backgroundRepeat: "no-repeat",
           }}
         >
           <div className="max-w-[900px] mx-auto">
             {/* Call to action card */}
-            <div className="mb-[90px]">
-              <h2 className="text-[36px] font-medium text-[#0f2963] tracking-[-0.025em] mb-4">
+            <div className="mb-16 md:mb-[90px]">
+              <h2 className="text-[28px] sm:text-[36px] font-medium text-[#0f2963] tracking-[-0.025em] mb-4">
                 Align your life goals today.
               </h2>
-              <p className="text-[15px] text-[#55688a] leading-[1.6] mb-8 font-light">
+              <p className="text-[14px] sm:text-[15px] text-[#55688a] leading-[1.6] mb-8 font-light max-w-[600px] mx-auto px-2">
                 Start generating your Ikigai, capturing ideas, and prioritizing
                 tasks without noise.
               </p>
@@ -172,7 +172,7 @@ export default function Home() {
             </div>
 
             {/* Middle navigation grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-left border-t border-[#0f2963]/8 pt-[60px] pb-[60px] mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-left border-t border-[#0f2963]/8 pt-12 md:pt-[60px] pb-12 md:pb-[60px] mb-10">
               {/* Brand Profile */}
               <div>
                 <span className="sekuya text-lg text-[#0f2963] block mb-3">
@@ -267,7 +267,7 @@ export default function Home() {
             </div>
 
             {/* Bottom Copyright */}
-            <div className="border-t border-[#0f2963]/8 pt-8 flex justify-between items-center">
+            <div className="border-t border-[#0f2963]/8 pt-8 flex flex-col sm:flex-row gap-4 justify-between items-center text-center sm:text-left">
               <span className="text-[12px] text-[#55688a]">
                 &copy; {new Date().getFullYear()} Enso Workspace. All rights
                 reserved.
