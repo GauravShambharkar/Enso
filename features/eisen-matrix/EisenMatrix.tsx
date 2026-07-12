@@ -78,6 +78,8 @@ export const EisenMatrix = () => {
     activeProject?.tasks.find((t) => t.id === selectedTaskId) || null;
 
   const [editTitle, setEditTitle] = useState("");
+  const [selectedMobileQuadrant, setSelectedMobileQuadrant] = useState<Q>("Q1");
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const [quadrantTab, setQuadrantTab] = useState<
     Record<Q, "active" | "completed">
   >({
@@ -141,9 +143,9 @@ export const EisenMatrix = () => {
   /* ── Project list ── */
   if (!activeProject) {
     return (
-      <div className="px-6 md:px-10 py-8 pb-24 md:pb-8">
+      <div className="w-full px-6 md:px-10 py-8 pb-24 md:pb-8 bg-background">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between mb-8">
           <div>
             <h1 className="text-[28px] font-medium text-foreground tracking-[-0.02em]">
               Eisen Matrix
@@ -154,7 +156,7 @@ export const EisenMatrix = () => {
           </div>
           <button
             onClick={() => setCreateProjectModal(true)}
-            className="flex items-center gap-2 cursor-pointer text-[13px] px-3.5 py-1.5 rounded-md border border-border bg-secondary text-foreground transition-colors hover:border-border-hover font-sans font-medium"
+            className="flex items-center gap-2 cursor-pointer text-[13px] px-3.5 py-1.5 rounded-md border border-border bg-secondary text-foreground transition-colors hover:border-border-hover font-sans font-medium self-start sm:self-auto"
           >
             <Plus className="size-3.5" /> New matrix
           </button>
@@ -183,37 +185,40 @@ export const EisenMatrix = () => {
             {projects.map((p) => (
               <div
                 key={p.id}
-                className="flex items-center justify-between group py-3.5 border-b border-border"
+                className="flex flex-col sm:flex-row sm:items-center justify-between group py-3.5 border-b border-border gap-3 sm:gap-4"
               >
-                <div>
+                <div className="min-w-0 w-full sm:flex-1">
                   <p
                     onClick={() => handleOpenProject(p.id)}
-                    className="text-[14px] text-foreground font-medium cursor-pointer"
+                    className="text-[14px] text-foreground font-medium cursor-pointer hover:underline truncate"
                   >
                     {p.name}
                   </p>
                   {p.purpose && (
-                    <p className="text-[12px] text-neutral-500 mt-0.5 font-light">
-                      {p.purpose}
+                    <p className="text-[12px] text-neutral-500 mt-0.5 font-light truncate" title={p.purpose}>
+                      {p.purpose.length > 70 ? p.purpose.slice(0, 70) + "…" : p.purpose}
                     </p>
                   )}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 w-full sm:w-auto mt-1 sm:mt-0 flex-shrink-0">
                   <span className="text-[11px] text-neutral-500">
                     {p.tasks.length} task{p.tasks.length !== 1 ? "s" : ""}
                   </span>
-                  <button
-                    onClick={() => handleOpenProject(p.id)}
-                    className="text-[12px] px-3 py-1 rounded-md border border-border bg-transparent text-muted-foreground hover:text-foreground cursor-pointer transition-colors font-sans"
-                  >
-                    Open
-                  </button>
-                  <button
-                    onClick={() => handleDeleteProject(p.id)}
-                    className="cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity text-neutral-500 hover:text-destructive bg-none border-none p-1"
-                  >
-                    <Trash2 className="size-3.5" />
-                  </button>
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <button
+                      onClick={() => handleOpenProject(p.id)}
+                      className="text-[12px] px-3 py-1 rounded-md border border-border bg-transparent text-muted-foreground hover:text-foreground cursor-pointer transition-colors font-sans"
+                    >
+                      Open
+                    </button>
+                    <button
+                      onClick={() => handleDeleteProject(p.id)}
+                      className="cursor-pointer opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity text-neutral-500 hover:text-destructive bg-none border-none p-1 flex items-center justify-center"
+                      title="Delete matrix"
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -238,9 +243,9 @@ export const EisenMatrix = () => {
 
   /* ── Project detail ── */
   return (
-    <div className="px-6 md:px-10 py-8 pb-24 md:pb-8">
+    <div className="w-full px-6 md:px-10 py-8 pb-24 md:pb-8 bg-background">
       {/* Header */}
-      <div className="flex items-center justify-between mb-7">
+      <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between mb-7">
         <div className="flex items-center gap-3">
           <button
             onClick={handleBackToList}
@@ -268,10 +273,31 @@ export const EisenMatrix = () => {
         </button>
       </div>
 
+      {/* Mobile Quadrant Selector Tabs */}
+      <div className="flex md:hidden gap-1 bg-card p-1 rounded-md border border-border w-full mb-4 flex-shrink-0">
+        {(["Q1", "Q2", "Q3", "Q4"] as Q[]).map((q) => {
+          const meta = Q_META[q];
+          const active = selectedMobileQuadrant === q;
+          return (
+            <button
+              key={q}
+              onClick={() => setSelectedMobileQuadrant(q)}
+              className="flex-1 text-[10px] py-1.5 rounded-[4px] border-none cursor-pointer font-sans font-medium transition-colors text-center"
+              style={{
+                backgroundColor: active ? "var(--secondary)" : "transparent",
+                color: active ? meta.accent : "var(--text-3)",
+              }}
+            >
+              {meta.label}
+            </button>
+          );
+        })}
+      </div>
+
       {/* 2×2 grid + panel wrapper */}
       <div className="flex flex-col md:flex-row gap-6 items-start w-full">
         {/* Matrix grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px flex-1 bg-border border border-border rounded-md overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-px flex-1 min-w-0 w-full bg-border border border-border rounded-md overflow-hidden">
           {(["Q1", "Q2", "Q3", "Q4"] as Q[]).map((q) => {
             const meta = Q_META[q];
             const tasks = qTasks(q);
@@ -284,7 +310,9 @@ export const EisenMatrix = () => {
             return (
               <div
                 key={q}
-                className="bg-background p-4 md:p-5 h-[255px] md:h-[295px] flex flex-col overflow-hidden"
+                className={`bg-background p-4 md:p-5 h-[270px] md:h-[295px] flex-col overflow-hidden ${
+                  selectedMobileQuadrant === q ? "flex" : "hidden md:flex"
+                }`}
               >
                 {/* Quadrant header */}
                 <div className="flex items-center justify-between mb-2 flex-shrink-0">
@@ -353,7 +381,7 @@ export const EisenMatrix = () => {
                         onClick={() =>
                           setSelectedTask(selectedTask?.id === t.id ? null : t)
                         }
-                        className={`flex items-center gap-2 cursor-pointer group/task px-2 py-1.5 rounded-[5px] transition-colors ${
+                        className={`flex items-center gap-2 cursor-pointer group/task px-2 py-1.5 rounded-[5px] transition-colors min-w-0 ${
                           selectedTask?.id === t.id
                             ? "bg-secondary"
                             : "bg-transparent hover:bg-card"
@@ -365,7 +393,7 @@ export const EisenMatrix = () => {
                             e.stopPropagation();
                             handleToggleComplete(t.id);
                           }}
-                          className={`bg-none border-none p-0 cursor-pointer transition-colors ${
+                          className={`bg-none border-none p-0 cursor-pointer transition-colors flex-shrink-0 ${
                             t.completed
                               ? "text-success"
                               : "text-neutral-500 hover:text-foreground"
@@ -378,7 +406,7 @@ export const EisenMatrix = () => {
                           )}
                         </button>
                         <span
-                          className={`text-[12px] font-sans flex-1 leading-[1.4] transition-colors ${
+                          className={`text-[12px] font-sans flex-1 min-w-0 truncate leading-[1.4] transition-colors ${
                             t.completed
                               ? "text-neutral-500 line-through"
                               : "text-muted-foreground"
@@ -396,16 +424,23 @@ export const EisenMatrix = () => {
         </div>
 
         {/* Task detail panel wrapper */}
-        <div className="w-full md:w-[300px] flex-shrink-0 min-h-[320px]">
+        <div
+          onClick={() => setSelectedTask(null)}
+          className={selectedTask
+            ? "fixed inset-0 bg-background/85 backdrop-blur-xs z-50 flex items-center justify-center p-4 md:relative md:inset-auto md:bg-transparent md:backdrop-blur-none md:z-auto md:flex md:items-start md:p-0 w-full md:w-[300px] flex-shrink-0"
+            : "hidden md:block w-full md:w-[300px] flex-shrink-0 min-h-[320px]"
+          }
+        >
           <AnimatePresence mode="wait">
             {selectedTask ? (
               <motion.div
                 key={selectedTask.id}
+                onClick={(e) => e.stopPropagation()}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
                 transition={{ duration: 0.12 }}
-                className="w-full bg-card border border-border rounded-md p-[18px] md:p-5 flex flex-col min-h-[320px] h-full"
+                className="w-full max-w-[340px] md:max-w-none bg-card border border-border rounded-md p-[18px] md:p-5 flex flex-col min-h-[320px] h-auto md:h-full shadow-lg md:shadow-none"
               >
                 {/* Panel Header */}
                 <div className="flex items-start justify-between mb-3.5 flex-shrink-0">
@@ -432,12 +467,16 @@ export const EisenMatrix = () => {
                     type="text"
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
+                    onFocus={() => setIsInputFocused(true)}
                     onBlur={() => {
                       if (editTitle.trim() && editTitle !== selectedTask.title) {
                         handleUpdateTask(selectedTask.id, {
                           title: editTitle.trim(),
                         });
                       }
+                      setTimeout(() => {
+                        setIsInputFocused(false);
+                      }, 180);
                     }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && editTitle.trim()) {
@@ -447,7 +486,7 @@ export const EisenMatrix = () => {
                     className="w-full bg-background border border-border rounded-md pl-3 pr-9 py-2 text-foreground text-[13px] outline-none focus:border-ring/35 transition-colors font-sans"
                     placeholder="Enter task title..."
                   />
-                  {editTitle.trim() !== selectedTask.title && (
+                  {isInputFocused && editTitle.trim() !== selectedTask.title && (
                     <button
                       onClick={() => {
                         if (editTitle.trim()) {
@@ -551,7 +590,10 @@ export const EisenMatrix = () => {
       {createTaskModal && (
         <CreateTaskModal
           onClose={() => setCreateTaskModal(false)}
-          onSubmit={handleAddTask}
+          onSubmit={() => {
+            setSelectedMobileQuadrant(newTaskQuadrant);
+            handleAddTask();
+          }}
           state={{
             title: newTaskTitle,
             setTitle: setNewTaskTitle,

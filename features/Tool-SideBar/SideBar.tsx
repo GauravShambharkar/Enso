@@ -22,6 +22,26 @@ export default function SideBar({ isCollapsed, toggleCollapse }: SideBarProps) {
 
   return (
     <>
+      {/* Mobile Top Header */}
+      <header
+        style={{
+          background: "var(--surface)",
+          borderBottom: "1px solid var(--border)",
+        }}
+        className="flex md:hidden fixed top-0 left-0 right-0 h-12 items-center justify-between px-4 z-50 shadow-xs"
+      >
+        <Link
+          href="/"
+          className="sekuya text-lg leading-none no-underline"
+          style={{ color: "var(--accent-text)" }}
+        >
+          Enso
+        </Link>
+        <div className="flex items-center">
+          <UserButton />
+        </div>
+      </header>
+
       {/* Desktop SideBar */}
       <aside
         style={{
@@ -140,9 +160,6 @@ export default function SideBar({ isCollapsed, toggleCollapse }: SideBarProps) {
             </Link>
           );
         })}
-        <div className="flex items-center justify-center flex-1 py-1">
-          <UserButton />
-        </div>
       </div>
     </>
   );

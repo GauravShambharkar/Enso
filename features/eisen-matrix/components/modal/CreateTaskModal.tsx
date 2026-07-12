@@ -54,14 +54,14 @@ export const CreateTaskModal = ({ onClose, onSubmit, state }: CreateTaskProps) =
         />
 
         {/* Quadrant selector */}
-        <div className="flex gap-1.5 mb-5">
+        <div className="grid grid-cols-2 gap-1.5 mb-5">
           {QUADRANTS.map(({ key, label, accent }) => {
             const active = state.quadrant === key;
             return (
               <button
                 key={key}
                 onClick={() => state.setQuadrant(key)}
-                className={`flex-1 py-1.5 px-1 rounded-md text-[11px] cursor-pointer font-sans transition-all border ${
+                className={`py-1.5 px-1 rounded-md text-[11px] cursor-pointer font-sans transition-all border ${
                   active
                     ? ""
                     : "border-border bg-transparent text-neutral-500 hover:text-muted-foreground"

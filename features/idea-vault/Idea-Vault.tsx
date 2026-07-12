@@ -36,6 +36,7 @@ export default function Idea_Vault() {
   const selected = ideas.find((i) => i.id === selectedId) || null;
 
   const [editIdeaText, setEditIdeaText] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     if (selected) {
@@ -215,14 +216,9 @@ export default function Idea_Vault() {
               <div className="flex items-center justify-between mb-4">
                 <p className="text-[11px] text-primary font-semibold uppercase tracking-[0.08em] flex items-center gap-2">
                   Idea Details
-                  {editIdeaText.trim() !== selected.text && (
-                    <span className="text-[10px] text-amber-500 lowercase font-normal italic animate-pulse">
-                      (edited)
-                    </span>
-                  )}
                 </p>
                 <div className="flex gap-3 items-center">
-                  {editIdeaText.trim() !== selected.text && (
+                  {isFocused && editIdeaText.trim() !== selected.text && (
                     <button
                       onClick={() => handleUpdateIdea(selected.id, editIdeaText.trim())}
                       className="cursor-pointer text-[12px] bg-none border-none text-emerald-500 hover:underline font-sans flex items-center gap-1 font-medium"
@@ -250,10 +246,14 @@ export default function Idea_Vault() {
               <textarea
                 value={editIdeaText}
                 onChange={(e) => setEditIdeaText(e.target.value)}
+                onFocus={() => setIsFocused(true)}
                 onBlur={() => {
                   if (editIdeaText.trim() && editIdeaText !== selected.text) {
                     handleUpdateIdea(selected.id, editIdeaText.trim());
                   }
+                  setTimeout(() => {
+                    setIsFocused(false);
+                  }, 180);
                 }}
                 placeholder="Edit your idea..."
                 rows={6}
