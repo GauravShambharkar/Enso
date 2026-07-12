@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Trash2, ArrowUpRight, X, Plus } from "lucide-react";
+import { Trash2, ArrowUpRight, X, Plus, Check } from "lucide-react";
 import { useQueryState } from "nuqs";
 
 interface Idea {
@@ -34,6 +34,35 @@ export default function Idea_Vault() {
   // Sync selected idea ID with URL query parameter using nuqs
   const [selectedId, setSelectedId] = useQueryState("ideaId", { defaultValue: "" });
   const selected = ideas.find((i) => i.id === selectedId) || null;
+
+  const [editIdeaText, setEditIdeaText] = useState("");
+
+  useEffect(() => {
+    if (selected) {
+      setEditIdeaText(selected.text);
+    }
+  }, [selected?.id]);
+
+  const handleUpdateIdea = async (id: string, updatedText: string) => {
+    const updated = ideas.map((i) => (i.id === id ? { ...i, text: updatedText } : i));
+    setIdeas(updated);
+
+    const targetIdea = updated.find((i) => i.id === id);
+    if (targetIdea) {
+      try {
+        const response = await fetch("/api/ideas", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(targetIdea),
+        });
+        if (!response.ok) {
+          saveIdeasToLocalStorage(updated);
+        }
+      } catch {
+        saveIdeasToLocalStorage(updated);
+      }
+    }
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -184,10 +213,24 @@ export default function Idea_Vault() {
             /* Selected Idea Details Panel */
             <div className="bg-card border border-border rounded-md p-5 flex flex-col">
               <div className="flex items-center justify-between mb-4">
-                <p className="text-[11px] text-primary font-semibold uppercase tracking-[0.08em]">
+                <p className="text-[11px] text-primary font-semibold uppercase tracking-[0.08em] flex items-center gap-2">
                   Idea Details
+                  {editIdeaText.trim() !== selected.text && (
+                    <span className="text-[10px] text-amber-500 lowercase font-normal italic animate-pulse">
+                      (edited)
+                    </span>
+                  )}
                 </p>
-                <div className="flex gap-3">
+                <div className="flex gap-3 items-center">
+                  {editIdeaText.trim() !== selected.text && (
+                    <button
+                      onClick={() => handleUpdateIdea(selected.id, editIdeaText.trim())}
+                      className="cursor-pointer text-[12px] bg-none border-none text-emerald-500 hover:underline font-sans flex items-center gap-1 font-medium"
+                      title="Save changes"
+                    >
+                      <Check className="size-3.5" /> Save
+                    </button>
+                  )}
                   <button
                     onClick={() => setSelectedId(null)}
                     title="Write a new idea"
@@ -204,9 +247,18 @@ export default function Idea_Vault() {
                 </div>
               </div>
 
-              <p className="text-[14px] text-foreground leading-[1.7] min-h-[120px] whitespace-pre-wrap">
-                {selected.text}
-              </p>
+              <textarea
+                value={editIdeaText}
+                onChange={(e) => setEditIdeaText(e.target.value)}
+                onBlur={() => {
+                  if (editIdeaText.trim() && editIdeaText !== selected.text) {
+                    handleUpdateIdea(selected.id, editIdeaText.trim());
+                  }
+                }}
+                placeholder="Edit your idea..."
+                rows={6}
+                className="w-full bg-background border border-border rounded-md px-3.5 py-3 text-foreground text-[14px] leading-[1.7] resize-none outline-none focus:border-ring/35 transition-colors font-sans min-h-[140px]"
+              />
 
               <div className="border-t border-border mt-5 pt-3 flex justify-between items-center">
                 <span className="text-[11px] text-neutral-500">
