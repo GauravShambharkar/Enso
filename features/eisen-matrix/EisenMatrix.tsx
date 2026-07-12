@@ -11,6 +11,7 @@ import {
   Trash2,
   X,
   Calendar,
+  Check,
 } from "lucide-react";
 import { useEisenProjects } from "./hooks/controller/useEisenProjects";
 import { useEisenTasks } from "./hooks/controller/useEisenTasks";
@@ -426,25 +427,42 @@ export const EisenMatrix = () => {
                 <label className="text-[10px] text-neutral-500 block mb-1.5 uppercase font-medium tracking-[0.04em] flex-shrink-0">
                   Task Title
                 </label>
-                <input
-                  type="text"
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                  onBlur={() => {
-                    if (editTitle.trim() && editTitle !== selectedTask.title) {
-                      handleUpdateTask(selectedTask.id, {
-                        title: editTitle.trim(),
-                      });
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && editTitle.trim()) {
-                      e.currentTarget.blur();
-                    }
-                  }}
-                  className="w-full bg-background border border-border rounded-md px-3 py-2 text-foreground text-[13px] outline-none mb-4 focus:border-ring/35 transition-colors font-sans flex-shrink-0"
-                  placeholder="Enter task title..."
-                />
+                <div className="relative flex items-center mb-4 flex-shrink-0">
+                  <input
+                    type="text"
+                    value={editTitle}
+                    onChange={(e) => setEditTitle(e.target.value)}
+                    onBlur={() => {
+                      if (editTitle.trim() && editTitle !== selectedTask.title) {
+                        handleUpdateTask(selectedTask.id, {
+                          title: editTitle.trim(),
+                        });
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && editTitle.trim()) {
+                        e.currentTarget.blur();
+                      }
+                    }}
+                    className="w-full bg-background border border-border rounded-md pl-3 pr-9 py-2 text-foreground text-[13px] outline-none focus:border-ring/35 transition-colors font-sans"
+                    placeholder="Enter task title..."
+                  />
+                  {editTitle.trim() !== selectedTask.title && (
+                    <button
+                      onClick={() => {
+                        if (editTitle.trim()) {
+                          handleUpdateTask(selectedTask.id, {
+                            title: editTitle.trim(),
+                          });
+                        }
+                      }}
+                      className="absolute right-2.5 text-neutral-500 hover:text-foreground cursor-pointer transition-colors bg-none border-none p-0.5"
+                      title="Save Title"
+                    >
+                      <Check className="size-4 text-emerald-500" />
+                    </button>
+                  )}
+                </div>
 
                 {/* Priority Quadrant Selector */}
                 <div className="mb-4 flex-shrink-0">
