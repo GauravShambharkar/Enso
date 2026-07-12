@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, Plus, RotateCcw, Trash2, Eye, Compass, List, Sparkles } from "lucide-react";
+import { useQueryState } from "nuqs";
 import { useIkigai } from "./hooks/controller/useIkigai.hook";
 import type { IkigaiProfile } from "./hooks/controller/useIkigai.hook";
 
@@ -57,9 +58,13 @@ export const Ikigai = () => {
   const {
     profiles,
     activeProfile,
+    setActiveProfile,
     activeMode,
+    setActiveMode,
     inputs,
+    setInputs,
     error,
+    isLoading,
     handleInputChange,
     handleDiscoverClick,
     handleViewProfile,
@@ -67,8 +72,14 @@ export const Ikigai = () => {
     handleSubmit,
   } = useIkigai();
 
-  const [activeTab, setActiveTab] = useState<"discover" | "view" | "profiles">("view");
-  const [activeSegment, setActiveSegment] = useState<SegKey>("ikigai");
+  // Sync activeTab and activeSegment to URL query state using nuqs
+  const [tabState, setTabState] = useQueryState("tab", { defaultValue: "view" });
+  const activeTab = (tabState || "view") as "discover" | "view" | "profiles";
+  const setActiveTab = (tab: "discover" | "view" | "profiles" | null) => setTabState(tab);
+
+  const [segmentState, setSegmentState] = useQueryState("segment", { defaultValue: "ikigai" });
+  const activeSegment = (segmentState || "ikigai") as SegKey;
+  const setActiveSegment = (seg: SegKey | null) => setSegmentState(seg);
 
   // Sync mode transitions with tabs
   useEffect(() => {
@@ -102,6 +113,37 @@ export const Ikigai = () => {
       default:           return activeProfile.result.ikigaiSummary;
     }
   };
+
+  if (isLoading) {
+    /* Full Page Skeleton Loader */
+    return (
+      <div className="w-full px-6 md:px-10 py-8 bg-background min-h-screen">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-border pb-4 animate-pulse">
+          <div>
+            <div className="h-8 bg-secondary rounded-sm w-48 mb-2" />
+            <div className="h-4 bg-secondary rounded-sm w-80" />
+          </div>
+          <div className="h-8 bg-secondary rounded-sm w-64 self-start" />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start mt-8 animate-pulse">
+          <div className="lg:col-span-5 flex flex-col items-center w-full">
+            <div className="w-72 h-72 rounded-full bg-secondary" />
+          </div>
+          <div className="lg:col-span-7 w-full flex flex-col gap-4">
+            <div className="h-6 bg-secondary rounded w-32 mb-4" />
+            <div className="h-4 bg-secondary rounded w-full" />
+            <div className="h-4 bg-secondary rounded w-full" />
+            <div className="h-4 bg-secondary rounded w-2/3" />
+            <div className="h-px bg-border my-6" />
+            <div className="grid grid-cols-2 gap-8">
+              <div className="h-20 bg-secondary rounded" />
+              <div className="h-20 bg-secondary rounded" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full px-6 md:px-10 py-8 bg-background">
@@ -271,6 +313,7 @@ export const Ikigai = () => {
             <SavedProfilesTab
               profiles={profiles}
               activeId={activeProfile?.id}
+              isLoading={isLoading}
               onView={(p) => {
                 handleViewProfile(p);
                 setActiveTab("view");
@@ -424,14 +467,34 @@ function LoadingState() {
 function SavedProfilesTab({
   profiles,
   activeId,
+  isLoading,
   onView,
   onDelete,
 }: {
   profiles: IkigaiProfile[];
   activeId: string | undefined;
+  isLoading: boolean;
   onView: (p: IkigaiProfile) => void;
   onDelete: (id: string) => void;
 }) {
+  if (isLoading) {
+    return (
+      <div>
+        <p className="text-[11px] text-primary font-semibold uppercase tracking-[0.08em] mb-4">
+          Historical Discoveries
+        </p>
+        <div className="flex flex-col gap-3 border-t border-border/60 py-3 pr-2.5">
+          {[1, 2, 3].map((n) => (
+            <div key={n} className="flex items-center justify-between py-3 border-b border-border/40 animate-pulse">
+              <div className="h-4 bg-secondary rounded-sm w-1/2" />
+              <div className="h-3 bg-secondary rounded-sm w-16" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   if (profiles.length === 0) {
     return (
       <div className="py-10 text-left">

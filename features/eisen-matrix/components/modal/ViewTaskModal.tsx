@@ -2,7 +2,7 @@
 
 import React from "react";
 import { X, Trash2, CheckCircle, Circle } from "lucide-react";
-import { EisenTask } from "../../hooks/controller/useEisenMatrix.hook";
+import { EisenTask } from "../../hooks/controller/useEisenProjects";
 
 interface ViewTaskProps {
   task: EisenTask | null;

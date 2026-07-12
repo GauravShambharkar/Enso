@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Trash2, ArrowUpRight, X, Plus } from "lucide-react";
+import { useQueryState } from "nuqs";
 
 interface Idea {
   id: string;
@@ -11,7 +12,7 @@ interface Idea {
 
 const STORAGE_KEY = "enso_idea_vault";
 
-function loadIdeas(): Idea[] {
+function loadIdeasFromLocalStorage(): Idea[] {
   if (typeof window === "undefined") return [];
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
@@ -20,39 +21,86 @@ function loadIdeas(): Idea[] {
   }
 }
 
-function saveIdeas(ideas: Idea[]) {
+function saveIdeasToLocalStorage(ideas: Idea[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(ideas));
 }
 
 export default function Idea_Vault() {
   const [ideas, setIdeas] = useState<Idea[]>([]);
   const [draft, setDraft] = useState("");
-  const [selected, setSelected] = useState<Idea | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  // Sync selected idea ID with URL query parameter using nuqs
+  const [selectedId, setSelectedId] = useQueryState("ideaId", { defaultValue: "" });
+  const selected = ideas.find((i) => i.id === selectedId) || null;
+
   useEffect(() => {
-    setIdeas(loadIdeas());
+    async function loadData() {
+      setIsLoading(true);
+      try {
+        const response = await fetch("/api/ideas");
+        if (response.ok) {
+          const res = await response.json();
+          if (res.success && res.data) {
+            setIdeas(res.data as Idea[]);
+          } else {
+            setIdeas(loadIdeasFromLocalStorage());
+          }
+        } else {
+          setIdeas(loadIdeasFromLocalStorage());
+        }
+      } catch {
+        setIdeas(loadIdeasFromLocalStorage());
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadData();
   }, []);
 
-  const addIdea = () => {
+  const handleAddIdea = async () => {
     if (!draft.trim()) return;
     const next: Idea = {
       id: Date.now().toString(),
       text: draft.trim(),
       createdOn: new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }),
     };
+    
     const updated = [next, ...ideas];
     setIdeas(updated);
-    saveIdeas(updated);
     setDraft("");
     inputRef.current?.focus();
+
+    try {
+      const response = await fetch("/api/ideas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(next),
+      });
+      if (!response.ok) {
+        saveIdeasToLocalStorage(updated);
+      }
+    } catch {
+      saveIdeasToLocalStorage(updated);
+    }
   };
 
-  const deleteIdea = (id: string) => {
+  const handleDeleteIdea = async (id: string) => {
     const updated = ideas.filter((i) => i.id !== id);
     setIdeas(updated);
-    saveIdeas(updated);
-    if (selected?.id === id) setSelected(null);
+    if (selectedId === id) setSelectedId(null);
+
+    try {
+      const response = await fetch(`/api/ideas?id=${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        saveIdeasToLocalStorage(updated);
+      }
+    } catch {
+      saveIdeasToLocalStorage(updated);
+    }
   };
 
   return (
@@ -63,7 +111,7 @@ export default function Idea_Vault() {
           Idea Vault
         </h1>
         <p className="text-[13px] text-neutral-500 mt-0.5">
-          {ideas.length === 0 ? "Capture your first idea on the right" : `${ideas.length} idea${ideas.length !== 1 ? "s" : ""}`}
+          {isLoading ? "Syncing database..." : ideas.length === 0 ? "Capture your first idea on the right" : `${ideas.length} idea${ideas.length !== 1 ? "s" : ""}`}
         </p>
       </div>
 
@@ -76,7 +124,17 @@ export default function Idea_Vault() {
             Saved Ideas
           </p>
           
-          {ideas.length === 0 ? (
+          {isLoading ? (
+            /* Skeleton Loading State */
+            <div className="flex flex-col gap-3 border-t border-border/60 py-3 pr-2.5">
+              {[1, 2, 3, 4].map((n) => (
+                <div key={n} className="flex items-center justify-between py-3 border-b border-border/40 animate-pulse">
+                  <div className="h-4 bg-secondary rounded-sm w-3/5" />
+                  <div className="h-3 bg-secondary rounded-sm w-12" />
+                </div>
+              ))}
+            </div>
+          ) : ideas.length === 0 ? (
             <p className="text-[13px] text-neutral-500 font-light italic">
               No ideas saved yet. Use the vault to capture thoughts.
             </p>
@@ -88,10 +146,10 @@ export default function Idea_Vault() {
                   className="flex items-start justify-between group py-3 border-b border-border"
                 >
                   <button
-                    onClick={() => setSelected(idea)}
+                    onClick={() => setSelectedId(idea.id)}
                     className="flex-1 text-left cursor-pointer transition-colors duration-100 bg-none border-none p-0 text-[13px] leading-[1.55] font-sans text-muted-foreground hover:text-foreground"
                     style={{
-                      color: selected?.id === idea.id ? "var(--text-1)" : undefined,
+                      color: selectedId === idea.id ? "var(--text-1)" : undefined,
                     }}
                   >
                     {idea.text.length > 120 ? idea.text.slice(0, 120) + "…" : idea.text}
@@ -100,14 +158,14 @@ export default function Idea_Vault() {
                   <div className="flex items-center gap-3 ml-4 flex-none pt-0.5">
                     <span className="text-[11px] text-neutral-500">{idea.createdOn}</span>
                     <button
-                      onClick={() => setSelected(idea)}
+                      onClick={() => setSelectedId(idea.id)}
                       title="View"
                       className="cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity text-neutral-500 hover:text-foreground bg-none border-none p-0.5"
                     >
                       <ArrowUpRight className="size-3.5" />
                     </button>
                     <button
-                      onClick={() => deleteIdea(idea.id)}
+                      onClick={() => handleDeleteIdea(idea.id)}
                       title="Delete"
                       className="cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity text-neutral-500 hover:text-destructive bg-none border-none p-0.5"
                     >
@@ -131,14 +189,14 @@ export default function Idea_Vault() {
                 </p>
                 <div className="flex gap-3">
                   <button
-                    onClick={() => setSelected(null)}
+                    onClick={() => setSelectedId(null)}
                     title="Write a new idea"
                     className="cursor-pointer flex items-center gap-1 text-[12px] bg-none border-none text-primary hover:underline font-sans"
                   >
                     <Plus className="size-3" /> New
                   </button>
                   <button
-                    onClick={() => setSelected(null)}
+                    onClick={() => setSelectedId(null)}
                     className="cursor-pointer transition-colors duration-100 text-neutral-500 hover:text-foreground bg-none border-none p-0.5"
                   >
                     <X className="size-4" />
@@ -146,7 +204,7 @@ export default function Idea_Vault() {
                 </div>
               </div>
 
-              <p className="text-[14px] text-foreground leading-[1.7] white-space-pre-wrap min-h-[120px] whitespace-pre-wrap">
+              <p className="text-[14px] text-foreground leading-[1.7] min-h-[120px] whitespace-pre-wrap">
                 {selected.text}
               </p>
 
@@ -155,7 +213,7 @@ export default function Idea_Vault() {
                   Captured {selected.createdOn}
                 </span>
                 <button
-                  onClick={() => deleteIdea(selected.id)}
+                  onClick={() => handleDeleteIdea(selected.id)}
                   className="text-[12px] px-2.5 py-1 rounded-md border border-destructive/30 bg-transparent text-destructive cursor-pointer hover:bg-destructive/10 transition-colors font-sans"
                 >
                   Delete
@@ -177,7 +235,7 @@ export default function Idea_Vault() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
-                    addIdea();
+                    handleAddIdea();
                   }
                 }}
                 placeholder="Write a thought... (Enter to save, Shift+Enter for newline)"
@@ -189,7 +247,7 @@ export default function Idea_Vault() {
                   Enter to save · Shift+Enter for newline
                 </p>
                 <button
-                  onClick={addIdea}
+                  onClick={handleAddIdea}
                   disabled={!draft.trim()}
                   className="text-[12px] px-3 py-1 rounded-md border-none font-medium font-sans cursor-pointer disabled:cursor-not-allowed bg-foreground text-background disabled:bg-secondary disabled:text-neutral-500"
                 >

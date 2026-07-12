@@ -82,6 +82,9 @@ export default function Home() {
               </Show>
             </div>
           </div>
+          
+          {/* Bottom transition gradient overlay */}
+          <div className="absolute bottom-0 left-0 right-0 h-[180px] bg-gradient-to-t from-[#FCEDD9] to-transparent pointer-events-none" />
         </section>
 
         {/* Feature Grid Section */}

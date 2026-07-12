@@ -26,7 +26,7 @@ ideas.md
 # misc
 .DS_Store
 *.pem
-
+ensoFirebase.json
 # debug
 npm-debug.log*
 yarn-debug.log*

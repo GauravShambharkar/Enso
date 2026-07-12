@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useQueryState } from "nuqs";
 import {
   Plus,
   ArrowLeft,
@@ -11,7 +12,12 @@ import {
   X,
   Calendar,
 } from "lucide-react";
-import { useEisenMatrix } from "./hooks/controller/useEisenMatrix.hook";
+import { useEisenProjects } from "./hooks/controller/useEisenProjects";
+import { useEisenTasks } from "./hooks/controller/useEisenTasks";
+import type {
+  EisenTask,
+  EisenProject,
+} from "./hooks/controller/useEisenProjects";
 import CreateProjectModal from "./components/modal/CreateProjectModal";
 import CreateTaskModal from "./components/modal/CreateTaskModal";
 
@@ -31,34 +37,105 @@ type Q = keyof typeof Q_META;
 
 /* ─── Main ──────────────────────────────────────────── */
 export const EisenMatrix = () => {
+  // Sync activeProjectId and selectedTaskId to URL query parameters using nuqs
+  const [activeProjectId, setActiveProjectId] = useQueryState("projectId", {
+    defaultValue: "",
+  });
+  const [selectedTaskId, setSelectedTaskId] = useQueryState("taskId", {
+    defaultValue: "",
+  });
+
   const {
     projects,
-    activeProject,
-    selectedTask,
-    setSelectedTask,
+    setProjects,
+    isLoading,
     createProjectModal,
     setCreateProjectModal,
-    createTaskModal,
-    setCreateTaskModal,
     newProjectName,
     setNewProjectName,
     newProjectPurpose,
     setNewProjectPurpose,
+    handleCreateProject,
+    handleDeleteProject,
+  } = useEisenProjects();
+
+  const {
+    createTaskModal,
+    setCreateTaskModal,
     newTaskTitle,
     setNewTaskTitle,
     newTaskQuadrant,
     setNewTaskQuadrant,
-    handleCreateProject,
-    handleDeleteProject,
-    handleOpenProject,
-    handleBackToList,
     handleAddTask,
     handleDeleteTask,
     handleToggleComplete,
-  } = useEisenMatrix();
+    handleUpdateTask,
+  } = useEisenTasks(projects, setProjects, activeProjectId);
+
+  const activeProject = projects.find((p) => p.id === activeProjectId) || null;
+  const selectedTask =
+    activeProject?.tasks.find((t) => t.id === selectedTaskId) || null;
+
+  const [editTitle, setEditTitle] = useState("");
+  const [quadrantTab, setQuadrantTab] = useState<
+    Record<Q, "active" | "completed">
+  >({
+    Q1: "active",
+    Q2: "active",
+    Q3: "active",
+    Q4: "active",
+  });
+
+  useEffect(() => {
+    if (selectedTask) {
+      setEditTitle(selectedTask.title);
+    }
+  }, [selectedTask?.id]);
+
+  const setSelectedTask = (task: EisenTask | null) => {
+    setSelectedTaskId(task ? task.id : null);
+  };
+
+  const handleOpenProject = (id: string) => {
+    setActiveProjectId(id);
+    setSelectedTaskId(null);
+  };
+
+  const handleBackToList = () => {
+    setActiveProjectId(null);
+    setSelectedTaskId(null);
+  };
 
   const qTasks = (q: Q) =>
     activeProject?.tasks.filter((t) => t.quadrant === q) ?? [];
+
+  /* ── Skeleton Loading State ── */
+  if (isLoading && !activeProject) {
+    return (
+      <div className="px-6 md:px-10 py-8 min-h-screen bg-background">
+        {/* Header Skeleton */}
+        <div className="flex items-center justify-between mb-8 animate-pulse">
+          <div>
+            <div className="h-8 bg-secondary rounded-sm w-44 mb-2" />
+            <div className="h-4 bg-secondary rounded-sm w-72" />
+          </div>
+          <div className="h-8 bg-secondary rounded-sm w-28" />
+        </div>
+        {/* Rows Skeleton */}
+        <div className="flex flex-col gap-3 border-t border-border/60 py-4 pr-2.5">
+          {[1, 2, 3].map((n) => (
+            <div
+              key={n}
+              className="flex items-center justify-between py-4 border-b border-border/40 animate-pulse"
+            >
+              <div className="h-4 bg-secondary rounded-sm w-1/3" />
+              <div className="h-3 bg-secondary rounded-sm w-20" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   /* ── Project list ── */
   if (!activeProject) {
@@ -89,7 +166,8 @@ export const EisenMatrix = () => {
               No matrices yet.
             </p>
             <p className="text-[13px] text-neutral-500 font-light">
-              Create a matrix to start organizing tasks by urgency and importance.
+              Create a matrix to start organizing tasks by urgency and
+              importance.
             </p>
             <button
               onClick={() => setCreateProjectModal(true)}
@@ -100,14 +178,17 @@ export const EisenMatrix = () => {
           </div>
         ) : (
           /* Project rows */
-          <div className="border-t border-border">
+          <div className="border-t border-border w-200">
             {projects.map((p) => (
               <div
                 key={p.id}
                 className="flex items-center justify-between group py-3.5 border-b border-border"
               >
                 <div>
-                  <p className="text-[14px] text-foreground font-medium">
+                  <p
+                    onClick={() => handleOpenProject(p.id)}
+                    className="text-[14px] text-foreground font-medium cursor-pointer"
+                  >
                     {p.name}
                   </p>
                   {p.purpose && (
@@ -186,19 +267,31 @@ export const EisenMatrix = () => {
         </button>
       </div>
 
-      {/* 2×2 grid + panel */}
-      <div className="flex gap-6 items-start">
+      {/* 2×2 grid + panel wrapper */}
+      <div className="flex flex-col md:flex-row gap-6 items-start w-full">
         {/* Matrix grid */}
         <div className="grid grid-cols-2 gap-px flex-1 bg-border border border-border rounded-md overflow-hidden">
           {(["Q1", "Q2", "Q3", "Q4"] as Q[]).map((q) => {
             const meta = Q_META[q];
             const tasks = qTasks(q);
+            const activeTasks = tasks.filter((t) => !t.completed);
+            const completedTasks = tasks.filter((t) => t.completed);
+            const activeTab = quadrantTab[q];
+            const displayedTasks =
+              activeTab === "active" ? activeTasks : completedTasks;
+
             return (
-              <div key={q} className="bg-background p-4 md:p-5 min-h-[200px]">
+              <div
+                key={q}
+                className="bg-background p-4 md:p-5 h-[255px] md:h-[295px] flex flex-col overflow-hidden"
+              >
                 {/* Quadrant header */}
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-2 flex-shrink-0">
                   <div>
-                    <p className="text-[12px] font-semibold" style={{ color: meta.accent }}>
+                    <p
+                      className="text-[12px] font-semibold"
+                      style={{ color: meta.accent }}
+                    >
                       {meta.label}
                     </p>
                     <p className="text-[10px] text-neutral-500 mt-0.5 font-light">
@@ -216,19 +309,53 @@ export const EisenMatrix = () => {
                   </button>
                 </div>
 
-                {/* Task list */}
-                {tasks.length === 0 ? (
-                  <p className="text-[11px] text-neutral-500 italic font-light">
-                    Empty
-                  </p>
-                ) : (
-                  <div className="space-y-1.5">
-                    {tasks.map((t) => (
+                {/* Sub-header Tabs (Active / Completed) */}
+                <div className="flex gap-3 mb-2.5 border-b border-border/40 pb-1.5 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setQuadrantTab((prev) => ({ ...prev, [q]: "active" }))
+                    }
+                    className={`text-[10px] bg-transparent border-none cursor-pointer p-0 font-sans font-medium transition-colors ${
+                      activeTab === "active"
+                        ? "text-foreground"
+                        : "text-neutral-500 hover:text-muted-foreground"
+                    }`}
+                  >
+                    Active ({activeTasks.length})
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setQuadrantTab((prev) => ({ ...prev, [q]: "completed" }))
+                    }
+                    className={`text-[10px] bg-transparent border-none cursor-pointer p-0 font-sans font-medium transition-colors ${
+                      activeTab === "completed"
+                        ? "text-foreground"
+                        : "text-neutral-500 hover:text-muted-foreground"
+                    }`}
+                  >
+                    Completed ({completedTasks.length})
+                  </button>
+                </div>
+
+                {/* Task list with independent overflow scrollbar */}
+                <div className="space-y-1.5 overflow-y-auto flex-1 pr-1.5 scrollbar-thin">
+                  {displayedTasks.length === 0 ? (
+                    <p className="text-[11px] text-neutral-500 italic font-light">
+                      No {activeTab} tasks
+                    </p>
+                  ) : (
+                    displayedTasks.map((t) => (
                       <div
                         key={t.id}
-                        onClick={() => setSelectedTask(selectedTask?.id === t.id ? null : t)}
+                        onClick={() =>
+                          setSelectedTask(selectedTask?.id === t.id ? null : t)
+                        }
                         className={`flex items-center gap-2 cursor-pointer group/task px-2 py-1.5 rounded-[5px] transition-colors ${
-                          selectedTask?.id === t.id ? "bg-secondary" : "bg-transparent hover:bg-card"
+                          selectedTask?.id === t.id
+                            ? "bg-secondary"
+                            : "bg-transparent hover:bg-card"
                         }`}
                       >
                         <button
@@ -238,7 +365,9 @@ export const EisenMatrix = () => {
                             handleToggleComplete(t.id);
                           }}
                           className={`bg-none border-none p-0 cursor-pointer transition-colors ${
-                            t.completed ? "text-success" : "text-neutral-500 hover:text-foreground"
+                            t.completed
+                              ? "text-success"
+                              : "text-neutral-500 hover:text-foreground"
                           }`}
                         >
                           {t.completed ? (
@@ -249,83 +378,155 @@ export const EisenMatrix = () => {
                         </button>
                         <span
                           className={`text-[12px] font-sans flex-1 leading-[1.4] transition-colors ${
-                            t.completed ? "text-neutral-500 line-through" : "text-muted-foreground"
+                            t.completed
+                              ? "text-neutral-500 line-through"
+                              : "text-muted-foreground"
                           }`}
                         >
                           {t.title}
                         </span>
                       </div>
-                    ))}
-                  </div>
-                )}
+                    ))
+                  )}
+                </div>
               </div>
             );
           })}
         </div>
 
-        {/* Task detail panel */}
-        <AnimatePresence>
-          {selectedTask && (
-            <motion.div
-              key={selectedTask.id}
-              initial={{ opacity: 0, x: 8 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 8 }}
-              transition={{ duration: 0.12 }}
-              className="w-[280px] bg-card border border-border rounded-md p-[18px] md:p-5 flex-shrink-0"
-            >
-              <div className="flex items-start justify-between mb-3.5">
-                <span
-                  className="text-[10px] font-semibold uppercase tracking-[0.06em]"
-                  style={{ color: Q_META[selectedTask.quadrant].accent }}
-                >
-                  {Q_META[selectedTask.quadrant].label}
-                </span>
-                <button
-                  onClick={() => setSelectedTask(null)}
-                  className="cursor-pointer transition-colors duration-100 bg-none border-none p-0 text-neutral-500 hover:text-foreground"
-                >
-                  <X className="size-3.5" />
-                </button>
-              </div>
+        {/* Task detail panel wrapper */}
+        <div className="w-full md:w-[300px] flex-shrink-0 min-h-[320px]">
+          <AnimatePresence mode="wait">
+            {selectedTask ? (
+              <motion.div
+                key={selectedTask.id}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.12 }}
+                className="w-full bg-card border border-border rounded-md p-[18px] md:p-5 flex flex-col min-h-[320px] h-full"
+              >
+                {/* Panel Header */}
+                <div className="flex items-start justify-between mb-3.5 flex-shrink-0">
+                  <span
+                    className="text-[10px] font-semibold uppercase tracking-[0.06em]"
+                    style={{ color: Q_META[selectedTask.quadrant].accent }}
+                  >
+                    {Q_META[selectedTask.quadrant].label}
+                  </span>
+                  <button
+                    onClick={() => setSelectedTask(null)}
+                    className="cursor-pointer transition-colors duration-100 bg-none border-none p-0 text-neutral-500 hover:text-foreground"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                </div>
 
-              <p className="text-[14px] text-foreground leading-[1.6] mb-4">
-                {selectedTask.title}
-              </p>
-
-              <div className="flex items-center gap-1.5 mb-5 text-neutral-500 text-[11px]">
-                <Calendar className="size-3" />
-                {selectedTask.createdOn}
-              </div>
-
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleToggleComplete(selectedTask.id)}
-                  className="flex items-center gap-1.5 flex-1 justify-center cursor-pointer text-[12px] px-3 py-1 rounded-md border border-border bg-transparent text-muted-foreground hover:text-foreground font-sans transition-colors"
-                >
-                  {selectedTask.completed ? (
-                    <>
-                      <Circle className="size-3" /> Mark active
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle className="size-3 text-success" /> Complete
-                    </>
-                  )}
-                </button>
-                <button
-                  onClick={() => {
-                    handleDeleteTask(selectedTask.id);
-                    setSelectedTask(null);
+                {/* Editable Title Input */}
+                <label className="text-[10px] text-neutral-500 block mb-1.5 uppercase font-medium tracking-[0.04em] flex-shrink-0">
+                  Task Title
+                </label>
+                <input
+                  type="text"
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  onBlur={() => {
+                    if (editTitle.trim() && editTitle !== selectedTask.title) {
+                      handleUpdateTask(selectedTask.id, {
+                        title: editTitle.trim(),
+                      });
+                    }
                   }}
-                  className="cursor-pointer text-[12px] px-2.5 py-1 rounded-md border border-destructive/30 bg-transparent text-destructive hover:bg-destructive/10 transition-colors font-sans"
-                >
-                  <Trash2 className="size-3.5" />
-                </button>
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && editTitle.trim()) {
+                      e.currentTarget.blur();
+                    }
+                  }}
+                  className="w-full bg-background border border-border rounded-md px-3 py-2 text-foreground text-[13px] outline-none mb-4 focus:border-ring/35 transition-colors font-sans flex-shrink-0"
+                  placeholder="Enter task title..."
+                />
+
+                {/* Priority Quadrant Selector */}
+                <div className="mb-4 flex-shrink-0">
+                  <label className="text-[10px] text-neutral-500 block mb-1.5 uppercase font-medium tracking-[0.04em]">
+                    Priority Quadrant
+                  </label>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {(["Q1", "Q2", "Q3", "Q4"] as Q[]).map((q) => {
+                      const meta = Q_META[q];
+                      const active = selectedTask.quadrant === q;
+                      return (
+                        <button
+                          key={q}
+                          type="button"
+                          onClick={() =>
+                            handleUpdateTask(selectedTask.id, { quadrant: q })
+                          }
+                          className={`py-1 px-1.5 rounded-[4px] text-[10px] cursor-pointer text-center transition-all border ${
+                            active
+                              ? ""
+                              : "border-border bg-transparent text-neutral-500 hover:text-muted-foreground hover:bg-card"
+                          }`}
+                          style={{
+                            borderColor: active
+                              ? `${meta.accent}40`
+                              : undefined,
+                            backgroundColor: active
+                              ? `${meta.accent}12`
+                              : undefined,
+                            color: active ? meta.accent : undefined,
+                            fontWeight: active ? 500 : 400,
+                          }}
+                        >
+                          {meta.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Task Metadata */}
+                <div className="flex items-center gap-1.5 mb-5 text-neutral-500 text-[11px] flex-shrink-0">
+                  <Calendar className="size-3" />
+                  <span>Created {selectedTask.createdOn}</span>
+                </div>
+
+                {/* Actions Footer */}
+                <div className="flex gap-2 mt-auto pt-2 flex-shrink-0">
+                  <button
+                    onClick={() => handleToggleComplete(selectedTask.id)}
+                    className="flex items-center gap-1.5 flex-1 justify-center cursor-pointer text-[12px] px-3 py-1.5 rounded-md border border-border bg-transparent text-muted-foreground hover:text-foreground font-sans transition-colors"
+                  >
+                    {selectedTask.completed ? (
+                      <>
+                        <Circle className="size-3" /> Mark active
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className="size-3 text-success" /> Complete
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleDeleteTask(selectedTask.id);
+                      setSelectedTask(null);
+                    }}
+                    className="cursor-pointer text-[12px] px-2.5 py-1.5 rounded-md border border-destructive/30 bg-transparent text-destructive hover:bg-destructive/10 transition-colors font-sans"
+                  >
+                    <Trash2 className="size-3.5" />
+                  </button>
+                </div>
+              </motion.div>
+            ) : (
+              <div className="w-full h-full border border-dashed border-border/40 rounded-md p-5 flex flex-col items-center justify-center text-center min-h-[320px]">
+                <p className="text-[12px] font-sans text-neutral-500/70">
+                  Select a task to view details and priority options.
+                </p>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
       {/* Modals */}

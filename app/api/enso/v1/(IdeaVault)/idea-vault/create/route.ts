@@ -1,6 +1,6 @@
-import Idea_Vault_Model from "@/app/api/Models/idea-vault-Modles/idea-vault-Modle";
+// import Idea_Vault_Model from "@/app/api/Models/idea-vault-Modles/idea-vault-Modle";
 import { NextRequest, NextResponse as res } from "next/server";
-import { DB_Connect } from "@/app/api/dbConnect/DB_Connect";
+// import { DB_Connect } from "@/app/api/dbConnect/DB_Connect";
 
 export const GET = () => {
     return res.json({
@@ -10,11 +10,11 @@ export const GET = () => {
 }
 
 export const POST = async (req: NextRequest) => {
-    await DB_Connect();
+    // Legacy MongoDB logic commented out to resolve Turbopack compilation bottlenecks on Windows
+    // await DB_Connect();
 
-    const body = await req.json()
-
-    const { title, description } = body
+    const body = await req.json();
+    const { title, description } = body;
 
     if (!title || !description) {
         return res.json({
@@ -25,5 +25,10 @@ export const POST = async (req: NextRequest) => {
         });
     }
 
-    // first create na user login register api
+    return res.json({
+        ok: true,
+        msg: "Legacy endpoint - database operations are now handled securely via Firestore Server Actions.",
+        title,
+        description
+    });
 }
