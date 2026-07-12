@@ -1,150 +1,114 @@
-import React, { useEffect, useState } from "react";
-import {
-  Brain,
-  PanelLeftCloseIcon,
-  PanelRightClose,
-  Sparkle,
-  Target,
-} from "lucide-react";
+"use client";
+
+import React from "react";
+import { Brain, Sparkle, Target, PanelLeft, PanelLeftClose } from "lucide-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 
-type prop = {
+type SideBarProps = {
   isCollapsed: boolean;
   toggleCollapse: () => void;
 };
 
-const SideBar = ({ isCollapsed, toggleCollapse }: prop) => {
-  const [isActive, setIsActive] = useState("Ikigai");
-  const tools = [
-    {
-      name: "Ikigai",
-      href: "/tools/ikigai",
-      icon: <Sparkle className="size-4" />,
-      color: "text-blue-300",
-    },
-    {
-      name: "Idea Vault",
-      href: "/tools/idea-vault",
-      icon: <Brain className="size-4" />,
-      color: "text-red-300",
-    },
-    {
-      name: "Eisen Matrix",
-      href: "/tools/eisen-matrix",
-      icon: <Target className="size-4" />,
-      color: "text-yellow-100",
-    },
-  ];
+const NAV = [
+  { label: "Ikigai",       href: "/tools/ikigai",       icon: Sparkle },
+  { label: "Idea Vault",   href: "/tools/idea-vault",   icon: Brain   },
+  { label: "Eisen Matrix", href: "/tools/eisen-matrix", icon: Target  },
+] as const;
 
+export default function SideBar({ isCollapsed, toggleCollapse }: SideBarProps) {
   const path = usePathname();
-  useEffect(() => {
-    if (path === "/tools/ikigai") {
-      setIsActive("Ikigai");
-    }
-    if (path === "/tools/idea-vault") {
-      setIsActive("Idea Vault");
-    }
-    if (path === "/tools/eisen-matrix") {
-      setIsActive("Eisen Matrix");
-    }
-  }, [path]);
 
   return (
-    <>
-      <aside
-        className={`${
-          isCollapsed ? "w-20" : "w-64"
-        } fixed top-0 left-0 h-screen transition-all ease-in-out duration-200 bg-black/50 backdrop-blur-md z-40 flex flex-col justify-between border-r border-white/5`}
+    <aside
+      style={{
+        width: isCollapsed ? 52 : 216,
+        background: "var(--surface)",
+        borderRight: "1px solid var(--border)",
+      }}
+      className="fixed top-0 left-0 h-screen flex flex-col transition-[width] duration-150 ease-out z-40"
+    >
+      {/* Logo row */}
+      <div
+        className="flex items-center justify-between px-3 h-12"
+        style={{ borderBottom: "1px solid var(--border)" }}
       >
-        {/* Main Nav Section */}
-        <div className={`${isCollapsed ? "p-4" : "p-6"} flex-1 flex flex-col`}>
-          {/* Logo Brand Title */}
-          <div className="mb-8 flex items-center justify-between border-b border-white/5 pb-4">
-            {!isCollapsed ? (
-              <Link href="/" className="text-2xl text-[#977DD3] italic font-medium tracking-tighter sekuya">
-                Enso
-              </Link>
-            ) : (
-              <Link href="/" className="text-xl text-[#977DD3] italic font-semibold sekuya w-full text-center">
-                E
-              </Link>
-            )}
-          </div>
+        {!isCollapsed && (
+          <Link
+            href="/"
+            className="sekuya text-lg leading-none"
+            style={{ color: "var(--accent-text)" }}
+          >
+            Enso
+          </Link>
+        )}
+        <button
+          onClick={toggleCollapse}
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="cursor-pointer transition-colors duration-150"
+          style={{ color: "var(--text-3)", marginLeft: isCollapsed ? "auto" : undefined }}
+          onMouseEnter={e => (e.currentTarget.style.color = "var(--text-1)")}
+          onMouseLeave={e => (e.currentTarget.style.color = "var(--text-3)")}
+        >
+          {isCollapsed ? <PanelLeft className="size-4" /> : <PanelLeftClose className="size-4" />}
+        </button>
+      </div>
 
-          {/* Tools Title & Collapse */}
-          <div className="flex mb-6 items-center justify-between">
-            {!isCollapsed ? (
-              <h2 className="text-xs font-semibold text-white/40 uppercase tracking-wider">Tools</h2>
-            ) : null}
-            {isCollapsed ? (
-              <PanelRightClose
-                onClick={toggleCollapse}
-                className="text-white w-full size-5 cursor-pointer stroke-1 hover:text-[#977DD3] transition-colors"
-              />
-            ) : (
-              <PanelLeftCloseIcon
-                onClick={toggleCollapse}
-                className="text-white/60 hover:text-white size-5 cursor-pointer stroke-1 transition-colors"
-              />
-            )}
-          </div>
-
-          {/* Nav List */}
-          <nav className="space-y-1.5 flex-1">
-            {tools.map((tool) => (
-              <Link
-                key={tool.name}
-                onClick={() => {
-                  setIsActive(tool.name);
-                }}
-                href={tool.href}
-                className={`px-3 py-2 flex items-center rounded-md cursor-pointer hover:text-white hover:bg-white/5 transition-colors ${
-                  isCollapsed ? "justify-center" : "gap-3"
-                }`}
-              >
+      {/* Nav */}
+      <nav className="flex-1 px-2 py-2 flex flex-col gap-0.5">
+        {NAV.map(({ label, href, icon: Icon }) => {
+          const active = path.startsWith(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              aria-current={active ? "page" : undefined}
+              className="relative flex items-center gap-2.5 px-2.5 py-2 rounded-md transition-colors duration-100"
+              style={{
+                background: active ? "var(--surface-2)" : "transparent",
+                color: active ? "var(--text-1)" : "var(--text-3)",
+              }}
+              onMouseEnter={e => {
+                if (!active) e.currentTarget.style.color = "var(--text-2)";
+              }}
+              onMouseLeave={e => {
+                if (!active) e.currentTarget.style.color = "var(--text-3)";
+              }}
+            >
+              {/* Active left bar */}
+              {active && (
                 <span
-                  className={`flex-none shrink-0 stroke-1 ${
-                    tool.name === isActive
-                      ? `${tool.color} animate-pulse`
-                      : `${tool.color} opacity-40`
-                  }`}
-                >
-                  {tool.icon}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-full"
+                  style={{ background: "var(--accent)" }}
+                />
+              )}
+              <Icon
+                className="size-4 flex-none stroke-[1.5]"
+                style={{ color: active ? "var(--accent-text)" : undefined }}
+              />
+              {!isCollapsed && (
+                <span className="text-sm" style={{ fontWeight: active ? 500 : 400 }}>
+                  {label}
                 </span>
-                {!isCollapsed && (
-                  <motion.span
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className={`text-sm font-medium ${
-                      tool.name === isActive ? `${tool.color}` : "text-white/60"
-                    }`}
-                  >
-                    {tool.name}
-                  </motion.span>
-                )}
-              </Link>
-            ))}
-          </nav>
-        </div>
+              )}
+            </Link>
+          );
+        })}
+      </nav>
 
-        {/* User Profile Footer Section */}
-        <div className={`${isCollapsed ? "p-4 justify-center" : "p-4"} border-t border-white/5 bg-black/25 flex items-center gap-3`}>
-          <div className="flex-none shrink-0">
-            <UserButton />
-          </div>
-          {!isCollapsed && (
-            <div className="flex flex-col min-w-0">
-              <span className="text-xs font-medium text-white/90 truncate">Profile</span>
-              <span className="text-[10px] text-white/45 truncate">Manage account</span>
-            </div>
-          )}
-        </div>
-      </aside>
-    </>
+      {/* User footer */}
+      <div
+        className="px-3 py-3 flex items-center gap-2.5"
+        style={{ borderTop: "1px solid var(--border)" }}
+      >
+        <UserButton />
+        {!isCollapsed && (
+          <span className="text-xs" style={{ color: "var(--text-3)" }}>
+            Account
+          </span>
+        )}
+      </div>
+    </aside>
   );
-};
-
-export default SideBar;
+}
