@@ -15,10 +15,8 @@ import {
 } from "lucide-react";
 import { useEisenProjects } from "./hooks/controller/useEisenProjects";
 import { useEisenTasks } from "./hooks/controller/useEisenTasks";
-import type {
-  EisenTask,
-  EisenProject,
-} from "./hooks/controller/useEisenProjects";
+import { useAppStore } from "@/store/appStore";
+import type { EisenTask, EisenProject } from "@/store/appStore";
 import CreateProjectModal from "./components/modal/CreateProjectModal";
 import CreateTaskModal from "./components/modal/CreateTaskModal";
 
@@ -38,6 +36,13 @@ type Q = keyof typeof Q_META;
 
 /* ─── Main ──────────────────────────────────────────── */
 export const EisenMatrix = () => {
+  const {
+    activeProjectId: cachedProjectId,
+    setActiveProjectId: setCachedProjectId,
+    activeTaskId,
+    setActiveTaskId,
+  } = useAppStore();
+
   // Sync activeProjectId and selectedTaskId to URL query parameters using nuqs
   const [activeProjectId, setActiveProjectId] = useQueryState("projectId", {
     defaultValue: "",
@@ -45,6 +50,60 @@ export const EisenMatrix = () => {
   const [selectedTaskId, setSelectedTaskId] = useQueryState("taskId", {
     defaultValue: "",
   });
+
+  const [hasHydrated, setHasHydrated] = React.useState(false);
+  const isProjectSyncMounted = React.useRef(false);
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+
+    if (!isProjectSyncMounted.current) {
+      isProjectSyncMounted.current = true;
+      if (!activeProjectId && cachedProjectId) {
+        setActiveProjectId(cachedProjectId);
+      } else if (activeProjectId) {
+        setCachedProjectId(activeProjectId);
+      }
+    } else {
+      if (activeProjectId !== cachedProjectId) {
+        setCachedProjectId(activeProjectId);
+      }
+    }
+  }, [
+    hasHydrated,
+    activeProjectId,
+    cachedProjectId,
+    setActiveProjectId,
+    setCachedProjectId,
+  ]);
+
+  const isTaskSyncMounted = React.useRef(false);
+  useEffect(() => {
+    if (!hasHydrated) return;
+
+    if (!isTaskSyncMounted.current) {
+      isTaskSyncMounted.current = true;
+      if (!selectedTaskId && activeTaskId) {
+        setSelectedTaskId(activeTaskId);
+      } else if (selectedTaskId) {
+        setActiveTaskId(selectedTaskId);
+      }
+    } else {
+      if (selectedTaskId !== activeTaskId) {
+        setActiveTaskId(selectedTaskId);
+      }
+    }
+  }, [
+    hasHydrated,
+    selectedTaskId,
+    activeTaskId,
+    setSelectedTaskId,
+    setActiveTaskId,
+  ]);
 
   const {
     projects,
@@ -115,7 +174,7 @@ export const EisenMatrix = () => {
   /* ── Skeleton Loading State ── */
   if (isLoading && !activeProject) {
     return (
-      <div className="px-6 md:px-10 py-8 min-h-screen bg-background">
+      <div className="w-full px-4 sm:px-6 md:px-10 py-6 md:py-8 min-h-screen bg-background">
         {/* Header Skeleton */}
         <div className="flex items-center justify-between mb-8 animate-pulse">
           <div>
@@ -143,7 +202,7 @@ export const EisenMatrix = () => {
   /* ── Project list ── */
   if (!activeProject) {
     return (
-      <div className="w-full px-6 md:px-10 py-8 pb-24 md:pb-8 bg-background">
+      <div className="w-full px-4 sm:px-6 md:px-10 py-6 md:py-8 pb-24 md:pb-8 bg-background">
         {/* Header */}
         <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between mb-8">
           <div>
@@ -154,12 +213,15 @@ export const EisenMatrix = () => {
               Prioritize by urgency and importance
             </p>
           </div>
-          <button
-            onClick={() => setCreateProjectModal(true)}
-            className="flex items-center gap-2 cursor-pointer text-[13px] px-3.5 py-1.5 rounded-md border border-border bg-secondary text-foreground transition-colors hover:border-border-hover font-sans font-medium self-start sm:self-auto"
-          >
-            <Plus className="size-3.5" /> New matrix
-          </button>
+          <div className="flex max-[750px]:justify-end">
+            <button
+              onClick={() => setCreateProjectModal(true)}
+              className="flex items-center gap-2 cursor-pointer text-[13px] px-3.5 py-1.5 rounded-md border border-border bg-secondary text-foreground transition-colors hover:border-border-hover font-sans font-medium self-start sm:self-auto"
+            >
+              <Plus className="size-3.5" /> New matrix
+            </button>
+            
+          </div>
         </div>
 
         {/* Empty state */}
@@ -195,8 +257,13 @@ export const EisenMatrix = () => {
                     {p.name}
                   </p>
                   {p.purpose && (
-                    <p className="text-[12px] text-neutral-500 mt-0.5 font-light truncate" title={p.purpose}>
-                      {p.purpose.length > 70 ? p.purpose.slice(0, 70) + "…" : p.purpose}
+                    <p
+                      className="text-[12px] text-neutral-500 mt-0.5 font-light truncate"
+                      title={p.purpose}
+                    >
+                      {p.purpose.length > 70
+                        ? p.purpose.slice(0, 70) + "…"
+                        : p.purpose}
                     </p>
                   )}
                 </div>
@@ -243,31 +310,34 @@ export const EisenMatrix = () => {
 
   /* ── Project detail ── */
   return (
-    <div className="w-full px-6 md:px-10 py-8 pb-24 md:pb-8 bg-background">
+    <div className="w-full px-4 sm:px-6 md:px-10 py-6 md:py-8 pb-24 md:pb-8 bg-background">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between mb-7">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleBackToList}
-            className="cursor-pointer transition-colors duration-100 bg-none border-none p-0 text-neutral-500 hover:text-foreground"
-            aria-label="Back to matrices"
-          >
-            <ArrowLeft className="size-4" />
-          </button>
-          <div>
-            <h1 className="text-[22px] font-medium text-foreground tracking-[-0.015em]">
+      <div className="flex flex-row items-center justify-between gap-4 mb-7 w-full">
+        <div className="min-w-0 flex flex-col gap-1">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <h1 className="text-[20px] sm:text-[22px] font-medium text-foreground tracking-[-0.015em] leading-tight truncate">
               {activeProject.name}
             </h1>
-            {activeProject.purpose && (
-              <p className="text-[12px] text-neutral-500 mt-0.5 font-light">
-                {activeProject.purpose}
-              </p>
-            )}
+            <button
+              onClick={handleBackToList}
+              className="text-[11px] px-2 py-0.5 rounded border border-border bg-transparent text-neutral-500 hover:text-foreground hover:bg-secondary/40 cursor-pointer font-sans font-medium transition-colors"
+              aria-label="Back to matrices"
+            >
+              Back
+            </button>
           </div>
+          {activeProject.purpose && (
+            <p
+              className="text-[12px] text-neutral-500 font-light truncate max-w-[200px] sm:max-w-[400px]"
+              title={activeProject.purpose}
+            >
+              {activeProject.purpose}
+            </p>
+          )}
         </div>
         <button
           onClick={() => setCreateTaskModal(true)}
-          className="flex items-center gap-2 cursor-pointer text-[13px] px-3.5 py-1.5 rounded-md border border-border bg-secondary text-foreground transition-colors hover:border-border-hover font-sans font-medium"
+          className="flex items-center gap-1.5 cursor-pointer text-[12px] sm:text-[13px] px-2.5 sm:px-3.5 py-1.5 rounded-md border border-border bg-secondary text-foreground transition-all hover:border-border-hover font-sans font-medium flex-shrink-0"
         >
           <Plus className="size-3.5" /> Add task
         </button>
@@ -426,9 +496,10 @@ export const EisenMatrix = () => {
         {/* Task detail panel wrapper */}
         <div
           onClick={() => setSelectedTask(null)}
-          className={selectedTask
-            ? "fixed inset-0 bg-background/85 backdrop-blur-xs z-50 flex items-center justify-center p-4 md:relative md:inset-auto md:bg-transparent md:backdrop-blur-none md:z-auto md:flex md:items-start md:p-0 w-full md:w-[300px] flex-shrink-0"
-            : "hidden md:block w-full md:w-[300px] flex-shrink-0 min-h-[320px]"
+          className={
+            selectedTask
+              ? "fixed inset-0 bg-background/85 backdrop-blur-xs z-50 flex items-center justify-center p-4 md:relative md:inset-auto md:bg-transparent md:backdrop-blur-none md:z-auto md:flex md:items-start md:p-0 w-full md:w-[300px] flex-shrink-0"
+              : "hidden md:block w-full md:w-[300px] flex-shrink-0 min-h-[320px]"
           }
         >
           <AnimatePresence mode="wait">
@@ -469,7 +540,10 @@ export const EisenMatrix = () => {
                     onChange={(e) => setEditTitle(e.target.value)}
                     onFocus={() => setIsInputFocused(true)}
                     onBlur={() => {
-                      if (editTitle.trim() && editTitle !== selectedTask.title) {
+                      if (
+                        editTitle.trim() &&
+                        editTitle !== selectedTask.title
+                      ) {
                         handleUpdateTask(selectedTask.id, {
                           title: editTitle.trim(),
                         });
@@ -486,21 +560,22 @@ export const EisenMatrix = () => {
                     className="w-full bg-background border border-border rounded-md pl-3 pr-9 py-2 text-foreground text-[13px] outline-none focus:border-ring/35 transition-colors font-sans"
                     placeholder="Enter task title..."
                   />
-                  {isInputFocused && editTitle.trim() !== selectedTask.title && (
-                    <button
-                      onClick={() => {
-                        if (editTitle.trim()) {
-                          handleUpdateTask(selectedTask.id, {
-                            title: editTitle.trim(),
-                          });
-                        }
-                      }}
-                      className="absolute right-2.5 text-neutral-500 hover:text-foreground cursor-pointer transition-colors bg-none border-none p-0.5"
-                      title="Save Title"
-                    >
-                      <Check className="size-4 text-emerald-500" />
-                    </button>
-                  )}
+                  {isInputFocused &&
+                    editTitle.trim() !== selectedTask.title && (
+                      <button
+                        onClick={() => {
+                          if (editTitle.trim()) {
+                            handleUpdateTask(selectedTask.id, {
+                              title: editTitle.trim(),
+                            });
+                          }
+                        }}
+                        className="absolute right-2.5 text-neutral-500 hover:text-foreground cursor-pointer transition-colors bg-none border-none p-0.5"
+                        title="Save Title"
+                      >
+                        <Check className="size-4 text-emerald-500" />
+                      </button>
+                    )}
                 </div>
 
                 {/* Priority Quadrant Selector */}

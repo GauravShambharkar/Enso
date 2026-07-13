@@ -3,37 +3,41 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Trash2, ArrowUpRight, X, Plus, Check } from "lucide-react";
 import { useQueryState } from "nuqs";
-
-interface Idea {
-  id: string;
-  text: string;
-  createdOn: string;
-}
-
-const STORAGE_KEY = "enso_idea_vault";
-
-function loadIdeasFromLocalStorage(): Idea[] {
-  if (typeof window === "undefined") return [];
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function saveIdeasToLocalStorage(ideas: Idea[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(ideas));
-}
+import { useAppStore, type Idea } from "@/store/appStore";
 
 export default function Idea_Vault() {
-  const [ideas, setIdeas] = useState<Idea[]>([]);
+  const { ideas, setIdeas, fetchIdeas, activeIdeaId, setActiveIdeaId } = useAppStore();
   const [draft, setDraft] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(ideas.length === 0);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Sync selected idea ID with URL query parameter using nuqs
   const [selectedId, setSelectedId] = useQueryState("ideaId", { defaultValue: "" });
   const selected = ideas.find((i) => i.id === selectedId) || null;
+
+  const [hasHydrated, setHasHydrated] = useState(false);
+  const isSyncMounted = useRef(false);
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+
+    if (!isSyncMounted.current) {
+      isSyncMounted.current = true;
+      if (!selectedId && activeIdeaId) {
+        setSelectedId(activeIdeaId);
+      } else if (selectedId) {
+        setActiveIdeaId(selectedId);
+      }
+    } else {
+      if (selectedId !== activeIdeaId) {
+        setActiveIdeaId(selectedId);
+      }
+    }
+  }, [hasHydrated, selectedId, activeIdeaId, setSelectedId, setActiveIdeaId]);
 
   const [editIdeaText, setEditIdeaText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -51,43 +55,32 @@ export default function Idea_Vault() {
     const targetIdea = updated.find((i) => i.id === id);
     if (targetIdea) {
       try {
-        const response = await fetch("/api/ideas", {
+        await fetch("/api/ideas", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(targetIdea),
         });
-        if (!response.ok) {
-          saveIdeasToLocalStorage(updated);
-        }
-      } catch {
-        saveIdeasToLocalStorage(updated);
+      } catch (e) {
+        console.error("Failed to sync updated idea with database:", e);
       }
     }
   };
 
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
+      if (ideas.length === 0) {
+        setIsLoading(true);
+      }
       try {
-        const response = await fetch("/api/ideas");
-        if (response.ok) {
-          const res = await response.json();
-          if (res.success && res.data) {
-            setIdeas(res.data as Idea[]);
-          } else {
-            setIdeas(loadIdeasFromLocalStorage());
-          }
-        } else {
-          setIdeas(loadIdeasFromLocalStorage());
-        }
-      } catch {
-        setIdeas(loadIdeasFromLocalStorage());
+        await fetchIdeas();
+      } catch (e) {
+        console.error("Failed to fetch ideas in background:", e);
       } finally {
         setIsLoading(false);
       }
     }
     loadData();
-  }, []);
+  }, [fetchIdeas, ideas.length]);
 
   const handleAddIdea = async () => {
     if (!draft.trim()) return;
@@ -103,16 +96,13 @@ export default function Idea_Vault() {
     inputRef.current?.focus();
 
     try {
-      const response = await fetch("/api/ideas", {
+      await fetch("/api/ideas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(next),
       });
-      if (!response.ok) {
-        saveIdeasToLocalStorage(updated);
-      }
-    } catch {
-      saveIdeasToLocalStorage(updated);
+    } catch (e) {
+      console.error("Failed to sync new idea with database:", e);
     }
   };
 
@@ -122,19 +112,16 @@ export default function Idea_Vault() {
     if (selectedId === id) setSelectedId(null);
 
     try {
-      const response = await fetch(`/api/ideas?id=${id}`, {
+      await fetch(`/api/ideas?id=${id}`, {
         method: "DELETE",
       });
-      if (!response.ok) {
-        saveIdeasToLocalStorage(updated);
-      }
-    } catch {
-      saveIdeasToLocalStorage(updated);
+    } catch (e) {
+      console.error("Failed to delete idea from database:", e);
     }
   };
 
   return (
-    <div className="w-full px-6 md:px-10 py-8 min-h-screen lg:h-screen flex flex-col overflow-y-auto lg:overflow-hidden bg-background pb-20 lg:pb-8">
+    <div className="w-full px-4 sm:px-6 md:px-10 py-6 md:py-8 min-h-screen lg:h-screen flex flex-col overflow-y-auto lg:overflow-hidden bg-background pb-20 lg:pb-8">
       {/* Header */}
       <div className="mb-7 flex-shrink-0">
         <h1 className="text-[28px] font-medium text-foreground tracking-[-0.02em]">

@@ -1,26 +1,9 @@
 import { useState, useEffect } from "react";
-
-export interface EisenTask {
-  id: string;
-  title: string;
-  quadrant: "Q1" | "Q2" | "Q3" | "Q4";
-  completed: boolean;
-  createdOn: string;
-}
-
-export interface EisenProject {
-  id: string;
-  name: string;
-  purpose: string;
-  tasks: EisenTask[];
-  createdOn: string;
-}
-
-const STORAGE_KEY = "enso_eisen_projects";
+import { useAppStore, type EisenProject } from "@/store/appStore";
 
 export const useEisenProjects = () => {
-  const [projects, setProjects] = useState<EisenProject[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { eisenProjects: projects, setEisenProjects: setProjects, fetchEisenProjects } = useAppStore();
+  const [isLoading, setIsLoading] = useState(projects.length === 0);
 
   // Modal & Inputs
   const [createProjectModal, setCreateProjectModal] = useState(false);
@@ -29,45 +12,19 @@ export const useEisenProjects = () => {
 
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
+      if (projects.length === 0) {
+        setIsLoading(true);
+      }
       try {
-        const response = await fetch("/api/eisen");
-        if (response.ok) {
-          const res = await response.json();
-          if (res.success && res.data) {
-            setProjects(res.data as EisenProject[]);
-          } else {
-            loadFromLocalStorage();
-          }
-        } else {
-          loadFromLocalStorage();
-        }
-      } catch {
-        loadFromLocalStorage();
+        await fetchEisenProjects();
+      } catch (e) {
+        console.error("Failed to fetch Eisen projects in background:", e);
       } finally {
         setIsLoading(false);
       }
     }
-
-    function loadFromLocalStorage() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
-          setProjects(JSON.parse(saved));
-        } catch (e) {
-          console.error("Failed to parse saved projects", e);
-        }
-      } else {
-        setProjects([]);
-      }
-    }
-
     loadData();
-  }, []);
-
-  const saveProjectsFallback = (updated: EisenProject[]) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-  };
+  }, [fetchEisenProjects, projects.length]);
 
   const handleCreateProject = async () => {
     if (!newProjectName.trim()) return;
@@ -85,16 +42,13 @@ export const useEisenProjects = () => {
     setCreateProjectModal(false);
 
     try {
-      const response = await fetch("/api/eisen", {
+      await fetch("/api/eisen", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newProject),
       });
-      if (!response.ok) {
-        saveProjectsFallback(updated);
-      }
-    } catch {
-      saveProjectsFallback(updated);
+    } catch (e) {
+      console.error("Failed to save new project to database:", e);
     }
   };
 
@@ -103,14 +57,11 @@ export const useEisenProjects = () => {
     setProjects(updated);
 
     try {
-      const response = await fetch(`/api/eisen?id=${id}`, {
+      await fetch(`/api/eisen?id=${id}`, {
         method: "DELETE",
       });
-      if (!response.ok) {
-        saveProjectsFallback(updated);
-      }
-    } catch {
-      saveProjectsFallback(updated);
+    } catch (e) {
+      console.error("Failed to delete project from database:", e);
     }
   };
 

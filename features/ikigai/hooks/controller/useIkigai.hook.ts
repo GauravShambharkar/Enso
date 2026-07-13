@@ -1,35 +1,11 @@
 import { useState, useEffect } from "react";
-
-export interface IkigaiResult {
-  ikigaiSummary: string;
-  analysis: {
-    passion: string;
-    mission: string;
-    vocation: string;
-    profession: string;
-  };
-  actionableSteps: string[];
-  potentialObstacles: string[];
-}
-
-export interface IkigaiProfile {
-  id: string;
-  title: string;
-  inputs: {
-    love: string;
-    goodAt: string;
-    worldNeeds: string;
-    paidFor: string;
-  };
-  result: IkigaiResult;
-  createdOn: string;
-}
+import { useAppStore, type IkigaiProfile, type IkigaiResult } from "@/store/appStore";
 
 export const useIkigai = () => {
-  const [profiles, setProfiles] = useState<IkigaiProfile[]>([]);
+  const { ikigaiProfiles: profiles, setIkigaiProfiles: setProfiles, fetchIkigaiProfiles } = useAppStore();
   const [activeProfile, setActiveProfile] = useState<IkigaiProfile | null>(null);
   const [activeMode, setActiveMode] = useState<"view" | "create" | "loading">("view");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(profiles.length === 0);
 
   // Input states for form creation
   const [inputs, setInputs] = useState({
@@ -72,64 +48,45 @@ export const useIkigai = () => {
 
   useEffect(() => {
     async function loadData() {
-      setIsLoading(true);
-      try {
-        const response = await fetch("/api/ikigai/profiles");
-        if (response.ok) {
-          const res = await response.json();
-          if (res.success && res.data && res.data.length > 0) {
-            setProfiles(res.data as IkigaiProfile[]);
-            setActiveProfile(res.data[0] as IkigaiProfile);
-            setInputs(res.data[0].inputs);
-            setActiveMode("view");
-          } else if (res.success && res.data && res.data.length === 0) {
-            const defaultProfile = defaultMockProfile;
-            setProfiles([defaultProfile]);
-            setActiveProfile(defaultProfile);
-            setInputs(defaultProfile.inputs);
-            setActiveMode("view");
-            await fetch("/api/ikigai/profiles", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(defaultProfile),
-            });
-          } else {
-            loadFromLocalStorage();
-          }
-        } else {
-          loadFromLocalStorage();
+      if (profiles.length === 0) {
+        setIsLoading(true);
+      } else {
+        if (!activeProfile && profiles.length > 0) {
+          setActiveProfile(profiles[0]);
+          setInputs(profiles[0].inputs);
+          setActiveMode("view");
         }
-      } catch {
-        loadFromLocalStorage();
+        setIsLoading(false);
+      }
+      try {
+        await fetchIkigaiProfiles();
+      } catch (e) {
+        console.error("Failed to fetch Ikigai profiles:", e);
       } finally {
         setIsLoading(false);
       }
     }
-
-    function loadFromLocalStorage() {
-      const saved = localStorage.getItem("enso_ikigai_profiles");
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved) as IkigaiProfile[];
-          setProfiles(parsed);
-          if (parsed.length > 0) {
-            setActiveProfile(parsed[0]);
-            setInputs(parsed[0].inputs);
-            setActiveMode("view");
-          } else {
-            loadDefaultMock();
-          }
-        } catch (e) {
-          console.error("Failed to parse saved Ikigai profiles", e);
-          loadDefaultMock();
-        }
-      } else {
-        loadDefaultMock();
-      }
-    }
-
     loadData();
-  }, []);
+  }, [fetchIkigaiProfiles]);
+
+  useEffect(() => {
+    if (!isLoading && profiles.length === 0) {
+      const defaultProfile = defaultMockProfile;
+      setProfiles([defaultProfile]);
+      setActiveProfile(defaultProfile);
+      setInputs(defaultProfile.inputs);
+      setActiveMode("view");
+      fetch("/api/ikigai/profiles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(defaultProfile),
+      }).catch((err) => console.error("Failed to save default mock profile", err));
+    } else if (profiles.length > 0 && !activeProfile) {
+      setActiveProfile(profiles[0]);
+      setInputs(profiles[0].inputs);
+      setActiveMode("view");
+    }
+  }, [profiles, isLoading, activeProfile]);
 
   const loadDefaultMock = () => {
     setProfiles([defaultMockProfile]);
@@ -169,14 +126,11 @@ export const useIkigai = () => {
     }
 
     try {
-      const response = await fetch(`/api/ikigai/profiles?id=${id}`, {
+      await fetch(`/api/ikigai/profiles?id=${id}`, {
         method: "DELETE",
       });
-      if (!response.ok) {
-        localStorage.setItem("enso_ikigai_profiles", JSON.stringify(updated));
-      }
-    } catch {
-      localStorage.setItem("enso_ikigai_profiles", JSON.stringify(updated));
+    } catch (e) {
+      console.error("Failed to delete Ikigai profile from database:", e);
     }
   };
 
@@ -218,16 +172,13 @@ export const useIkigai = () => {
 
       // Save to server
       try {
-        const res = await fetch("/api/ikigai/profiles", {
+        await fetch("/api/ikigai/profiles", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newProfile),
         });
-        if (!res.ok) {
-          localStorage.setItem("enso_ikigai_profiles", JSON.stringify(updated));
-        }
-      } catch {
-        localStorage.setItem("enso_ikigai_profiles", JSON.stringify(updated));
+      } catch (e) {
+        console.error("Failed to save new profile to database:", e);
       }
     } catch (err: any) {
       console.error(err);

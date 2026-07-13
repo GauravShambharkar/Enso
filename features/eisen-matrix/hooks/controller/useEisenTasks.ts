@@ -1,21 +1,15 @@
 import { useState } from "react";
-import type { EisenTask, EisenProject } from "./useEisenProjects";
-
-const STORAGE_KEY = "enso_eisen_projects";
+import { type EisenTask, type EisenProject } from "@/store/appStore";
 
 export const useEisenTasks = (
   projects: EisenProject[],
-  setProjects: React.Dispatch<React.SetStateAction<EisenProject[]>>,
+  setProjects: (projects: EisenProject[]) => void,
   activeProjectId: string | null
 ) => {
   // Modal & Inputs
   const [createTaskModal, setCreateTaskModal] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newTaskQuadrant, setNewTaskQuadrant] = useState<"Q1" | "Q2" | "Q3" | "Q4">("Q1");
-
-  const saveProjectsFallback = (updated: EisenProject[]) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-  };
 
   const handleAddTask = async () => {
     if (!newTaskTitle.trim() || !activeProjectId) return;
@@ -37,16 +31,13 @@ export const useEisenTasks = (
     const targetProject = updated.find((p) => p.id === activeProjectId);
     if (targetProject) {
       try {
-        const response = await fetch("/api/eisen", {
+        await fetch("/api/eisen", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(targetProject),
         });
-        if (!response.ok) {
-          saveProjectsFallback(updated);
-        }
-      } catch {
-        saveProjectsFallback(updated);
+      } catch (e) {
+        console.error("Failed to save new task to database:", e);
       }
     }
   };
@@ -63,16 +54,13 @@ export const useEisenTasks = (
     const targetProject = updated.find((p) => p.id === activeProjectId);
     if (targetProject) {
       try {
-        const response = await fetch("/api/eisen", {
+        await fetch("/api/eisen", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(targetProject),
         });
-        if (!response.ok) {
-          saveProjectsFallback(updated);
-        }
-      } catch {
-        saveProjectsFallback(updated);
+      } catch (e) {
+        console.error("Failed to delete task from database:", e);
       }
     }
   };
@@ -89,16 +77,13 @@ export const useEisenTasks = (
     const targetProject = updated.find((p) => p.id === activeProjectId);
     if (targetProject) {
       try {
-        const response = await fetch("/api/eisen", {
+        await fetch("/api/eisen", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(targetProject),
         });
-        if (!response.ok) {
-          saveProjectsFallback(updated);
-        }
-      } catch {
-        saveProjectsFallback(updated);
+      } catch (e) {
+        console.error("Failed to toggle task complete state in database:", e);
       }
     }
   };
@@ -118,16 +103,13 @@ export const useEisenTasks = (
     const targetProject = updated.find((p) => p.id === activeProjectId);
     if (targetProject) {
       try {
-        const response = await fetch("/api/eisen", {
+        await fetch("/api/eisen", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(targetProject),
         });
-        if (!response.ok) {
-          saveProjectsFallback(updated);
-        }
-      } catch {
-        saveProjectsFallback(updated);
+      } catch (e) {
+        console.error("Failed to update task detail inside database:", e);
       }
     }
   };
