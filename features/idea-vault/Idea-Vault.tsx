@@ -121,7 +121,7 @@ export default function Idea_Vault() {
   };
 
   return (
-    <div className="w-full px-6 md:px-10 py-8 min-h-screen lg:h-screen flex flex-col overflow-y-auto lg:overflow-hidden bg-background pb-20 lg:pb-8">
+    <div className="w-full px-4 sm:px-6 md:px-10 py-6 md:py-8 min-h-screen lg:h-screen flex flex-col overflow-y-auto lg:overflow-hidden bg-background pb-20 lg:pb-8">
       {/* Header */}
       <div className="mb-7 flex-shrink-0">
         <h1 className="text-[28px] font-medium text-foreground tracking-[-0.02em]">

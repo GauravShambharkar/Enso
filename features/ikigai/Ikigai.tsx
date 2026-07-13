@@ -117,7 +117,7 @@ export const Ikigai = () => {
   if (isLoading) {
     /* Full Page Skeleton Loader */
     return (
-      <div className="w-full px-6 md:px-10 py-8 bg-background min-h-screen pb-24 md:pb-8">
+      <div className="w-full px-4 sm:px-6 md:px-10 py-6 md:py-8 bg-background min-h-screen pb-24 md:pb-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-border pb-4 animate-pulse">
           <div>
             <div className="h-8 bg-secondary rounded-sm w-48 mb-2" />
@@ -146,7 +146,7 @@ export const Ikigai = () => {
   }
 
   return (
-    <div className="w-full px-6 md:px-10 py-8 bg-background pb-24 md:pb-8">
+    <div className="w-full px-4 sm:px-6 md:px-10 py-6 md:py-8 bg-background pb-24 md:pb-8">
       {/* Header and Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-border pb-4">
         <div>
