@@ -12,6 +12,7 @@ import {
   X,
   Calendar,
   Check,
+  HelpCircle,
 } from "lucide-react";
 import { useEisenProjects } from "./hooks/controller/useEisenProjects";
 import { useEisenTasks } from "./hooks/controller/useEisenTasks";
@@ -22,13 +23,29 @@ import CreateTaskModal from "./components/modal/CreateTaskModal";
 
 /* ─── Quadrant config ───────────────────────────────── */
 const Q_META = {
-  Q1: { label: "Do First", sub: "Urgent · Important", accent: "#f87171" },
-  Q2: { label: "Schedule", sub: "Important · Not Urgent", accent: "#60a5fa" },
-  Q3: { label: "Delegate", sub: "Urgent · Not Important", accent: "#fbbf24" },
+  Q1: {
+    label: "Do First",
+    sub: "Urgent · Important",
+    accent: "#f87171",
+    desc: "Crisis tasks, tight deadlines, and pressing issues that require immediate action."
+  },
+  Q2: {
+    label: "Schedule",
+    sub: "Important · Not Urgent",
+    accent: "#60a5fa",
+    desc: "Long-term planning, personal growth, relationships, and preventing future crises."
+  },
+  Q3: {
+    label: "Delegate",
+    sub: "Urgent · Not Important",
+    accent: "#fbbf24",
+    desc: "Distractions, phone calls, certain emails, and meetings that can be handled by others."
+  },
   Q4: {
     label: "Eliminate",
     sub: "Not Urgent · Not Important",
     accent: "#34d399",
+    desc: "Time-wasting activities, unproductive habits, and trivial tasks with no clear value."
   },
 } as const;
 
@@ -386,13 +403,21 @@ export const EisenMatrix = () => {
               >
                 {/* Quadrant header */}
                 <div className="flex items-center justify-between mb-2 flex-shrink-0">
-                  <div>
-                    <p
-                      className="text-[12px] font-semibold"
-                      style={{ color: meta.accent }}
-                    >
-                      {meta.label}
-                    </p>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <p
+                        className="text-[12px] font-semibold"
+                        style={{ color: meta.accent }}
+                      >
+                        {meta.label}
+                      </p>
+                      <div className="relative group">
+                        <HelpCircle className="size-3 text-neutral-400 hover:text-foreground cursor-pointer transition-colors" />
+                        <div className="absolute left-0 bottom-full mb-1.5 hidden group-hover:block z-50 w-[200px] bg-card border border-border rounded p-2 text-[11px] text-muted-foreground leading-[1.4] shadow-md font-sans font-normal normal-case">
+                          {meta.desc}
+                        </div>
+                      </div>
+                    </div>
                     <p className="text-[10px] text-neutral-500 mt-0.5 font-light">
                       {meta.sub}
                     </p>

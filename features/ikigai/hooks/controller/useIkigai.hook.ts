@@ -4,7 +4,9 @@ import { useAppStore, type IkigaiProfile, type IkigaiResult } from "@/store/appS
 export const useIkigai = () => {
   const { ikigaiProfiles: profiles, setIkigaiProfiles: setProfiles, fetchIkigaiProfiles } = useAppStore();
   const [activeProfile, setActiveProfile] = useState<IkigaiProfile | null>(null);
-  const [activeMode, setActiveMode] = useState<"view" | "create" | "loading">("view");
+  const [activeMode, setActiveMode] = useState<"view" | "create" | "loading">(
+    profiles.length > 0 ? "view" : "create"
+  );
   const [isLoading, setIsLoading] = useState(profiles.length === 0);
 
   // Input states for form creation
@@ -16,36 +18,6 @@ export const useIkigai = () => {
   });
   const [error, setError] = useState("");
 
-  const defaultMockProfile: IkigaiProfile = {
-    id: "1",
-    title: "Creative Developer & Educator",
-    inputs: {
-      love: "Coding creative interfaces, exploring philosophy",
-      goodAt: "Translating mockups to clean React code, writing modular hooks",
-      worldNeeds: "Helping developers find clarity, building accessible tools",
-      paidFor: "Full-stack software engineering, developer advocacy"
-    },
-    createdOn: "2026-07-06",
-    result: {
-      ikigaiSummary: "To empower human clarity by engineering accessible and beautifully designed web interfaces.",
-      analysis: {
-        passion: "Coding creative React hooks combines your love for technology with developer strength.",
-        mission: "Building tools that reduce complexity solves a core challenge developers experience.",
-        vocation: "Translating designs into accessible formats is a premium, monetizable skill.",
-        profession: "Full-stack engineering represents highly sustainable career paths for your skillset."
-      },
-      actionableSteps: [
-        "Contribute to open-source developer clarity repositories.",
-        "Establish a clean React component library design pattern.",
-        "Integrate AI assistants to facilitate user onboarding."
-      ],
-      potentialObstacles: [
-        "Losing focus in multi-layered features overhead.",
-        "Ignoring unit test assertions in favor of visuals."
-      ]
-    }
-  };
-
   useEffect(() => {
     async function loadData() {
       if (profiles.length === 0) {
@@ -53,7 +25,6 @@ export const useIkigai = () => {
       } else {
         if (!activeProfile && profiles.length > 0) {
           setActiveProfile(profiles[0]);
-          setInputs(profiles[0].inputs);
           setActiveMode("view");
         }
         setIsLoading(false);
@@ -71,30 +42,14 @@ export const useIkigai = () => {
 
   useEffect(() => {
     if (!isLoading && profiles.length === 0) {
-      const defaultProfile = defaultMockProfile;
-      setProfiles([defaultProfile]);
-      setActiveProfile(defaultProfile);
-      setInputs(defaultProfile.inputs);
-      setActiveMode("view");
-      fetch("/api/ikigai/profiles", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(defaultProfile),
-      }).catch((err) => console.error("Failed to save default mock profile", err));
+      setActiveProfile(null);
+      setInputs({ love: "", goodAt: "", worldNeeds: "", paidFor: "" });
+      setActiveMode("create");
     } else if (profiles.length > 0 && !activeProfile) {
       setActiveProfile(profiles[0]);
-      setInputs(profiles[0].inputs);
       setActiveMode("view");
     }
   }, [profiles, isLoading, activeProfile]);
-
-  const loadDefaultMock = () => {
-    setProfiles([defaultMockProfile]);
-    setActiveProfile(defaultMockProfile);
-    setInputs(defaultMockProfile.inputs);
-    setActiveMode("view");
-    localStorage.setItem("enso_ikigai_profiles", JSON.stringify([defaultMockProfile]));
-  };
 
   const handleInputChange = (value: string, key: string) => {
     setInputs(prev => ({ ...prev, [key]: value }));
@@ -109,7 +64,6 @@ export const useIkigai = () => {
 
   const handleViewProfile = (profile: IkigaiProfile) => {
     setActiveProfile(profile);
-    setInputs(profile.inputs);
     setActiveMode("view");
     setError("");
   };
@@ -169,6 +123,7 @@ export const useIkigai = () => {
       setProfiles(updated);
       setActiveProfile(newProfile);
       setActiveMode("view");
+      setInputs({ love: "", goodAt: "", worldNeeds: "", paidFor: "" });
 
       // Save to server
       try {

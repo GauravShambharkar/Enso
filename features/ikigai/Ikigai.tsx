@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, ArrowLeft, Plus, RotateCcw, Trash2, Eye, Compass, List, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowLeft, Plus, RotateCcw, Trash2, Eye, Compass, List, Sparkles, HelpCircle } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useIkigai } from "./hooks/controller/useIkigai.hook";
 import type { IkigaiProfile } from "@/store/appStore";
@@ -15,6 +15,11 @@ const STEPS = [
     label: "What you love",
     hint: "Activities, topics, and pursuits that draw you in without effort.",
     placeholder: "e.g. writing, building tools, teaching, exploring ideas...",
+    guides: [
+      "What tasks make you feel energized rather than drained?",
+      "What hobbies do you gravitate towards on your days off?",
+      "What are you passionate about learning, discussing, or reading about?"
+    ]
   },
   {
     field: "goodAt" as const,
@@ -22,6 +27,11 @@ const STEPS = [
     label: "What you're good at",
     hint: "Competencies you've built — skills others rely on you for.",
     placeholder: "e.g. systems thinking, visual design, deep research...",
+    guides: [
+      "What skills have you spent significant time practicing or studying?",
+      "What do friends, classmates, or colleagues ask you to help them with?",
+      "What comes relatively easily to you compared to others?"
+    ]
   },
   {
     field: "worldNeeds" as const,
@@ -29,6 +39,11 @@ const STEPS = [
     label: "What the world needs",
     hint: "Real problems worth solving. Where you see gaps others miss.",
     placeholder: "e.g. accessible education, mental clarity tools...",
+    guides: [
+      "What problems in your community or society bother you the most?",
+      "What are the major challenges or inefficiencies your industry faces?",
+      "What gaps do you notice that others seem to ignore or miss?"
+    ]
   },
   {
     field: "paidFor" as const,
@@ -36,6 +51,11 @@ const STEPS = [
     label: "What you can be paid for",
     hint: "Market-valued skills — services or products people will pay for.",
     placeholder: "e.g. software engineering, consulting, writing...",
+    guides: [
+      "What jobs, roles, or freelance services are in high demand?",
+      "What products or services could you sell that solve someone's pain point?",
+      "What have you been paid to do (or offered compensation for) in the past?"
+    ]
   },
 ] as const;
 
@@ -81,14 +101,11 @@ export const Ikigai = () => {
   const activeSegment = (segmentState || "ikigai") as SegKey;
   const setActiveSegment = (seg: SegKey | null) => setSegmentState(seg);
 
-  // Sync mode transitions with tabs
   useEffect(() => {
-    if (activeMode === "create") {
+    if (profiles.length === 0 && activeTab !== "discover") {
       setActiveTab("discover");
-    } else if (activeMode === "view" && activeProfile) {
-      setActiveTab("view");
     }
-  }, [activeMode, activeProfile]);
+  }, [profiles.length, activeTab]);
 
   const handleTabChange = (tab: "discover" | "view" | "profiles") => {
     if (tab === "discover") {
@@ -102,10 +119,10 @@ export const Ikigai = () => {
   const getSegmentContent = (): string => {
     if (!activeProfile) return "No profile data loaded.";
     switch (activeSegment) {
-      case "love":       return inputs.love || activeProfile.inputs.love;
-      case "goodAt":     return inputs.goodAt || activeProfile.inputs.goodAt;
-      case "worldNeeds": return inputs.worldNeeds || activeProfile.inputs.worldNeeds;
-      case "paidFor":    return inputs.paidFor || activeProfile.inputs.paidFor;
+      case "love":       return activeProfile.inputs.love;
+      case "goodAt":     return activeProfile.inputs.goodAt;
+      case "worldNeeds": return activeProfile.inputs.worldNeeds;
+      case "paidFor":    return activeProfile.inputs.paidFor;
       case "passion":    return activeProfile.result.analysis.passion;
       case "mission":    return activeProfile.result.analysis.mission;
       case "vocation":   return activeProfile.result.analysis.vocation;
@@ -166,7 +183,7 @@ export const Ikigai = () => {
               activeTab === "discover" ? "bg-secondary text-foreground font-medium" : "bg-transparent text-neutral-500 hover:text-muted-foreground"
             }`}
           >
-            <Compass className="size-3.5" /> Discover
+            <Compass className="size-3.5" /> Build Ikigai
           </button>
           
           <button
@@ -196,12 +213,15 @@ export const Ikigai = () => {
 
       {/* Main Workspace content area */}
       <AnimatePresence mode="wait">
-        {activeTab === "discover" && activeMode === "create" && (
+        {activeTab === "discover" && activeMode !== "loading" && (
           <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
             <WizardForm
               inputs={inputs}
               onChange={handleInputChange}
-              onSubmit={handleSubmit}
+              onSubmit={async () => {
+                await handleSubmit();
+                setActiveTab("view");
+              }}
               onCancel={() => profiles.length > 0 && handleViewProfile(profiles[0])}
               error={error}
               hasProfiles={profiles.length > 0}
@@ -344,9 +364,14 @@ function WizardForm({
   hasProfiles: boolean;
 }) {
   const [step, setStep] = useState(0);
+  const [showHelp, setShowHelp] = useState(false);
   const current = STEPS[step];
   const value = inputs[current.field] ?? "";
   const allFilled = STEPS.every(s => inputs[s.field]?.trim());
+
+  useEffect(() => {
+    setShowHelp(false);
+  }, [step]);
 
   return (
     <div className="max-w-[600px] my-5">
@@ -375,15 +400,48 @@ function WizardForm({
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.12 }}
         >
-          <p className="text-[11px] text-neutral-500 mb-1.5 tabular-nums">
-            {current.num} / 04
-          </p>
+          <div className="flex items-center justify-between mb-1.5">
+            <p className="text-[11px] text-neutral-500 tabular-nums">
+              {current.num} / 04
+            </p>
+            <button
+              onClick={() => setShowHelp(!showHelp)}
+              className="flex items-center gap-1 text-[11px] text-neutral-400 hover:text-foreground transition-colors cursor-pointer bg-transparent border-none p-0 outline-none font-sans font-medium"
+              title="Toggle Guiding Questions"
+            >
+              <HelpCircle className="size-3.5" />
+              {showHelp ? "Hide guide" : "Stuck? Show guide"}
+            </button>
+          </div>
           <h2 className="text-[22px] font-medium text-foreground tracking-[-0.015em] mb-1">
             {current.label}
           </h2>
           <p className="text-[13px] text-neutral-500 mb-5 leading-[1.6]">
             {current.hint}
           </p>
+
+          <AnimatePresence>
+            {showHelp && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden mb-4"
+              >
+                <div className="bg-secondary/40 border border-border/80 rounded-md p-4 text-[13px] text-muted-foreground leading-[1.6]">
+                  <p className="font-semibold text-foreground mb-2 flex items-center gap-1.5">
+                    <Sparkles className="size-3.5 text-amber-500" /> Guiding Questions:
+                  </p>
+                  <ul className="list-disc list-inside space-y-1.5 pl-1.5 font-light">
+                    {current.guides.map((g, idx) => (
+                      <li key={idx}>{g}</li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <textarea
             autoFocus

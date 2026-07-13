@@ -185,7 +185,7 @@ html.dark body {
 
 ::-webkit-scrollbar-thumb {
   background: #222;
-  border-radius: 99px;
+  border-radius: 100px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
