@@ -9,4 +9,4 @@
 
 export { useEisenProjects } from "./useEisenProjects";
 export { useEisenTasks } from "./useEisenTasks";
-export type { EisenTask, EisenProject } from "./useEisenProjects";
+export type { EisenTask, EisenProject } from "@/store/appStore";

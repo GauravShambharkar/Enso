@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, Plus, RotateCcw, Trash2, Eye, Compass, List, Sparkles } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useIkigai } from "./hooks/controller/useIkigai.hook";
-import type { IkigaiProfile } from "./hooks/controller/useIkigai.hook";
+import type { IkigaiProfile } from "@/store/appStore";
 
 /* ─── Wizard steps ──────────────────────────────────── */
 const STEPS = [

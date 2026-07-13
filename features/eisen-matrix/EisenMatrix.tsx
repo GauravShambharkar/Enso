@@ -15,10 +15,11 @@ import {
 } from "lucide-react";
 import { useEisenProjects } from "./hooks/controller/useEisenProjects";
 import { useEisenTasks } from "./hooks/controller/useEisenTasks";
+import { useAppStore } from "@/store/appStore";
 import type {
   EisenTask,
   EisenProject,
-} from "./hooks/controller/useEisenProjects";
+} from "@/store/appStore";
 import CreateProjectModal from "./components/modal/CreateProjectModal";
 import CreateTaskModal from "./components/modal/CreateTaskModal";
 
@@ -38,6 +39,13 @@ type Q = keyof typeof Q_META;
 
 /* ─── Main ──────────────────────────────────────────── */
 export const EisenMatrix = () => {
+  const {
+    activeProjectId: cachedProjectId,
+    setActiveProjectId: setCachedProjectId,
+    activeTaskId,
+    setActiveTaskId,
+  } = useAppStore();
+
   // Sync activeProjectId and selectedTaskId to URL query parameters using nuqs
   const [activeProjectId, setActiveProjectId] = useQueryState("projectId", {
     defaultValue: "",
@@ -45,6 +53,48 @@ export const EisenMatrix = () => {
   const [selectedTaskId, setSelectedTaskId] = useQueryState("taskId", {
     defaultValue: "",
   });
+
+  const [hasHydrated, setHasHydrated] = React.useState(false);
+  const isProjectSyncMounted = React.useRef(false);
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+
+    if (!isProjectSyncMounted.current) {
+      isProjectSyncMounted.current = true;
+      if (!activeProjectId && cachedProjectId) {
+        setActiveProjectId(cachedProjectId);
+      } else if (activeProjectId) {
+        setCachedProjectId(activeProjectId);
+      }
+    } else {
+      if (activeProjectId !== cachedProjectId) {
+        setCachedProjectId(activeProjectId);
+      }
+    }
+  }, [hasHydrated, activeProjectId, cachedProjectId, setActiveProjectId, setCachedProjectId]);
+
+  const isTaskSyncMounted = React.useRef(false);
+  useEffect(() => {
+    if (!hasHydrated) return;
+
+    if (!isTaskSyncMounted.current) {
+      isTaskSyncMounted.current = true;
+      if (!selectedTaskId && activeTaskId) {
+        setSelectedTaskId(activeTaskId);
+      } else if (selectedTaskId) {
+        setActiveTaskId(selectedTaskId);
+      }
+    } else {
+      if (selectedTaskId !== activeTaskId) {
+        setActiveTaskId(selectedTaskId);
+      }
+    }
+  }, [hasHydrated, selectedTaskId, activeTaskId, setSelectedTaskId, setActiveTaskId]);
 
   const {
     projects,

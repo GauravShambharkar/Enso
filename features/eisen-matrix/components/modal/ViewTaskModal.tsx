@@ -2,7 +2,7 @@
 
 import React from "react";
 import { X, Trash2, CheckCircle, Circle } from "lucide-react";
-import { EisenTask } from "../../hooks/controller/useEisenProjects";
+import { type EisenTask } from "@/store/appStore";
 
 interface ViewTaskProps {
   task: EisenTask | null;

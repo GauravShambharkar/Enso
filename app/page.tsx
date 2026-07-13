@@ -37,10 +37,10 @@ export default function Home() {
       <main>
         {/* Hero Section */}
         <section
-          className="relative min-h-[90vh] md:h-screen flex flex-col items-center justify-start text-center px-6 pt-[120px] md:pt-[150px] max-[750px]:pt-[100px]"
+          className="relative min-h-[90vh] md:h-screen flex flex-col items-center justify-start text-center px-6 pt-[120px] md:pt-[110px] max-[750px]:pt-[150px]"
           style={{
             backgroundImage:
-              "linear-gradient(to bottom, rgba(252, 237, 217, 0.1) 60%, rgba(252, 237, 217, 0.95) 98%), url('/bgEnso2.png')",
+              "linear-gradient(to bottom, rgba(252, 237, 217, 0.1) 60%, rgba(252, 237, 217, 0.95) 98%), url('/bgLightThemeResized.png')",
             backgroundSize: "cover",
             backgroundPosition: "center bottom",
             backgroundRepeat: "no-repeat",
