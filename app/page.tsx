@@ -34,7 +34,9 @@ export default function Home() {
   const { isNight } = useTimeTheme();
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isNight ? "bg-[#030712]" : "bg-[#FCEDD9]"}`}>
+    <div
+      className={`min-h-screen transition-colors duration-300 ${isNight ? "bg-[#030712]" : "bg-[#FCEDD9]"}`}
+    >
       <Navbar />
 
       <main>
@@ -52,13 +54,17 @@ export default function Home() {
         >
           <div className="max-w-[800px]">
             {/* Headline */}
-            <h1 className={`text-[32px] tracking-tighter sm:text-[48px] md:text-[64px] font-medium leading-[1.15] sm:leading-[1.1] mb-5 transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}>
+            <h1
+              className={`text-[32px] tracking-tighter sm:text-[48px] md:text-[64px] font-medium leading-[1.15] sm:leading-[1.1] mb-5 transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}
+            >
               Finding your focus in a<br />
               world full of noise.
             </h1>
 
             {/* Description */}
-            <p className={`text-[14px] sm:text-[15px] w-full leading-[1.6] sm:leading-[1.7] mb-8 max-w-[640px] mx-auto font-normal px-2 max-[750px]:text-[12px] transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}>
+            <p
+              className={`text-[14px] sm:text-[15px] w-full leading-[1.6] sm:leading-[1.7] mb-8 max-w-[640px] mx-auto font-normal px-2 max-[750px]:text-[12px] transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+            >
               Enso is a quiet workspace designed for professionals who want to
               cultivate clarity.
               <br className="hidden sm:inline" />
@@ -70,7 +76,9 @@ export default function Home() {
             <div className="flex justify-center">
               <Show when="signed-out">
                 <SignUpButton mode="modal" forceRedirectUrl="/tools">
-                  <button className={`text-[14px] px-6 py-2.5 rounded-md border-none cursor-pointer font-medium flex items-center gap-2 transition-all duration-300 ${isNight ? "bg-white text-slate-950 shadow-[0_4px_12px_rgba(255,255,255,0.15)] hover:bg-white/90" : "bg-[#0f2963] text-white shadow-[0_2px_8px_rgba(15,41,99,0.15)] hover:opacity-90"}`}>
+                  <button
+                    className={`text-[14px] px-6 py-2.5 rounded-md border-none cursor-pointer font-medium flex items-center gap-2 transition-all duration-300 ${isNight ? "bg-white text-slate-950 shadow-[0_4px_12px_rgba(255,255,255,0.15)] hover:bg-white/90" : "bg-[#0f2963] text-white shadow-[0_2px_8px_rgba(15,41,99,0.15)] hover:opacity-90"}`}
+                  >
                     Start Free <ArrowRight className="size-4" />
                   </button>
                 </SignUpButton>
@@ -88,16 +96,22 @@ export default function Home() {
           </div>
 
           {/* Bottom transition gradient overlay */}
-          <div className={`absolute bottom-0 left-0 right-0 h-[180px] bg-gradient-to-t to-transparent pointer-events-none transition-colors duration-300 ${isNight ? "from-[#030712]" : "from-[#FCEDD9]"}`} />
+          <div
+            className={`absolute bottom-0 left-0 right-0 h-[180px] bg-gradient-to-t to-transparent pointer-events-none transition-colors duration-300 ${isNight ? "from-[#030712]" : "from-[#FCEDD9]"}`}
+          />
         </section>
 
         {/* Feature Grid Section */}
         <section className="py-20 md:py-[100px] px-6 max-w-[1100px] mx-auto">
           <div className="text-center mb-[54px]">
-            <p className={`text-[11px] font-semibold uppercase tracking-[0.08em] mb-2 transition-colors duration-300 ${isNight ? "text-violet-400" : "text-[#0f2963]"}`}>
+            <p
+              className={`text-[11px] font-semibold uppercase tracking-[0.08em] mb-2 transition-colors duration-300 ${isNight ? "text-violet-400" : "text-[#0f2963]"}`}
+            >
               Core Features
             </p>
-            <h2 className={`text-[32px] font-medium tracking-[-0.02em] transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}>
+            <h2
+              className={`text-[32px] font-medium tracking-[-0.02em] transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}
+            >
               Minimalist tools for complex minds.
             </h2>
           </div>
@@ -124,16 +138,22 @@ export default function Home() {
                   >
                     <Icon className="size-4" />
                   </div>
-                  <h3 className={`text-[18px] font-medium mb-3 transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}>
+                  <h3
+                    className={`text-[18px] font-medium mb-3 transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}
+                  >
                     {tool.name}
                   </h3>
-                  <p className={`text-[13px] leading-[1.6] flex-1 mb-6 transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}>
+                  <p
+                    className={`text-[13px] leading-[1.6] flex-1 mb-6 transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+                  >
                     {tool.desc}
                   </p>
                   <Link
                     href={tool.href}
                     className={`text-[12px] no-underline flex items-center gap-1.5 font-medium transition-colors duration-300 ${
-                      isNight ? "text-violet-400 hover:text-violet-300" : "text-[#0f2963] hover:text-[#1d4ed8]"
+                      isNight
+                        ? "text-violet-400 hover:text-violet-300"
+                        : "text-[#0f2963] hover:text-[#1d4ed8]"
                     }`}
                   >
                     Try tool <ArrowRight className="size-3.5" />
@@ -159,10 +179,14 @@ export default function Home() {
           <div className="max-w-[900px] mx-auto">
             {/* Call to action card */}
             <div className="mb-16 md:mb-[90px]">
-              <h2 className={`text-[28px] sm:text-[36px] font-medium tracking-[-0.025em] mb-4 transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}>
+              <h2
+                className={`text-[28px] sm:text-[36px] font-medium tracking-[-0.025em] mb-4 transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}
+              >
                 Align your life goals today.
               </h2>
-              <p className={`text-[14px] sm:text-[15px] leading-[1.6] mb-8 font-light max-w-[600px] mx-auto px-2 transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}>
+              <p
+                className={`text-[14px] sm:text-[15px] leading-[1.6] mb-8 font-light max-w-[600px] mx-auto px-2 transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+              >
                 Start generating your Ikigai, capturing ideas, and prioritizing
                 tasks without noise.
               </p>
@@ -170,7 +194,9 @@ export default function Home() {
               <div className="flex gap-3 justify-center">
                 <Show when="signed-out">
                   <SignUpButton mode="modal" forceRedirectUrl="/tools">
-                    <button className={`text-[14px] px-6 py-2.5 rounded-[6px] border-none cursor-pointer font-medium transition-all duration-300 ${isNight ? "bg-white text-slate-950 hover:bg-white/90" : "bg-[#0f2963] text-white hover:opacity-90"}`}>
+                    <button
+                      className={`text-[14px] px-6 py-2.5 rounded-[6px] border-none cursor-pointer font-medium transition-all duration-300 ${isNight ? "bg-white text-slate-950 hover:bg-white/90" : "bg-[#0f2963] text-white hover:opacity-90"}`}
+                    >
                       Start for free
                     </button>
                   </SignUpButton>
@@ -188,13 +214,19 @@ export default function Home() {
             </div>
 
             {/* Middle navigation grid */}
-            <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-left border-t pt-12 md:pt-[60px] pb-12 md:pb-[60px] mb-10 transition-colors duration-300 ${isNight ? "border-white/10" : "border-[#0f2963]/8"}`}>
+            <div
+              className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-left border-t pt-12 md:pt-[60px] pb-12 md:pb-[60px] mb-10 transition-colors duration-300 ${isNight ? "border-white/10" : "border-[#0f2963]/8"}`}
+            >
               {/* Brand Profile */}
               <div>
-                <span className={`sekuya text-lg block mb-3 transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}>
+                <span
+                  className={`sekuya text-lg block mb-3 transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}
+                >
                   Enso
                 </span>
-                <p className={`text-[12px] leading-[1.6] font-light transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}>
+                <p
+                  className={`text-[12px] leading-[1.6] font-light transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+                >
                   A clean, distraction-free environment for aligning life goals,
                   brain dump notes, and prioritizing workload.
                 </p>
@@ -202,7 +234,9 @@ export default function Home() {
 
               {/* Tools Column */}
               <div>
-                <p className={`text-[11px] font-bold uppercase tracking-[0.08em] mb-4 transition-colors duration-300 ${isNight ? "text-slate-300" : "text-[#0f2963]"}`}>
+                <p
+                  className={`text-[11px] font-bold uppercase tracking-[0.08em] mb-4 transition-colors duration-300 ${isNight ? "text-slate-300" : "text-[#0f2963]"}`}
+                >
                   Tools
                 </p>
                 <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
@@ -235,22 +269,30 @@ export default function Home() {
 
               {/* Resources Column */}
               <div>
-                <p className={`text-[11px] font-bold uppercase tracking-[0.08em] mb-4 transition-colors duration-300 ${isNight ? "text-slate-300" : "text-[#0f2963]"}`}>
+                <p
+                  className={`text-[11px] font-bold uppercase tracking-[0.08em] mb-4 transition-colors duration-300 ${isNight ? "text-slate-300" : "text-[#0f2963]"}`}
+                >
                   Resources
                 </p>
                 <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
                   <li>
-                    <span className={`text-[13px] cursor-default transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}>
+                    <span
+                      className={`text-[13px] cursor-default transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+                    >
                       Documentation
                     </span>
                   </li>
                   <li>
-                    <span className={`text-[13px] cursor-default transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}>
+                    <span
+                      className={`text-[13px] cursor-default transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+                    >
                       Privacy Guide
                     </span>
                   </li>
                   <li>
-                    <span className={`text-[13px] cursor-default transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}>
+                    <span
+                      className={`text-[13px] cursor-default transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+                    >
                       Focus Techniques
                     </span>
                   </li>
@@ -259,22 +301,30 @@ export default function Home() {
 
               {/* Legal Column */}
               <div>
-                <p className={`text-[11px] font-bold uppercase tracking-[0.08em] mb-4 transition-colors duration-300 ${isNight ? "text-slate-300" : "text-[#0f2963]"}`}>
+                <p
+                  className={`text-[11px] font-bold uppercase tracking-[0.08em] mb-4 transition-colors duration-300 ${isNight ? "text-slate-300" : "text-[#0f2963]"}`}
+                >
                   Product
                 </p>
                 <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
                   <li>
-                    <span className={`text-[13px] cursor-default transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}>
+                    <span
+                      className={`text-[13px] cursor-default transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+                    >
                       Terms of Service
                     </span>
                   </li>
                   <li>
-                    <span className={`text-[13px] cursor-default transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}>
+                    <span
+                      className={`text-[13px] cursor-default transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+                    >
                       Privacy Policy
                     </span>
                   </li>
                   <li>
-                    <span className={`text-[13px] cursor-default transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}>
+                    <span
+                      className={`text-[13px] cursor-default transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+                    >
                       Support Center
                     </span>
                   </li>
@@ -283,12 +333,18 @@ export default function Home() {
             </div>
 
             {/* Bottom Copyright */}
-            <div className={`border-t pt-8 flex flex-col sm:flex-row gap-4 justify-between items-center text-center sm:text-left transition-colors duration-300 ${isNight ? "border-white/10" : "border-[#0f2963]/8"}`}>
-              <span className={`text-[12px] transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}>
+            <div
+              className={`border-t pt-8 flex flex-col sm:flex-row gap-4 justify-between items-center text-center sm:text-left transition-colors duration-300 ${isNight ? "border-white/10" : "border-[#0f2963]/8"}`}
+            >
+              <span
+                className={`text-[12px] transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+              >
                 &copy; {new Date().getFullYear()} Enso Workspace. All rights
                 reserved.
               </span>
-              <span className={`text-[12px] font-light flex items-center gap-1.5 transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}>
+              <span
+                className={`text-[12px] font-light flex items-center gap-1.5 transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+              >
                 <span className="width-1.5 height-1.5 rounded-full bg-[#10b981] inline-block w-1.5 h-1.5"></span>{" "}
                 Operational
               </span>
