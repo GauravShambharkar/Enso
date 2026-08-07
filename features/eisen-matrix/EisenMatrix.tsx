@@ -19,6 +19,7 @@ import { useEisenTasks } from "./hooks/controller/useEisenTasks";
 import { useAppStore } from "@/store/appStore";
 import type { EisenTask, EisenProject } from "@/store/appStore";
 import CreateProjectModal from "./components/modal/CreateProjectModal";
+import EditProjectModal from "./components/modal/EditProjectModal";
 import CreateTaskModal from "./components/modal/CreateTaskModal";
 
 /* ─── Quadrant config ───────────────────────────────── */
@@ -134,6 +135,13 @@ export const EisenMatrix = () => {
     setNewProjectPurpose,
     handleCreateProject,
     handleDeleteProject,
+    editProjectModal,
+    setEditProjectModal,
+    editProjectName,
+    setEditProjectName,
+    editProjectPurpose,
+    setEditProjectPurpose,
+    handleUpdateProject,
   } = useEisenProjects();
 
   const {
@@ -251,12 +259,6 @@ export const EisenMatrix = () => {
               Create a matrix to start organizing tasks by urgency and
               importance.
             </p>
-            <button
-              onClick={() => setCreateProjectModal(true)}
-              className="text-[12px] px-3 py-1.5 rounded-md border border-border bg-transparent text-muted-foreground hover:bg-secondary cursor-pointer transition-colors font-sans mt-1"
-            >
-              Create your first matrix
-            </button>
           </div>
         ) : (
           /* Project rows */
@@ -341,6 +343,17 @@ export const EisenMatrix = () => {
               aria-label="Back to matrices"
             >
               Back
+            </button>
+            <button
+              onClick={() => {
+                setEditProjectName(activeProject.name);
+                setEditProjectPurpose(activeProject.purpose || "");
+                setEditProjectModal(true);
+              }}
+              className="text-[11px] px-2 py-0.5 rounded border border-border bg-transparent text-neutral-500 hover:text-foreground hover:bg-secondary/40 cursor-pointer font-sans font-medium transition-colors"
+              aria-label="Edit matrix details"
+            >
+              Edit
             </button>
           </div>
           {activeProject.purpose && (
@@ -699,6 +712,18 @@ export const EisenMatrix = () => {
             setTitle: setNewTaskTitle,
             quadrant: newTaskQuadrant,
             setQuadrant: setNewTaskQuadrant,
+          }}
+        />
+      )}
+      {editProjectModal && (
+        <EditProjectModal
+          onClose={() => setEditProjectModal(false)}
+          onSubmit={() => handleUpdateProject(activeProject.id)}
+          state={{
+            name: editProjectName,
+            setName: setEditProjectName,
+            purpose: editProjectPurpose,
+            setPurpose: setEditProjectPurpose,
           }}
         />
       )}
