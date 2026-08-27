@@ -35,13 +35,11 @@ export function Navbar() {
           </SignInButton>
           <SignUpButton mode="modal" forceRedirectUrl="/tools">
             <button
-              className={`text-[13px] px-4 py-1.5 rounded-md border-none cursor-pointer font-medium transition-all duration-300 ${
-                isNight
-                  ? "bg-white text-slate-950 hover:bg-white/90"
-                  : "bg-[#0f2963] text-white hover:opacity-90"
+              className={`text-[14px] px-[14px] py-[4px] rounded-[7px] border-[1.5px] cursor-pointer font-normal transition-all duration-300 ${
+                "bg-gradient-to-b from-[#2361e2] to-[#092257] text-white border-[#84acff] hover:brightness-110"
               }`}
             >
-              Get started
+              Get Started
             </button>
           </SignUpButton>
         </Show>

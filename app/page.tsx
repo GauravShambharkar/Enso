@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { SignUpButton, Show } from "@clerk/nextjs";
 import { Navbar } from "@/components/navbar";
 import { Compass, Brain, Target, ArrowRight } from "lucide-react";
@@ -13,6 +14,7 @@ const TOOLS = [
     color: "#c084fc",
     desc: "A reflection tool to align what you love, what you're good at, what the world needs, and what you can get paid for. Synthesize your life purpose.",
     href: "/tools/ikigai",
+    image: "/ikigai.png",
   },
   {
     name: "Idea Vault",
@@ -20,6 +22,7 @@ const TOOLS = [
     color: "#a78bfa",
     desc: "A distraction-free zone to capture raw thoughts and ideas the second they arrive. Review and develop them in a split-pane layout at your own pace.",
     href: "/tools/idea-vault",
+    image: "/ideaVault.png",
   },
   {
     name: "Eisen Matrix",
@@ -27,6 +30,7 @@ const TOOLS = [
     color: "#60a5fa",
     desc: "A project-based Eisenhower prioritization matrix. Drag, sort, and organize tasks into urgency and importance quadrants to clear visual clutter.",
     href: "/tools/eisen-matrix",
+    image: "/EisenMatrix.png",
   },
 ];
 
@@ -42,33 +46,30 @@ export default function Home() {
       <main>
         {/* Hero Section */}
         <section
-          className="relative min-h-[90vh] md:h-screen flex flex-col items-center justify-start text-center px-6 pt-[120px] md:pt-[110px] max-[750px]:pt-[150px] transition-all duration-300"
+          className={`relative min-h-[100svh] md:h-screen flex flex-col items-center justify-start text-center px-6 pt-[137px] md:pt-[137px] max-[750px]:pt-[150px] transition-all duration-300 ${isNight ? "bg-[#06174B]" : "bg-[#FCEDD9]"}`}
           style={{
             backgroundImage: isNight
-              ? "linear-gradient(to bottom, rgba(3, 7, 18, 0.1) 60%, rgba(3, 7, 18, 0.95) 98%), url('/bgDarkTheme.png')"
-              : "linear-gradient(to bottom, rgba(252, 237, 217, 0.1) 60%, rgba(252, 237, 217, 0.95) 98%), url('/bgLightThemeResized.png')",
+              ? "linear-gradient(to bottom, #06174B 0 123px, transparent 123px), linear-gradient(to bottom, rgba(3, 7, 18, 0.1) 60%, rgba(3, 7, 18, 0.95) 98%), url('/bgDarkTheme.png')"
+              : "linear-gradient(to bottom, rgba(255, 255, 255, 0) 82%, rgba(253, 246, 235, 1) 97%), url('/landing-hero-reference.png')",
             backgroundSize: "cover",
-            backgroundPosition: "center bottom",
+            backgroundPosition: "center calc(100% + 110px)",
             backgroundRepeat: "no-repeat",
           }}
         >
-          <div className="max-w-[800px]">
+          <div className="max-w-[650px]">
             {/* Headline */}
             <h1
-              className={`text-[32px] tracking-tighter sm:text-[48px] md:text-[64px] font-medium leading-[1.15] sm:leading-[1.1] mb-5 transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}
+              className={`hero-serif text-[36px] tracking-[-0.04em] sm:text-[44px] md:text-[50px] font-medium leading-[1.18] mb-4 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#224388]"}`}
             >
-              Finding your focus in a<br />
-              world full of noise.
+              Finding Your Focus In a World Full Of Noise!!
             </h1>
 
             {/* Description */}
             <p
-              className={`text-[14px] sm:text-[15px] w-full leading-[1.6] sm:leading-[1.7] mb-8 max-w-[640px] mx-auto font-normal px-2 max-[750px]:text-[12px] transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+              className={`hero-serif text-[15px] sm:text-[16px] w-full leading-[1.65] mb-8 max-w-[575px] mx-auto font-normal px-2 max-[750px]:text-[13px] transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#879dc6]"}`}
             >
-              Enso is a quiet workspace designed for professionals who want to
-              cultivate clarity.
-              <br className="hidden sm:inline" />
-              Align your life goals, capture ideas, and prioritize work without
+              Designed for Everyone who want to cultivate clarity. Align your
+              life goals, capture ideas, and prioritize work without
               distractions.
             </p>
 
@@ -77,7 +78,7 @@ export default function Home() {
               <Show when="signed-out">
                 <SignUpButton mode="modal" forceRedirectUrl="/tools">
                   <button
-                    className={`text-[14px] px-6 py-2.5 rounded-md border-none cursor-pointer font-medium flex items-center gap-2 transition-all duration-300 ${isNight ? "bg-white text-slate-950 shadow-[0_4px_12px_rgba(255,255,255,0.15)] hover:bg-white/90" : "bg-[#0f2963] text-white shadow-[0_2px_8px_rgba(15,41,99,0.15)] hover:opacity-90"}`}
+                    className="text-[14px] px-[16px] py-[6px] rounded-[7px] border-[1.5px] cursor-pointer font-normal flex items-center gap-2 transition-all duration-300 bg-gradient-to-b from-[#2361e2] to-[#092257] text-white border-[#84acff] hover:brightness-110"
                   >
                     Start Free <ArrowRight className="size-4" />
                   </button>
@@ -97,70 +98,55 @@ export default function Home() {
 
           {/* Bottom transition gradient overlay */}
           <div
-            className={`absolute bottom-0 left-0 right-0 h-[180px] bg-gradient-to-t to-transparent pointer-events-none transition-colors duration-300 ${isNight ? "from-[#030712]" : "from-[#FCEDD9]"}`}
+            className={`absolute bottom-0 left-0 right-0 h-[240px] bg-gradient-to-t to-transparent pointer-events-none transition-colors duration-300 ${isNight ? "from-[#06174B] via-[#06174B]/30" : "from-[#06174B] via-[#06174B]/30 max-[450px]:from-[#06174B] max-[450px]:via-[#06174B]/10"}`}
           />
         </section>
 
         {/* Feature Grid Section */}
-        <section className="py-20 md:py-[100px] px-6 max-w-[1100px] mx-auto">
+        <section className="bg-[#06174B] py-20 md:py-[100px] px-6">
+          <div className="max-w-[1100px] mx-auto">
           <div className="text-center mb-[54px]">
             <p
-              className={`text-[11px] font-semibold uppercase tracking-[0.08em] mb-2 transition-colors duration-300 ${isNight ? "text-violet-400" : "text-[#0f2963]"}`}
+              className="hero-serif text-[16px] mb-2 text-[#84ACFF]"
             >
               Core Features
             </p>
             <h2
-              className={`text-[32px] font-medium tracking-[-0.02em] transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}
+              className="hero-serif text-[32px] font-medium tracking-[-0.02em] text-white"
             >
               Minimalist tools for complex minds.
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 justify-center gap-8">
             {TOOLS.map((tool) => {
-              const Icon = tool.icon;
               return (
                 <div
                   key={tool.name}
-                  className={`border rounded-[8px] p-8 md:px-7 md:py-8 flex flex-col transition-all duration-300 ${
-                    isNight
-                      ? "bg-slate-900/40 border-white/10 text-white shadow-[0_4px_24px_rgba(0,0,0,0.4)]"
-                      : "bg-white border-[#0f2963]/8 text-foreground shadow-[0_4px_12px_rgba(15,41,99,0.02)]"
-                  }`}
+                  className="hero-serif relative mx-auto flex h-[488px] w-full max-w-[353px] flex-col overflow-hidden rounded-[3px] bg-[#F8F3E7] px-7 pt-14 text-center text-[#0F2963]"
                 >
                   <div
-                    className={`w-9 h-9 rounded-[6px] flex items-center justify-center mb-5 border transition-colors duration-300 ${
-                      isNight
-                        ? "bg-white/5 border-white/10"
-                        : "bg-[#0f2963]/3 border-[#0f2963]/6"
-                    }`}
-                    style={{ color: tool.color }}
+                    className="absolute right-0 top-0 h-[24px] w-[24px]"
                   >
-                    <Icon className="size-4" />
+                    <Image src="/CornerAsset.png" alt="" fill sizes="26px" />
                   </div>
-                  <h3
-                    className={`text-[18px] font-medium mb-3 transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}
-                  >
+                  <h3 className="text-[32px] font-medium leading-tight tracking-[-0.04em]">
                     {tool.name}
                   </h3>
-                  <p
-                    className={`text-[13px] leading-[1.6] flex-1 mb-6 transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
-                  >
+                  <p className="mt-4 text-[16px] leading-[1.45] text-[#46649B]">
                     {tool.desc}
                   </p>
-                  <Link
-                    href={tool.href}
-                    className={`text-[12px] no-underline flex items-center gap-1.5 font-medium transition-colors duration-300 ${
-                      isNight
-                        ? "text-violet-400 hover:text-violet-300"
-                        : "text-[#0f2963] hover:text-[#1d4ed8]"
-                    }`}
-                  >
-                    Try tool <ArrowRight className="size-3.5" />
-                  </Link>
+                  <div className="relative mb-14 mt-auto h-[220px] w-full">
+                    <Image src={tool.image} alt="" fill sizes="300px" className="object-contain object-bottom" />
+                  </div>
+                  {/* <Link href={tool.href} className="sr-only">Try tool</Link> */}
+                  <div className="absolute bottom-0 left-0 h-[24px] w-[24px] rotate-180">
+                    <Image src="/CornerAsset.png" alt="" fill sizes="36px" />
+                  </div>
                 </div>
               );
             })}
+          </div>
           </div>
         </section>
 
@@ -180,12 +166,12 @@ export default function Home() {
             {/* Call to action card */}
             <div className="mb-16 md:mb-[90px]">
               <h2
-                className={`text-[28px] sm:text-[36px] font-medium tracking-[-0.025em] mb-4 transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}
+                className={`hero-serif text-[32px] sm:text-[42px] font-medium tracking-[-0.035em] mb-4 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#0f2963]"}`}
               >
                 Align your life goals today.
               </h2>
               <p
-                className={`text-[14px] sm:text-[15px] leading-[1.6] mb-8 font-light max-w-[600px] mx-auto px-2 transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+                className={`hero-serif text-[16px] sm:text-[18px] leading-[1.5] mb-8 max-w-[600px] mx-auto px-2 transition-colors duration-300 ${isNight ? "text-[#A9B9D8]" : "text-[#55688a]"}`}
               >
                 Start generating your Ikigai, capturing ideas, and prioritizing
                 tasks without noise.
@@ -195,9 +181,9 @@ export default function Home() {
                 <Show when="signed-out">
                   <SignUpButton mode="modal" forceRedirectUrl="/tools">
                     <button
-                      className={`text-[14px] px-6 py-2.5 rounded-[6px] border-none cursor-pointer font-medium transition-all duration-300 ${isNight ? "bg-white text-slate-950 hover:bg-white/90" : "bg-[#0f2963] text-white hover:opacity-90"}`}
+                      className="text-[14px] px-6 py-2.5 rounded-[7px] border-[1.5px] border-[#84acff] cursor-pointer font-normal text-white transition-all duration-300 bg-gradient-to-b from-[#2361e2] to-[#092257] hover:brightness-110"
                     >
-                      Start for free
+                      Start For Free
                     </button>
                   </SignUpButton>
                 </Show>
@@ -205,7 +191,7 @@ export default function Home() {
                 <Show when="signed-in">
                   <Link
                     href="/tools"
-                    className={`text-[14px] px-6 py-2.5 rounded-[6px] border-none cursor-pointer font-medium no-underline transition-all duration-300 ${isNight ? "bg-white text-slate-950 hover:bg-white/90" : "bg-[#0f2963] text-white hover:opacity-90"}`}
+                    className="text-[14px] px-6 py-2.5 rounded-[7px] border-[1.5px] border-[#84acff] cursor-pointer font-normal text-white no-underline transition-all duration-300 bg-gradient-to-b from-[#2361e2] to-[#092257] hover:brightness-110"
                   >
                     Enter Workspace
                   </Link>

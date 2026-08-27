@@ -65,6 +65,38 @@ export const useEisenProjects = () => {
     }
   };
 
+  const [editProjectModal, setEditProjectModal] = useState(false);
+  const [editProjectName, setEditProjectName] = useState("");
+  const [editProjectPurpose, setEditProjectPurpose] = useState("");
+
+  const handleUpdateProject = async (projectId: string) => {
+    if (!editProjectName.trim()) return;
+    const project = projects.find((p) => p.id === projectId);
+    if (!project) return;
+
+    const updatedProject: EisenProject = {
+      ...project,
+      name: editProjectName.trim(),
+      purpose: editProjectPurpose.trim(),
+    };
+
+    const updatedProjects = projects.map((p) =>
+      p.id === projectId ? updatedProject : p
+    );
+    setProjects(updatedProjects);
+    setEditProjectModal(false);
+
+    try {
+      await fetch("/api/eisen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedProject),
+      });
+    } catch (e) {
+      console.error("Failed to update project in database:", e);
+    }
+  };
+
   return {
     projects,
     setProjects,
@@ -77,5 +109,12 @@ export const useEisenProjects = () => {
     setNewProjectPurpose,
     handleCreateProject,
     handleDeleteProject,
+    editProjectModal,
+    setEditProjectModal,
+    editProjectName,
+    setEditProjectName,
+    editProjectPurpose,
+    setEditProjectPurpose,
+    handleUpdateProject,
   };
 };

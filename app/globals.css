@@ -167,6 +167,11 @@ html.dark body {
   font-family: sekuya;
 }
 
+/* Landing-page display type. */
+.hero-serif {
+  font-family: "Sorts Mill Goudy";
+}
+
 /* ─── Scrollbar ─────────────────────────────────────── */
 * {
   scrollbar-width: thin;
