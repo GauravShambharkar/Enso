@@ -39,7 +39,7 @@ export default function Home() {
 
   return (
     <div
-      className={`min-h-screen transition-colors duration-300 ${isNight ? "bg-[#030712]" : "bg-[#FCEDD9]"}`}
+      className={`min-h-screen transition-colors duration-300 ${isNight ? "bg-[#06174B]" : "bg-[#FCEDD9]"}`}
     >
       <Navbar />
 
@@ -49,7 +49,7 @@ export default function Home() {
           className={`relative min-h-[100svh] md:h-screen flex flex-col items-center justify-start text-center px-6 pt-[137px] md:pt-[137px] max-[750px]:pt-[150px] transition-all duration-300 ${isNight ? "bg-[#06174B]" : "bg-[#FCEDD9]"}`}
           style={{
             backgroundImage: isNight
-              ? "linear-gradient(to bottom, #06174B 0 123px, transparent 123px), linear-gradient(to bottom, rgba(3, 7, 18, 0.1) 60%, rgba(3, 7, 18, 0.95) 98%), url('/bgDarkTheme.png')"
+              ? "url('/bgDarkTheme.png')"
               : "linear-gradient(to bottom, rgba(255, 255, 255, 0) 82%, rgba(253, 246, 235, 1) 97%), url('/landing-hero-reference.png')",
             backgroundSize: "cover",
             backgroundPosition: "center calc(100% + 110px)",
@@ -74,13 +74,13 @@ export default function Home() {
             </p>
 
             {/* Call to Action Button */}
-            <div className="flex justify-center">
+            <div className="flex justify-center group">
               <Show when="signed-out">
                 <SignUpButton mode="modal" forceRedirectUrl="/tools">
                   <button
-                    className="text-[14px] px-[16px] py-[6px] rounded-[7px] border-[1.5px] cursor-pointer font-normal flex items-center gap-2 transition-all duration-300 bg-gradient-to-b from-[#2361e2] to-[#092257] text-white border-[#84acff] hover:brightness-110"
+                    className="text-[14px] px-[16px] py-[6px] rounded-[7px] border-[1.5px] cursor-pointer font-normal flex items-center gap-2 transition-all duration-300 bg-gradient-to-b from-[#2361e2] to-[#092257] text-white border-[#4574d2] group hover:border-[#84acff] hover:brightness-110"
                   >
-                    Start Free <ArrowRight className="size-4" />
+                    Start Free <ArrowRight className="size-4 group-hover:translate-x-1 ease-in-out duration-300" />
                   </button>
                 </SignUpButton>
               </Show>
@@ -162,7 +162,7 @@ export default function Home() {
             backgroundRepeat: "no-repeat",
           }}
         >
-          <div className="max-w-[900px] mx-auto">
+          <div className="max-w-[1100px] mx-auto">
             {/* Call to action card */}
             <div className="mb-16 md:mb-[90px]">
               <h2
@@ -181,7 +181,7 @@ export default function Home() {
                 <Show when="signed-out">
                   <SignUpButton mode="modal" forceRedirectUrl="/tools">
                     <button
-                      className="text-[14px] px-6 py-2.5 rounded-[7px] border-[1.5px] border-[#84acff] cursor-pointer font-normal text-white transition-all duration-300 bg-gradient-to-b from-[#2361e2] to-[#092257] hover:brightness-110"
+                      className="text-[14px] px-4 py-2 rounded-[7px] border-[1.5px] border-[#84acff] cursor-pointer font-normal text-white transition-all duration-300 bg-gradient-to-b from-[#2361e2] to-[#092257] hover:brightness-110"
                     >
                       Start For Free
                     </button>
@@ -206,12 +206,12 @@ export default function Home() {
               {/* Brand Profile */}
               <div>
                 <span
-                  className={`sekuya text-lg block mb-3 transition-colors duration-300 ${isNight ? "text-slate-100" : "text-[#0f2963]"}`}
+                  className={`hero-serif text-[28px] block mb-3 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#0f2963]"}`}
                 >
                   Enso
                 </span>
                 <p
-                  className={`text-[12px] leading-[1.6] font-light transition-colors duration-300 ${isNight ? "text-slate-400" : "text-[#55688a]"}`}
+                  className={`hero-serif text-[15px] leading-[1.55] transition-colors duration-300 ${isNight ? "text-[#A9B9D8]" : "text-[#55688a]"}`}
                 >
                   A clean, distraction-free environment for aligning life goals,
                   brain dump notes, and prioritizing workload.
@@ -221,7 +221,7 @@ export default function Home() {
               {/* Tools Column */}
               <div>
                 <p
-                  className={`text-[11px] font-bold uppercase tracking-[0.08em] mb-4 transition-colors duration-300 ${isNight ? "text-slate-300" : "text-[#0f2963]"}`}
+                    className={`hero-serif text-[19px] font-medium mb-4 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#0f2963]"}`}
                 >
                   Tools
                 </p>
@@ -256,7 +256,7 @@ export default function Home() {
               {/* Resources Column */}
               <div>
                 <p
-                  className={`text-[11px] font-bold uppercase tracking-[0.08em] mb-4 transition-colors duration-300 ${isNight ? "text-slate-300" : "text-[#0f2963]"}`}
+                    className={`hero-serif text-[19px] font-medium mb-4 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#0f2963]"}`}
                 >
                   Resources
                 </p>
@@ -288,7 +288,7 @@ export default function Home() {
               {/* Legal Column */}
               <div>
                 <p
-                  className={`text-[11px] font-bold uppercase tracking-[0.08em] mb-4 transition-colors duration-300 ${isNight ? "text-slate-300" : "text-[#0f2963]"}`}
+                    className={`hero-serif text-[19px] font-medium mb-4 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#0f2963]"}`}
                 >
                   Product
                 </p>
