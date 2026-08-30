@@ -6,6 +6,7 @@ import { SignUpButton, Show } from "@clerk/nextjs";
 import { Navbar } from "@/components/navbar";
 import { Compass, Brain, Target, ArrowRight } from "lucide-react";
 import { useTimeTheme } from "@/hooks/useTimeTheme";
+import { LandingCtaSection, LandingFooterSection } from "@/components/landing-sections";
 
 const TOOLS = [
   {
@@ -77,10 +78,9 @@ export default function Home() {
             <div className="flex justify-center group">
               <Show when="signed-out">
                 <SignUpButton mode="modal" forceRedirectUrl="/tools">
-                  <button
-                    className="text-[14px] px-[16px] py-[6px] rounded-[7px] border-[1.5px] cursor-pointer font-normal flex items-center gap-2 transition-all duration-300 bg-gradient-to-b from-[#2361e2] to-[#092257] text-white border-[#4574d2] group hover:border-[#84acff] hover:brightness-110"
-                  >
-                    Start Free <ArrowRight className="size-4 group-hover:translate-x-1 ease-in-out duration-300" />
+                  <button className="text-[14px] px-[16px] py-[6px] rounded-[7px] border-[1.5px] cursor-pointer font-normal flex items-center gap-2 transition-all duration-300 bg-gradient-to-b from-[#2361e2] to-[#092257] text-white border-[#4574d2] group hover:border-[#84acff] hover:brightness-110">
+                    Start Free{" "}
+                    <ArrowRight className="size-4 group-hover:translate-x-1 ease-in-out duration-300" />
                   </button>
                 </SignUpButton>
               </Show>
@@ -105,66 +105,53 @@ export default function Home() {
         {/* Feature Grid Section */}
         <section className="bg-[#06174B] py-20 md:py-[100px] px-6">
           <div className="max-w-[1100px] mx-auto">
-          <div className="text-center mb-[54px]">
-            <p
-              className="hero-serif text-[16px] mb-2 text-[#84ACFF]"
-            >
-              Core Features
-            </p>
-            <h2
-              className="hero-serif text-[32px] font-medium tracking-[-0.02em] text-white"
-            >
-              Minimalist tools for complex minds.
-            </h2>
-          </div>
+            <div className="text-center mb-[54px]">
+              <p className="hero-serif text-[16px] mb-2 text-[#84ACFF]">
+                Core Features
+              </p>
+              <h2 className="hero-serif text-[32px] font-medium tracking-[-0.02em] text-white">
+                Minimalist tools for complex minds.
+              </h2>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 justify-center gap-8">
-            {TOOLS.map((tool) => {
-              return (
-                <div
-                  key={tool.name}
-                  className="hero-serif relative mx-auto flex h-[488px] w-full max-w-[353px] flex-col overflow-hidden rounded-[3px] bg-[#F8F3E7] px-7 pt-14 text-center text-[#0F2963]"
-                >
+            <div className="grid grid-cols-1 md:grid-cols-3 justify-center gap-8">
+              {TOOLS.map((tool) => {
+                return (
                   <div
-                    className="absolute right-0 top-0 h-[24px] w-[24px]"
+                    key={tool.name}
+                    className="hero-serif relative mx-auto flex h-[400px] w-full max-w-[300px] flex-col overflow-hidden rounded-[3px] bg-[#F8F3E7] px-7 pt-8 text-center text-[#0F2963]"
                   >
-                    <Image src="/CornerAsset.png" alt="" fill sizes="26px" />
+                    <div className="absolute right-0 top-0 h-[24px] w-[24px]">
+                      <Image src="/CornerAsset.png" alt="" fill sizes="26px" />
+                    </div>
+                    <h3 className="text-[30px] font-medium leading-tight tracking-[-0.04em]">
+                      {tool.name}
+                    </h3>
+                    <p className="mt-4 text-[14px] leading-[1.45] text-[#46649B]">
+                      {tool.desc}
+                    </p>
+                    <div className="relative mb-10 mt-auto h-[218px] w-full">
+                      <Image
+                        src={tool.image}
+                        alt=""
+                        fill
+                        sizes="300px"
+                        className="object-contain object-bottom"
+                      />
+                    </div>
+                    {/* <Link href={tool.href} className="sr-only">Try tool</Link> */}
+                    <div className="absolute bottom-0 left-0 h-[24px] w-[24px] rotate-180">
+                      <Image src="/CornerAsset.png" alt="" fill sizes="36px" />
+                    </div>
                   </div>
-                  <h3 className="text-[32px] font-medium leading-tight tracking-[-0.04em]">
-                    {tool.name}
-                  </h3>
-                  <p className="mt-4 text-[16px] leading-[1.45] text-[#46649B]">
-                    {tool.desc}
-                  </p>
-                  <div className="relative mb-14 mt-auto h-[220px] w-full">
-                    <Image src={tool.image} alt="" fill sizes="300px" className="object-contain object-bottom" />
-                  </div>
-                  {/* <Link href={tool.href} className="sr-only">Try tool</Link> */}
-                  <div className="absolute bottom-0 left-0 h-[24px] w-[24px] rotate-180">
-                    <Image src="/CornerAsset.png" alt="" fill sizes="36px" />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
           </div>
         </section>
 
-        {/* Footer Section with background image */}
-        <section
-          className={`py-16 md:py-[120px] md:pb-20 px-6 text-center border-t transition-colors duration-300 ${isNight ? "border-white/10" : "border-[#0f2963]/8"}`}
-          style={{
-            backgroundImage: isNight
-              ? "linear-gradient(to top, rgba(3, 7, 18, 0.95) 0%, rgba(3, 7, 18, 0.3) 100%), url('/bgDarkTheme.png')"
-              : "linear-gradient(to top, rgba(252, 237, 217, 0.95) 0%, rgba(252, 237, 217, 0.3) 100%), url('/bgEnso.png')",
-            backgroundSize: "cover",
-            backgroundPosition: "center bottom",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          <div className="max-w-[1100px] mx-auto">
-            {/* Call to action card */}
-            <div className="mb-16 md:mb-[90px]">
+        {/* CTA Section with its own artwork */}
+        <LandingCtaSection isNight={isNight}>
               <h2
                 className={`hero-serif text-[32px] sm:text-[42px] font-medium tracking-[-0.035em] mb-4 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#0f2963]"}`}
               >
@@ -180,9 +167,7 @@ export default function Home() {
               <div className="flex gap-3 justify-center">
                 <Show when="signed-out">
                   <SignUpButton mode="modal" forceRedirectUrl="/tools">
-                    <button
-                      className="text-[14px] px-4 py-2 rounded-[7px] border-[1.5px] border-[#84acff] cursor-pointer font-normal text-white transition-all duration-300 bg-gradient-to-b from-[#2361e2] to-[#092257] hover:brightness-110"
-                    >
+                    <button className="text-[14px] px-4 py-2 rounded-[7px] border-[1.5px] border-[#84acff] cursor-pointer font-normal text-white transition-all duration-300 bg-gradient-to-b from-[#2361e2] to-[#092257] hover:brightness-110">
                       Start For Free
                     </button>
                   </SignUpButton>
@@ -197,19 +182,24 @@ export default function Home() {
                   </Link>
                 </Show>
               </div>
-            </div>
+        </LandingCtaSection>
 
+        {/* Footer Section with its own artwork */}
+        <LandingFooterSection isNight={isNight}>
+          <div className="max-w-[1100px] mx-auto">
             {/* Middle navigation grid */}
             <div
               className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-left border-t pt-12 md:pt-[60px] pb-12 md:pb-[60px] mb-10 transition-colors duration-300 ${isNight ? "border-white/10" : "border-[#0f2963]/8"}`}
             >
               {/* Brand Profile */}
               <div>
-                <span
-                  className={`hero-serif text-[28px] block mb-3 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#0f2963]"}`}
-                >
-                  Enso
-                </span>
+                  <Image
+                    src="/enso.png"
+                    alt="Enso"
+                    width={76}
+                    height={30}
+                    className={`mb-3 h-auto w-[76px] object-contain ${isNight ? "brightness-0 invert" : ""}`}
+                  />
                 <p
                   className={`hero-serif text-[15px] leading-[1.55] transition-colors duration-300 ${isNight ? "text-[#A9B9D8]" : "text-[#55688a]"}`}
                 >
@@ -221,7 +211,7 @@ export default function Home() {
               {/* Tools Column */}
               <div>
                 <p
-                    className={`hero-serif text-[19px] font-medium mb-4 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#0f2963]"}`}
+                  className={`hero-serif text-[19px] font-medium mb-4 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#0f2963]"}`}
                 >
                   Tools
                 </p>
@@ -256,7 +246,7 @@ export default function Home() {
               {/* Resources Column */}
               <div>
                 <p
-                    className={`hero-serif text-[19px] font-medium mb-4 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#0f2963]"}`}
+                  className={`hero-serif text-[19px] font-medium mb-4 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#0f2963]"}`}
                 >
                   Resources
                 </p>
@@ -288,7 +278,7 @@ export default function Home() {
               {/* Legal Column */}
               <div>
                 <p
-                    className={`hero-serif text-[19px] font-medium mb-4 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#0f2963]"}`}
+                  className={`hero-serif text-[19px] font-medium mb-4 transition-colors duration-300 ${isNight ? "text-[#F8DCC2]" : "text-[#0f2963]"}`}
                 >
                   Product
                 </p>
@@ -336,7 +326,7 @@ export default function Home() {
               </span>
             </div>
           </div>
-        </section>
+        </LandingFooterSection>
       </main>
     </div>
   );

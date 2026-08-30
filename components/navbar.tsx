@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
 import { useTimeTheme } from "@/hooks/useTimeTheme";
 
@@ -12,11 +13,16 @@ export function Navbar() {
       {/* Brand */}
       <Link
         href="/"
-        className={`sekuya text-lg leading-none no-underline font-semibold transition-colors duration-300 ${
-          isNight ? "text-white" : "text-[#0f2963]"
-        }`}
+        className="flex h-[18px] w-[20px] items-center no-underline"
       >
-        Enso
+        <Image
+          src="/enso.png"
+          alt="Enso"
+          width={70}
+          height={28}
+          className={`h-auto w-full object-contain ${isNight ? "brightness-0 invert" : ""}`}
+          priority
+        />
       </Link>
 
       {/* Auth */}
