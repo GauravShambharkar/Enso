@@ -8,7 +8,7 @@ type ThemeProps = {
 export function LandingCtaSection({ isNight, children }: ThemeProps) {
   return (
     <section
-      className="bg-cover h-120 bg-center bg-no-repeat px-4 py-10 text-center md:py-14"
+      className="h-120 bg-cover bg-[18%_center] bg-no-repeat px-4 py-10 text-center md:bg-center md:py-14"
       style={{
         backgroundImage: `url('${isNight ? "/ensoCTANight.png" : "/ensoCTAday.png"}')`,
       }}

@@ -189,10 +189,10 @@ export default function Home() {
           <div className="max-w-[1100px] mx-auto">
             {/* Middle navigation grid */}
             <div
-              className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-left border-t pt-12 md:pt-[60px] pb-12 md:pb-[60px] mb-10 transition-colors duration-300 ${isNight ? "border-white/10" : "border-[#0f2963]/8"}`}
+              className={`grid grid-cols-2 gap-x-6 gap-y-10 text-left border-t pt-10 pb-10 mb-8 transition-colors duration-300 sm:grid-cols-2 md:grid-cols-4 md:gap-8 md:pb-[60px] md:pt-[60px] md:mb-10 ${isNight ? "border-white/10" : "border-[#0f2963]/8"}`}
             >
               {/* Brand Profile */}
-              <div>
+              <div className="col-span-2 md:col-span-1">
                   <Image
                     src="/enso.png"
                     alt="Enso"
